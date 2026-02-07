@@ -1,0 +1,384 @@
+{
+  "breed": "Dachshund",
+  "description": "Long narrow snout, long pendant ears, extra-long body, very short legs",
+  "sizes": {
+    "small": {
+      "name": "Small",
+      "targetHeight": "4 inches",
+      "hookSize": "3.0mm",
+      "yarnWeight": "DK Weight",
+      "bodyParts": {
+        "head": {
+          "widthModifier": 0.9,
+          "lengthModifier": 0.85,
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase (12 stitches + 6 increases)", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around 3 rows", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Decrease every 2nd stitch (18 - 9 decreases)", "stitchCount": 9, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Stuff head. Decrease every stitch (9 - 4 or 5 decreases). Close with slip stitch.", "stitchCount": 4, "colorKey": "primary"}
+          ]
+        },
+        "body": {
+          "widthModifier": 0.85,
+          "lengthModifier": 1.4,
+          "notes": "Extra-long body - signature Dachshund feature",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Single crochet around 6 rows - very long", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Decrease every stitch (12 - 6 decreases)", "stitchCount": 6, "colorKey": "primary"}
+          ]
+        },
+        "frontLeg": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.5,
+          "notes": "Very short stumpy legs",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Single crochet around 2 rows", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Decrease every stitch (12 - 6 decreases)", "stitchCount": 6, "colorKey": "primary"}
+          ]
+        },
+        "backLeg": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.5,
+          "notes": "Very short stumpy legs",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Single crochet around 2 rows", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Decrease every stitch (12 - 6 decreases)", "stitchCount": 6, "colorKey": "primary"}
+          ]
+        },
+        "ear": {
+          "widthModifier": 0.9,
+          "lengthModifier": 1.2,
+          "notes": "Long pendant ears",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Single crochet around 4 rows - long and droopy", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Decrease every stitch (12 - 6 decreases)", "stitchCount": 6, "colorKey": "primary"}
+          ]
+        },
+        "tail": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.8,
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Single crochet around 3 rows", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"}
+          ]
+        },
+        "snout": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.85,
+          "notes": "Long narrow snout",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Single crochet around 4 rows - long and thin", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Single crochet around", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 6, "colorKey": "primary"}
+          ]
+        },
+        "nose": {
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "nose"},
+            {"rowNumber": 2, "instructions": "Single crochet around, close with slip stitch", "stitchCount": 6, "colorKey": "nose"}
+          ]
+        }
+      },
+      "assembly": {
+        "order": ["head", "body", "frontLeg", "backLeg", "ear", "tail", "snout", "nose"],
+        "instructions": "Attach body to head. Attach 2 very short front legs to front of body, positioned close to ground. Attach 2 very short back legs to back of body, positioned close to ground. Attach 2 long pendant ears to sides of head. Attach tail to back of body, slightly upward. Attach long narrow snout to front of head. Attach nose to tip of snout. Embroider eyes."
+      },
+      "colors": {
+        "primary": "#8B4513",
+        "nose": "#1A1A1A"
+      }
+    },
+    "medium": {
+      "name": "Medium",
+      "targetHeight": "8 inches",
+      "hookSize": "3.5mm",
+      "yarnWeight": "Worsted Weight",
+      "bodyParts": {
+        "head": {
+          "widthModifier": 0.9,
+          "lengthModifier": 0.85,
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase (12 stitches + 6 increases)", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Work 2 single crochet, increase (repeat around)", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around 3 rows", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Decrease every 2nd stitch (24 - 12 decreases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Stuff head. Decrease every stitch (12 - 6 decreases). Close with slip stitch.", "stitchCount": 6, "colorKey": "primary"}
+          ]
+        },
+        "body": {
+          "widthModifier": 0.85,
+          "lengthModifier": 1.4,
+          "notes": "Extra-long body - signature Dachshund feature",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase",  "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around 8 rows - very long", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 10, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 11, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 12, "instructions": "Decrease every 2nd stitch (18 - 9 decreases)", "stitchCount": 9, "colorKey": "primary"}
+          ]
+        },
+        "frontLeg": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.5,
+          "notes": "Very short stumpy legs",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around 2 rows", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Decrease every stitch (18 - 9 decreases)", "stitchCount": 9, "colorKey": "primary"}
+          ]
+        },
+        "backLeg": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.5,
+          "notes": "Very short stumpy legs",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around 2 rows", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Decrease every stitch (18 - 9 decreases)", "stitchCount": 9, "colorKey": "primary"}
+          ]
+        },
+        "ear": {
+          "widthModifier": 0.9,
+          "lengthModifier": 1.2,
+          "notes": "Long pendant ears",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around 5 rows - long and droopy", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Decrease every 2nd stitch (18 - 9 decreases)", "stitchCount": 9, "colorKey": "primary"}
+          ]
+        },
+        "tail": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.8,
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around 4 rows", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"}
+          ]
+        },
+        "snout": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.85,
+          "notes": "Long narrow snout",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Single crochet around 5 rows - long and thin", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 12, "colorKey": "primary"}
+          ]
+        },
+        "nose": {
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "nose"},
+            {"rowNumber": 2, "instructions": "Single crochet around, close with slip stitch", "stitchCount": 6, "colorKey": "nose"}
+          ]
+        }
+      },
+      "assembly": {
+        "order": ["head", "body", "frontLeg", "backLeg", "ear", "tail", "snout", "nose"],
+        "instructions": "Attach body to head. Attach 2 very short front legs to front of body, positioned close to ground. Attach 2 very short back legs to back of body, positioned close to ground. Attach 2 long pendant ears to sides of head. Attach tail to back of body, slightly upward. Attach long narrow snout to front of head. Attach nose to tip of snout. Embroider eyes."
+      },
+      "colors": {
+        "primary": "#8B4513",
+        "nose": "#1A1A1A"
+      }
+    },
+    "large": {
+      "name": "Large",
+      "targetHeight": "12 inches",
+      "hookSize": "4.0mm",
+      "yarnWeight": "Worsted Weight",
+      "bodyParts": {
+        "head": {
+          "widthModifier": 0.9,
+          "lengthModifier": 0.85,
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase (12 stitches + 6 increases)", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Work 2 single crochet, increase (repeat around)", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Alternate single crochet and increase (24 stitches + 12 increases)", "stitchCount": 36, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around 4 rows", "stitchCount": 36, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 36, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 36, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Single crochet around", "stitchCount": 36, "colorKey": "primary"},
+            {"rowNumber": 10, "instructions": "Decrease every 3rd stitch (36 - 12 decreases)", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 11, "instructions": "Stuff head. Decrease every 2nd stitch (24 - 12 decreases)", "stitchCount": 12, "colorKey": "primary"}
+          ]
+        },
+        "body": {
+          "widthModifier": 0.85,
+          "lengthModifier": 1.4,
+          "notes": "Extra-long body - signature Dachshund feature",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase (12 stitches + 6 increases)", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Work 2 single crochet, increase (repeat around)", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around 10 rows - very long", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 10, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 11, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 12, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 13, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 14, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 15, "instructions": "Decrease every 2nd stitch (24 - 12 decreases)", "stitchCount": 12, "colorKey": "primary"}
+          ]
+        },
+        "frontLeg": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.5,
+          "notes": "Very short stumpy legs",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Work 2 single crochet, increase", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around 3 rows", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Decrease every stitch (24 - 12 decreases)", "stitchCount": 12, "colorKey": "primary"}
+          ]
+        },
+        "backLeg": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.5,
+          "notes": "Very short stumpy legs",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Work 2 single crochet, increase", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around 3 rows", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Decrease every stitch (24 - 12 decreases)", "stitchCount": 12, "colorKey": "primary"}
+          ]
+        },
+        "ear": {
+          "widthModifier": 0.9,
+          "lengthModifier": 1.2,
+          "notes": "Long pendant ears",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Work 2 single crochet, increase", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around 6 rows - long and droopy", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 10, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 11, "instructions": "Decrease every 2nd stitch (24 - 12 decreases)", "stitchCount": 12, "colorKey": "primary"}
+          ]
+        },
+        "tail": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.8,
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Work 2 single crochet, increase", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around 5 rows", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Single crochet around", "stitchCount": 24, "colorKey": "primary"}
+          ]
+        },
+        "snout": {
+          "widthModifier": 0.75,
+          "lengthModifier": 0.85,
+          "notes": "Long narrow snout",
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "primary"},
+            {"rowNumber": 2, "instructions": "Increase in each stitch (6 increases)", "stitchCount": 12, "colorKey": "primary"},
+            {"rowNumber": 3, "instructions": "Alternate single crochet and increase", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 4, "instructions": "Single crochet around 6 rows - long and thin", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 5, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 6, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 7, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 8, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"},
+            {"rowNumber": 9, "instructions": "Single crochet around", "stitchCount": 18, "colorKey": "primary"}
+          ]
+        },
+        "nose": {
+          "rows": [
+            {"rowNumber": 1, "instructions": "Magic ring: 6 single crochet", "stitchCount": 6, "colorKey": "nose"},
+            {"rowNumber": 2, "instructions": "Single crochet around, close with slip stitch", "stitchCount": 6, "colorKey": "nose"}
+          ]
+        }
+      },
+      "assembly": {
+        "order": ["head", "body", "frontLeg", "backLeg", "ear", "tail", "snout", "nose"],
+        "instructions": "Attach body to head. Attach 2 very short front legs to front of body, positioned close to ground. Attach 2 very short back legs to back of body, positioned close to ground. Attach 2 long pendant ears to sides of head. Attach tail to back of body, slightly upward. Attach long narrow snout to front of head. Attach nose to tip of snout. Embroider eyes."
+      },
+      "colors": {
+        "primary": "#8B4513",
+        "nose": "#1A1A1A"
+      }
+    }
+  }
+}

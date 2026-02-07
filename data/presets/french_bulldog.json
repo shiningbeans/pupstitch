@@ -1,0 +1,434 @@
+{
+  "breedId": "french_bulldog",
+  "name": "French Bulldog",
+  "description": "Compact companion with bat ears, wide flat head, and tiny curly tail",
+  "baseSize": "small",
+  "defaultEarShape": "bat",
+  "defaultTailType": "curly",
+  "estimatedHours": 4,
+  "skillLevel": "beginner",
+  "hookSize": "3.5mm",
+  "yarnWeight": "worsted",
+  "defaultColors": {
+    "primary": "#F5DEB3",
+    "secondary": "#D2B48C",
+    "accent": "#8B7355",
+    "nose": "#000000"
+  },
+  "sizes": {
+    "small": {
+      "hookSize": "3.0mm",
+      "yarnWeight": "DK",
+      "finishedHeight": "4 inches",
+      "bodyParts": {
+        "head": {
+          "name": "head",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 2, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.2, "lengthModifier": 0.75 },
+          "assemblyNotes": "Very wide, flat head. Eyes at rows 3-4, wide apart."
+        },
+        "body": {
+          "name": "body",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 2, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.05, "lengthModifier": 0.85 },
+          "assemblyNotes": "Compact, broad body. Very short and stocky."
+        },
+        "frontLeg": {
+          "name": "frontLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.65 },
+          "assemblyNotes": "Very short stubby legs. Frenchies have short legs close to ground."
+        },
+        "backLeg": {
+          "name": "backLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.65 },
+          "assemblyNotes": "Same length as front - all very short."
+        },
+        "ear": {
+          "name": "ear",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 1.4 },
+          "assemblyNotes": "HUGE pointy bat ears. Wide base, stand straight up. Signature feature."
+        },
+        "tail": {
+          "name": "tail",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.65, "lengthModifier": 0.6 },
+          "assemblyNotes": "Very short curly tail. Curl into spiral shape."
+        },
+        "snout": {
+          "name": "snout",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 0.6 },
+          "assemblyNotes": "Very short snout. Frenchies have brachycephalic flat faces."
+        },
+        "nose": {
+          "name": "nose",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "nose" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 3, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "nose" },
+            { "rowNumber": 4, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "nose" }
+          ],
+          "proportions": { "widthModifier": 0.7, "lengthModifier": 0.7 },
+          "assemblyNotes": "Black nose on flat snout."
+        }
+      }
+    },
+    "medium": {
+      "hookSize": "3.5mm",
+      "yarnWeight": "Worsted",
+      "finishedHeight": "8 inches",
+      "bodyParts": {
+        "head": {
+          "name": "head",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.2, "lengthModifier": 0.75 },
+          "assemblyNotes": "Very wide, flat head. Eyes at rows 4-5, wide spaced."
+        },
+        "body": {
+          "name": "body",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.05, "lengthModifier": 0.85 },
+          "assemblyNotes": "Compact, broad barrel-shaped body."
+        },
+        "frontLeg": {
+          "name": "frontLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.65 },
+          "assemblyNotes": "Very short stubby legs."
+        },
+        "backLeg": {
+          "name": "backLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.65 },
+          "assemblyNotes": "Same length as front."
+        },
+        "ear": {
+          "name": "ear",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 1.4 },
+          "assemblyNotes": "LARGE pointy bat ears. Wide base, stand upright. Signature Frenchie feature."
+        },
+        "tail": {
+          "name": "tail",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.65, "lengthModifier": 0.6 },
+          "assemblyNotes": "Very short curly tail. Coil into spiral."
+        },
+        "snout": {
+          "name": "snout",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 0.6 },
+          "assemblyNotes": "Very short flat snout. Characteristic brachycephalic face."
+        },
+        "nose": {
+          "name": "nose",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "nose" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "nose" },
+            { "rowNumber": 5, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "nose" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.75 },
+          "assemblyNotes": "Black nose on short flat snout."
+        }
+      }
+    },
+    "large": {
+      "hookSize": "4.0mm",
+      "yarnWeight": "Worsted",
+      "finishedHeight": "12 inches",
+      "bodyParts": {
+        "head": {
+          "name": "head",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.2, "lengthModifier": 0.75 },
+          "assemblyNotes": "Very wide flat head. Eyes at rows 5-6, wide apart."
+        },
+        "body": {
+          "name": "body",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 13, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 14, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.05, "lengthModifier": 0.85 },
+          "assemblyNotes": "Compact barrel-shaped body."
+        },
+        "frontLeg": {
+          "name": "frontLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.65 },
+          "assemblyNotes": "Very short stubby legs. Close to ground."
+        },
+        "backLeg": {
+          "name": "backLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.65 },
+          "assemblyNotes": "Same length as front."
+        },
+        "ear": {
+          "name": "ear",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 1.4 },
+          "assemblyNotes": "HUGE pointy bat ears. Wide base, stand straight up."
+        },
+        "tail": {
+          "name": "tail",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.65, "lengthModifier": 0.6 },
+          "assemblyNotes": "Very short curly tail. Curl into spiral shape."
+        },
+        "snout": {
+          "name": "snout",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 0.6 },
+          "assemblyNotes": "Very short flat snout. Brachycephalic face."
+        },
+        "nose": {
+          "name": "nose",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "nose" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "nose" },
+            { "rowNumber": 5, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "nose" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 0.75 },
+          "assemblyNotes": "Black nose on short flat snout."
+        }
+      }
+    }
+  },
+  "assemblyInstructions": [
+    "1. Create the wide, flat head characteristic of French Bulldogs",
+    "2. Stuff all parts firmly but head especially for width",
+    "3. Sew short, flat snout to front of head",
+    "4. Add black nose to snout",
+    "5. Embroider round, friendly eyes on wide head",
+    "6. Attach HUGE pointy bat ears - these should dominate the head",
+    "7. Sew body to head securely",
+    "8. Attach very short stubby legs - position close to ground",
+    "9. Attach short curly tail - coil into spiral shape",
+    "10. Add wrinkle details on face with embroidery if desired for authenticity"
+  ],
+  "colorNotes": "Pale tan, cream, fawn, or brindle for main body. Can add darker patches or brindle striping. Nose always black. French Bulldogs should look compact and comical with the emphasis on huge bat ears and flat face."
+}

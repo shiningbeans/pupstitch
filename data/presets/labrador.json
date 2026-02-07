@@ -1,0 +1,474 @@
+{
+  "breedId": "labrador",
+  "name": "Labrador Retriever",
+  "description": "Friendly and energetic with a sturdy build and otter-like tail",
+  "baseSize": "large",
+  "defaultEarShape": "floppy",
+  "defaultTailType": "otter",
+  "estimatedHours": 6,
+  "skillLevel": "intermediate",
+  "hookSize": "3.5mm",
+  "yarnWeight": "worsted",
+  "defaultColors": {
+    "primary": "#2C1810",
+    "secondary": "#3D2817",
+    "accent": "#1A1A1A",
+    "nose": "#1A1A1A"
+  },
+  "sizes": {
+    "small": {
+      "hookSize": "3.0mm",
+      "yarnWeight": "DK",
+      "finishedHeight": "4 inches",
+      "bodyParts": {
+        "head": {
+          "name": "head",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 2, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.9, "lengthModifier": 0.85 },
+          "assemblyNotes": "Stuff firmly. Round head characteristic of Labs. Eyes at rows 3-4."
+        },
+        "body": {
+          "name": "body",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "(Sc 2, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.95, "lengthModifier": 1.1 },
+          "assemblyNotes": "Stocky body. Stuff firmly. Sew to head."
+        },
+        "frontLeg": {
+          "name": "frontLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.8, "lengthModifier": 0.95 },
+          "assemblyNotes": "Medium length, sturdy legs. Sew to front corners."
+        },
+        "backLeg": {
+          "name": "backLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.85, "lengthModifier": 1.0 },
+          "assemblyNotes": "Slightly longer than front. Sew to back corners."
+        },
+        "ear": {
+          "name": "ear",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 1.2 },
+          "assemblyNotes": "Soft floppy ears. Sew to sides of head, let them hang naturally."
+        },
+        "tail": {
+          "name": "tail",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.7, "lengthModifier": 1.5 },
+          "assemblyNotes": "Otter-like tail with tapered tip. Stuff and curve."
+        },
+        "snout": {
+          "name": "snout",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.9, "lengthModifier": 1.0 },
+          "assemblyNotes": "Medium snout. Sew to front of head at rows 2-3."
+        },
+        "nose": {
+          "name": "nose",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "nose" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 3, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "nose" },
+            { "rowNumber": 4, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "nose" }
+          ],
+          "proportions": { "widthModifier": 0.65, "lengthModifier": 0.75 },
+          "assemblyNotes": "Black nose. Sew to snout tip."
+        }
+      }
+    },
+    "medium": {
+      "hookSize": "3.5mm",
+      "yarnWeight": "Worsted",
+      "finishedHeight": "8 inches",
+      "bodyParts": {
+        "head": {
+          "name": "head",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 13, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 0.95 },
+          "assemblyNotes": "Stuff firmly. Round head. Eyes embroidered at rows 5-6, spaced 8 stitches apart."
+        },
+        "body": {
+          "name": "body",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 13, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 14, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 1.2 },
+          "assemblyNotes": "Sturdy, stocky body. Stuff firmly. Sew to head with secure neck."
+        },
+        "frontLeg": {
+          "name": "frontLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.85, "lengthModifier": 1.0 },
+          "assemblyNotes": "Sturdy front legs. Sew to bottom front at rows 10-12 of body."
+        },
+        "backLeg": {
+          "name": "backLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.9, "lengthModifier": 1.05 },
+          "assemblyNotes": "Back legs slightly longer. Sew to bottom back."
+        },
+        "ear": {
+          "name": "ear",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.8, "lengthModifier": 1.4 },
+          "assemblyNotes": "Medium floppy ears. Sew to sides at rows 4-6, angled to hang down."
+        },
+        "tail": {
+          "name": "tail",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 1.8 },
+          "assemblyNotes": "Classic otter tail - thick base, tapers to blunt point. Sew to back."
+        },
+        "snout": {
+          "name": "snout",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.95, "lengthModifier": 1.1 },
+          "assemblyNotes": "Medium-length snout. Sew to front of head at rows 7-9."
+        },
+        "nose": {
+          "name": "nose",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "nose" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "nose" },
+            { "rowNumber": 5, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "nose" }
+          ],
+          "proportions": { "widthModifier": 0.7, "lengthModifier": 0.8 },
+          "assemblyNotes": "Black nose. Sew to snout tip with light stuffing."
+        }
+      }
+    },
+    "large": {
+      "hookSize": "4.0mm",
+      "yarnWeight": "Worsted",
+      "finishedHeight": "12 inches",
+      "bodyParts": {
+        "head": {
+          "name": "head",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 4, inc) x 6", "stitchCount": 36, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 36, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 36, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 36, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 36, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Sc in each st around", "stitchCount": 36, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "(Sc 4, dec) x 6", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 13, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 14, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 15, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 16, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 17, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 1.0 },
+          "assemblyNotes": "Stuff firmly. Classic round Lab head. Eyes at rows 6-7, spaced 10 stitches apart."
+        },
+        "body": {
+          "name": "body",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 13, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 14, "instructions": "Sc in each st around", "stitchCount": 30, "colorKey": "primary" },
+            { "rowNumber": 15, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24, "colorKey": "primary" },
+            { "rowNumber": 16, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 17, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 18, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 19, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 1.0, "lengthModifier": 1.2 },
+          "assemblyNotes": "Stocky, muscular body. Stuff very firmly. Sew to head securely."
+        },
+        "frontLeg": {
+          "name": "frontLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.85, "lengthModifier": 1.0 },
+          "assemblyNotes": "Strong front legs. Sew to bottom front at rows 14-16."
+        },
+        "backLeg": {
+          "name": "backLeg",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.9, "lengthModifier": 1.05 },
+          "assemblyNotes": "Back legs support body. Sew to bottom rear corners."
+        },
+        "ear": {
+          "name": "ear",
+          "quantity": 2,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.8, "lengthModifier": 1.4 },
+          "assemblyNotes": "Soft floppy ears. Sew to sides of head at rows 5-7, let them hang down naturally."
+        },
+        "tail": {
+          "name": "tail",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 11, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "primary" },
+            { "rowNumber": 12, "instructions": "Dec 4 times", "stitchCount": 4, "colorKey": "primary" },
+            { "rowNumber": 13, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.75, "lengthModifier": 1.8 },
+          "assemblyNotes": "Characteristic otter tail - thick, muscular base that tapers to blunt point. Sew to back of body."
+        },
+        "snout": {
+          "name": "snout",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 18, "colorKey": "primary" },
+            { "rowNumber": 7, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12, "colorKey": "primary" },
+            { "rowNumber": 8, "instructions": "Dec 6 times", "stitchCount": 6, "colorKey": "primary" },
+            { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "primary" }
+          ],
+          "proportions": { "widthModifier": 0.95, "lengthModifier": 1.1 },
+          "assemblyNotes": "Rounded snout. Sew to front of head at rows 8-10, centered and protruding slightly."
+        },
+        "nose": {
+          "name": "nose",
+          "quantity": 1,
+          "rows": [
+            { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6, "colorKey": "nose" },
+            { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12, "colorKey": "nose" },
+            { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8, "colorKey": "nose" },
+            { "rowNumber": 5, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0, "colorKey": "nose" }
+          ],
+          "proportions": { "widthModifier": 0.7, "lengthModifier": 0.8 },
+          "assemblyNotes": "Black nose. Sew to tip of snout with light stuffing. Dark labs use #1A1A1A, chocolate/yellow can use lighter shades."
+        }
+      }
+    }
+  },
+  "assemblyInstructions": [
+    "1. Stuff all body parts firmly with fiberfill before assembly",
+    "2. Sew snout to front of head, centered and protruding from face",
+    "3. Sew nose to tip of snout in contrasting color",
+    "4. Embroider or sew eyes on head - two oval shapes spaced appropriately",
+    "5. Sew ears to sides of head, positioned to hang naturally downward",
+    "6. Sew body to underside of head with secure neck connection",
+    "7. Sew front legs to bottom front corners of body",
+    "8. Sew back legs to bottom back corners - slightly longer than fronts",
+    "9. Sew characteristic otter tail to back of body with thick base",
+    "10. Final shaping - fluff Labs to show sturdy, athletic build"
+  ],
+  "colorNotes": "Primary color (black, chocolate brown, or golden) for main body. Secondary accent color optional for chest/belly details. Nose should be contrasting dark color for all color variants."
+}

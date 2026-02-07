@@ -1,0 +1,233 @@
+{
+  "breedId": "german-shepherd",
+  "name": "German Shepherd",
+  "description": "Large and alert with pointy ears, sloped body, and distinctive saddle markings",
+  "baseSize": "large",
+  "defaultEarShape": "pointy",
+  "defaultTailType": "bushy",
+  "estimatedHours": 7,
+  "skillLevel": "advanced",
+  "hookSize": "3.5mm",
+  "yarnWeight": "worsted",
+  "defaultColors": {
+    "primary": "#8B6F47",
+    "secondary": "#2C1810",
+    "accent": "#5C3317",
+    "nose": "#1A1A1A"
+  },
+  "bodyParts": {
+    "head": {
+      "name": "head",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18 },
+        { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24 },
+        { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30 },
+        { "rowNumber": 6, "instructions": "(Sc 4, inc) x 6", "stitchCount": 36 },
+        { "rowNumber": 7, "instructions": "(Sc 5, inc) x 6", "stitchCount": 42 },
+        { "rowNumber": 8, "instructions": "(Sc 6, inc) x 6", "stitchCount": 48 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 48 },
+        { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 48 },
+        { "rowNumber": 11, "instructions": "Sc in each st around", "stitchCount": 48 },
+        { "rowNumber": 12, "instructions": "Sc in each st around", "stitchCount": 48 },
+        { "rowNumber": 13, "instructions": "(Sc 6, dec) x 6", "stitchCount": 42 },
+        { "rowNumber": 14, "instructions": "(Sc 5, dec) x 6", "stitchCount": 36 },
+        { "rowNumber": 15, "instructions": "(Sc 4, dec) x 6", "stitchCount": 30 },
+        { "rowNumber": 16, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24 },
+        { "rowNumber": 17, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18 },
+        { "rowNumber": 18, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12 },
+        { "rowNumber": 19, "instructions": "Dec 6 times", "stitchCount": 6 },
+        { "rowNumber": 20, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "head-tan", "startRow": 1, "endRow": 20, "colorKey": "primary", "description": "Tan head base" },
+        { "id": "head-saddle", "startRow": 9, "endRow": 13, "colorKey": "secondary", "description": "Dark saddle marking over head" }
+      ],
+      "proportions": { "widthModifier": 1.1, "lengthModifier": 1.05 },
+      "assemblyNotes": "Stuff firmly. This head is larger with more defined shape. Embroider almond-shaped eyes with alert expression."
+    },
+    "body": {
+      "name": "body",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18 },
+        { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24 },
+        { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30 },
+        { "rowNumber": 6, "instructions": "(Sc 4, inc) x 6", "stitchCount": 36 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 11, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 12, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 13, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 14, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 15, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 16, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 17, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 18, "instructions": "(Sc 4, dec) x 6", "stitchCount": 30 },
+        { "rowNumber": 19, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24 },
+        { "rowNumber": 20, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18 },
+        { "rowNumber": 21, "instructions": "Dec 6 times", "stitchCount": 6 },
+        { "rowNumber": 22, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "body-tan", "startRow": 1, "endRow": 7, "colorKey": "primary", "description": "Tan belly" },
+        { "id": "body-saddle", "startRow": 8, "endRow": 18, "colorKey": "secondary", "description": "Dark saddle marking over back and sides" },
+        { "id": "body-tan-rear", "startRow": 19, "endRow": 22, "colorKey": "primary", "description": "Tan rear" }
+      ],
+      "proportions": { "widthModifier": 1.05, "lengthModifier": 1.4 },
+      "assemblyNotes": "Stuff firmly. Body is longer and wider than lab for sloped appearance. Saddle marking visible on upper 2/3 of body."
+    },
+    "frontLeg": {
+      "name": "frontLeg",
+      "quantity": 2,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 10, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 11, "instructions": "Dec 4 times", "stitchCount": 4 },
+        { "rowNumber": 12, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "leg-tan", "startRow": 1, "endRow": 4, "colorKey": "primary", "description": "Tan upper leg" },
+        { "id": "leg-dark", "startRow": 5, "endRow": 12, "colorKey": "secondary", "description": "Dark lower leg/paw" }
+      ],
+      "proportions": { "widthModifier": 0.9, "lengthModifier": 1.1 },
+      "assemblyNotes": "Stuff firmly. Front legs are longer and more substantial. Sew at front bottom corners of body."
+    },
+    "backLeg": {
+      "name": "backLeg",
+      "quantity": 2,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 10, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 11, "instructions": "Dec 4 times", "stitchCount": 4 },
+        { "rowNumber": 12, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "leg-tan", "startRow": 1, "endRow": 4, "colorKey": "primary", "description": "Tan upper leg" },
+        { "id": "leg-dark", "startRow": 5, "endRow": 12, "colorKey": "secondary", "description": "Dark lower leg/paw" }
+      ],
+      "proportions": { "widthModifier": 0.95, "lengthModifier": 1.15 },
+      "assemblyNotes": "Stuff firmly. Back legs are slightly longer, giving the characteristic sloped GSD appearance. Sew at back bottom corners."
+    },
+    "ear": {
+      "name": "ear",
+      "quantity": 2,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 9, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12 },
+        { "rowNumber": 10, "instructions": "Dec 6 times", "stitchCount": 6 },
+        { "rowNumber": 11, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "ear-outer", "startRow": 1, "endRow": 11, "colorKey": "secondary", "description": "Dark pointed ear" }
+      ],
+      "proportions": { "widthModifier": 0.7, "lengthModifier": 1.6 },
+      "assemblyNotes": "Do not stuff, or stuff very lightly. Ears should be pointy and stand up. Sew to top of head at rows 4-6, angled slightly forward and outward."
+    },
+    "tail": {
+      "name": "tail",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 11, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 12, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 13, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 14, "instructions": "Dec 4 times", "stitchCount": 4 },
+        { "rowNumber": 15, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "tail-tan", "startRow": 1, "endRow": 5, "colorKey": "primary", "description": "Tan tail base" },
+        { "id": "tail-dark", "startRow": 6, "endRow": 15, "colorKey": "secondary", "description": "Dark bushy tail" }
+      ],
+      "proportions": { "widthModifier": 0.8, "lengthModifier": 2.0 },
+      "assemblyNotes": "Stuff and shape to make bushy. Sew to rear of body, tail should curve upward slightly. Use fluffy yarn or add texture for bushy appearance."
+    },
+    "snout": {
+      "name": "snout",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 8, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12 },
+        { "rowNumber": 9, "instructions": "Dec 6 times", "stitchCount": 6 },
+        { "rowNumber": 10, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "snout-main", "startRow": 1, "endRow": 10, "colorKey": "primary", "description": "Tan snout" }
+      ],
+      "proportions": { "widthModifier": 1.0, "lengthModifier": 1.2 },
+      "assemblyNotes": "Stuff moderately. Sew to front/center of head at rows 8-11. GSD snouts are longer and more tapered than labs."
+    },
+    "nose": {
+      "name": "nose",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 5, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "nose-main", "startRow": 1, "endRow": 5, "colorKey": "nose", "description": "Black nose" }
+      ],
+      "proportions": { "widthModifier": 0.75, "lengthModifier": 0.85 },
+      "assemblyNotes": "Stuff very lightly. Sew to tip of snout. Black nose gives alert, intelligent GSD expression."
+    }
+  },
+  "assemblyInstructions": [
+    "1. Sew snout to front of head at rows 9-12, centered and protruding",
+    "2. Sew nose to tip of snout",
+    "3. Embroider almond-shaped eyes on rows 7-9 of head, angled slightly upward for alert expression",
+    "4. Sew ears to top of head at rows 3-5, letting them stand up and angle forward slightly",
+    "5. Sew front legs to bottom front corners of body at rows 16-20",
+    "6. Sew back legs to bottom back corners at rows 2-8 of body",
+    "7. Sew body to head with neck connection, body should slope downward slightly from front to back",
+    "8. Sew bushy tail to rear of body, curving slightly upward",
+    "9. Use dark yarn to embroider saddle marking zone on upper body and head if not already in color zones",
+    "10. Embroider tan point over eyes (like eyebrows) for typical GSD markings"
+  ]
+}

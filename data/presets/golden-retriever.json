@@ -1,0 +1,210 @@
+{
+  "breedId": "golden-retriever",
+  "name": "Golden Retriever",
+  "description": "Friendly and intelligent with a beautiful golden coat and feathered tail",
+  "baseSize": "large",
+  "defaultEarShape": "floppy",
+  "defaultTailType": "plumed",
+  "estimatedHours": 7,
+  "skillLevel": "intermediate",
+  "hookSize": "3.5mm",
+  "yarnWeight": "worsted",
+  "defaultColors": {
+    "primary": "#DAA520",
+    "secondary": "#F0E68C",
+    "accent": "#CD853F",
+    "nose": "#1A1A1A"
+  },
+  "bodyParts": {
+    "head": {
+      "name": "head",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18 },
+        { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24 },
+        { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30 },
+        { "rowNumber": 6, "instructions": "(Sc 4, inc) x 6", "stitchCount": 36 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 36 },
+        { "rowNumber": 11, "instructions": "(Sc 4, dec) x 6", "stitchCount": 30 },
+        { "rowNumber": 12, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24 },
+        { "rowNumber": 13, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18 },
+        { "rowNumber": 14, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12 },
+        { "rowNumber": 15, "instructions": "Dec 6 times", "stitchCount": 6 },
+        { "rowNumber": 16, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "head-main", "startRow": 1, "endRow": 16, "colorKey": "primary", "description": "Golden head" }
+      ],
+      "proportions": { "widthModifier": 1.0, "lengthModifier": 1.0 },
+      "assemblyNotes": "Stuff firmly. Golden retrievers have friendly expressions. Round head shape."
+    },
+    "body": {
+      "name": "body",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18 },
+        { "rowNumber": 4, "instructions": "(Sc 2, inc) x 6", "stitchCount": 24 },
+        { "rowNumber": 5, "instructions": "(Sc 3, inc) x 6", "stitchCount": 30 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 10, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 11, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 12, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 13, "instructions": "Sc in each st around", "stitchCount": 30 },
+        { "rowNumber": 14, "instructions": "(Sc 3, dec) x 6", "stitchCount": 24 },
+        { "rowNumber": 15, "instructions": "(Sc 2, dec) x 6", "stitchCount": 18 },
+        { "rowNumber": 16, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12 },
+        { "rowNumber": 17, "instructions": "Dec 6 times", "stitchCount": 6 },
+        { "rowNumber": 18, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "body-main", "startRow": 1, "endRow": 18, "colorKey": "primary", "description": "Golden body" },
+        { "id": "body-lighter", "startRow": 10, "endRow": 14, "colorKey": "secondary", "description": "Lighter underside" }
+      ],
+      "proportions": { "widthModifier": 1.0, "lengthModifier": 1.2 },
+      "assemblyNotes": "Stuff firmly. Sturdy athletic build."
+    },
+    "frontLeg": {
+      "name": "frontLeg",
+      "quantity": 2,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 9, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 10, "instructions": "Dec 4 times", "stitchCount": 4 },
+        { "rowNumber": 11, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "leg-main", "startRow": 1, "endRow": 11, "colorKey": "primary", "description": "Golden leg" }
+      ],
+      "proportions": { "widthModifier": 0.85, "lengthModifier": 1.0 },
+      "assemblyNotes": "Stuff moderately. Strong front legs."
+    },
+    "backLeg": {
+      "name": "backLeg",
+      "quantity": 2,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 9, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 10, "instructions": "Dec 4 times", "stitchCount": 4 },
+        { "rowNumber": 11, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "leg-main", "startRow": 1, "endRow": 11, "colorKey": "primary", "description": "Golden leg" }
+      ],
+      "proportions": { "widthModifier": 0.9, "lengthModifier": 1.0 },
+      "assemblyNotes": "Stuff moderately. Well-muscled back legs."
+    },
+    "ear": {
+      "name": "ear",
+      "quantity": 2,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 8, "instructions": "Dec 4 times", "stitchCount": 4 },
+        { "rowNumber": 9, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "ear-main", "startRow": 1, "endRow": 9, "colorKey": "primary", "description": "Golden floppy ear" }
+      ],
+      "proportions": { "widthModifier": 0.9, "lengthModifier": 1.4 },
+      "assemblyNotes": "Stuff lightly. Large floppy ears. Sew to sides of head, letting them hang naturally."
+    },
+    "tail": {
+      "name": "tail",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 6, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 8, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 9, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 10, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 11, "instructions": "Dec 4 times", "stitchCount": 4 },
+        { "rowNumber": 12, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "tail-main", "startRow": 1, "endRow": 12, "colorKey": "primary", "description": "Feathered plumed tail" }
+      ],
+      "proportions": { "widthModifier": 0.8, "lengthModifier": 1.6 },
+      "assemblyNotes": "Stuff moderately. Golden retrievers have beautiful plumed tails. Sew to back with slight curve upward."
+    },
+    "snout": {
+      "name": "snout",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "(Sc 1, inc) x 6", "stitchCount": 18 },
+        { "rowNumber": 4, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 5, "instructions": "Sc in each st around", "stitchCount": 18 },
+        { "rowNumber": 6, "instructions": "(Sc 1, dec) x 6", "stitchCount": 12 },
+        { "rowNumber": 7, "instructions": "Dec 6 times", "stitchCount": 6 },
+        { "rowNumber": 8, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "snout-main", "startRow": 1, "endRow": 8, "colorKey": "primary", "description": "Golden snout" }
+      ],
+      "proportions": { "widthModifier": 1.0, "lengthModifier": 1.0 },
+      "assemblyNotes": "Stuff moderately. Sew to front of head."
+    },
+    "nose": {
+      "name": "nose",
+      "quantity": 1,
+      "rows": [
+        { "rowNumber": 1, "instructions": "Magic ring, 6 sc", "stitchCount": 6 },
+        { "rowNumber": 2, "instructions": "Inc in each st around", "stitchCount": 12 },
+        { "rowNumber": 3, "instructions": "Sc in each st around", "stitchCount": 12 },
+        { "rowNumber": 4, "instructions": "(Sc 1, dec) x 4", "stitchCount": 8 },
+        { "rowNumber": 5, "instructions": "Cut yarn and pull through remaining stitches", "stitchCount": 0 }
+      ],
+      "colorZones": [
+        { "id": "nose-main", "startRow": 1, "endRow": 5, "colorKey": "nose", "description": "Dark nose" }
+      ],
+      "proportions": { "widthModifier": 0.7, "lengthModifier": 0.8 },
+      "assemblyNotes": "Stuff very lightly. Sew to tip of snout."
+    }
+  },
+  "assemblyInstructions": [
+    "1. Sew snout to front of head",
+    "2. Sew nose to tip of snout",
+    "3. Embroider warm, friendly eyes",
+    "4. Sew ears to sides of head, let them hang",
+    "5. Sew front legs to front corners",
+    "6. Sew back legs to back corners",
+    "7. Sew body to head",
+    "8. Sew plumed tail to back with natural curve upward",
+    "9. Golden retrievers should look happy and friendly"
+  ]
+}

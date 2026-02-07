@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Warm Craft-Themed Color Palette */
+  --primary-amber: #D97706;
+  --primary-amber-light: #F59E0B;
+  --secondary-cream: #FEF3C7;
+  --secondary-cream-light: #FFFBEB;
+  --accent-coral: #F43F5E;
+  --text-dark: #1C1917;
+  --text-warm: #44403C;
+  --background-warm: #FAFAF9;
+}
+
+body {
+  color: var(--text-warm);
+  background-color: var(--background-warm);
+  font-family: inherit;
+}
+
+@layer components {
+  /* Card Utility */
+  .card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100;
+  }
+
+  .card-hover {
+    @apply bg-white rounded-xl shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 border border-amber-100 cursor-pointer;
+  }
+
+  /* Button Utilities */
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-400 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-amber-500 transition-all duration-200 shadow-md hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white text-amber-700 font-semibold rounded-lg border-2 border-amber-200 hover:bg-amber-50 transition-all duration-200;
+  }
+
+  .btn-small {
+    @apply px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-400 text-white font-medium rounded-lg hover:from-amber-600 hover:to-amber-500 transition-all duration-200;
+  }
+
+  /* Gradient Utilities */
+  .gradient-honey {
+    @apply bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50;
+  }
+
+  .gradient-warm-accent {
+    @apply bg-gradient-to-r from-amber-400 to-rose-400;
+  }
+
+  .gradient-sunset {
+    @apply bg-gradient-to-r from-amber-500 via-orange-400 to-rose-400;
+  }
+
+  /* Text Utilities */
+  .text-warm-primary {
+    @apply text-amber-900;
+  }
+
+  .text-warm-secondary {
+    @apply text-amber-700;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-bold text-warm-primary text-center mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-warm-secondary text-center mb-12 max-w-2xl mx-auto;
+  }
+
+  /* Step Counter */
+  .step-number {
+    @apply inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-white font-bold text-lg;
+  }
+
+  /* Breed Card */
+  .breed-card {
+    @apply card flex flex-col items-center justify-center p-4 gap-2 text-center min-h-24;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Print styles for pattern output */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide everything except the pattern document */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reset backgrounds */
+  .bg-gradient-honey,
+  .gradient-honey {
+    background: white !important;
+  }
+
+  /* Pattern document print styles */
+  .pattern-document {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+  }
+
+  /* Ensure color swatches print */
+  .pattern-document span[style*="background-color"] {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Page breaks */
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+  }
+
+  /* Tighter spacing for print */
+  .pattern-document > div {
+    padding: 12pt 0 !important;
+  }
+
+  /* Font size adjustments */
+  .pattern-document .font-mono {
+    font-size: 9pt !important;
+    line-height: 1.4 !important;
+  }
+}
