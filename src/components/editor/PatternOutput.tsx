@@ -124,9 +124,25 @@ export default function PatternOutput({ pattern }: PatternOutputProps) {
                   {section.name}
                 </h3>
                 {section.notes && (
-                  <p className="text-xs text-amber-600 print:text-gray-500 mb-2 ml-8 italic">
-                    {section.notes}
-                  </p>
+                  <div className="ml-8 mb-2 text-xs space-y-0.5">
+                    {section.notes.split('. ').filter(Boolean).map((note, nIdx) => {
+                      const trimmed = note.trim().replace(/\.$/, '');
+                      if (!trimmed) return null;
+                      // Highlight the "With X yarn" line
+                      if (trimmed.startsWith('With ') && trimmed.includes('yarn')) {
+                        return (
+                          <p key={nIdx} className="text-amber-800 print:text-gray-700 font-semibold">
+                            {trimmed}.
+                          </p>
+                        );
+                      }
+                      return (
+                        <p key={nIdx} className="text-amber-600 print:text-gray-500 italic">
+                          {trimmed}.
+                        </p>
+                      );
+                    })}
+                  </div>
                 )}
                 <div className="ml-8 space-y-0.5">
                   {section.instructions.map((inst, iIdx) => (

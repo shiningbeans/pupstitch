@@ -296,6 +296,21 @@ function hexToColorName(hex: string): string {
 // COLOR ASSIGNMENT
 // ============================================================================
 
+/**
+ * Map preset body part names → AI analysis part names
+ */
+const PRESET_TO_AI_PART: Record<string, string> = {
+  head: 'head',
+  body: 'body',
+  frontLeg: 'legs',
+  backLeg: 'legs',
+  ear: 'ears',
+  tail: 'tail',
+  snout: 'snout',
+  nose: 'nose',
+  eyePatch: 'head',
+};
+
 function buildColorAssignments(
   analysis: DogAnalysisResult
 ): PatternCustomizations['colorAssignments'] {
@@ -310,7 +325,6 @@ function buildColorAssignments(
 
   if (analysis.colors.secondary) {
     const secName = hexToColorName(analysis.colors.secondary);
-    // If same name as primary, disambiguate
     const label = secName === primaryName ? `Light ${secName}` : secName;
     assignments.push({
       colorKey: 'secondary',
@@ -334,13 +348,113 @@ function buildColorAssignments(
       yarnName: name,
     });
   }
-  assignments.push({
-    colorKey: 'nose',
-    hexCode: '#000000',
-    yarnName: 'Black',
-  });
+
+  // Add per-body-part color assignments from AI bodyPartAnalysis.
+  // This ensures each section uses the ACTUAL color the AI detected for
+  // that specific body part, not just the generic primary/secondary.
+  if (analysis.bodyPartAnalysis) {
+    const usedNames = new Set(assignments.map((a) => a.yarnName));
+
+    for (const bp of analysis.bodyPartAnalysis) {
+      if (!bp.primaryColor) continue;
+
+      // Create a body-part-specific color key like 'bp-head', 'bp-ears', etc.
+      const bpColorKey = `bp-${bp.partName}`;
+      const bpName = hexToColorName(bp.primaryColor);
+
+      // Disambiguate names so users can tell them apart
+      let label = bpName;
+      if (usedNames.has(label)) {
+        const partLabel =
+          bp.partName.charAt(0).toUpperCase() + bp.partName.slice(1);
+        label = `${bpName} (${partLabel})`;
+      }
+
+      // Only add if the color is meaningfully different from primary
+      // (within ~20 units of brightness difference to avoid clutter)
+      const existingMatch = assignments.find(
+        (a) => a.hexCode.toLowerCase() === bp.primaryColor.toLowerCase()
+      );
+      if (existingMatch) {
+        // Reuse existing assignment — just note the mapping
+        continue;
+      }
+
+      assignments.push({
+        colorKey: bpColorKey,
+        hexCode: bp.primaryColor,
+        yarnName: label,
+      });
+      usedNames.add(label);
+    }
+  }
+
+  // Dedicated nose color: use AI bodyPartAnalysis, then accent, then black
+  let noseHex = '#000000';
+  if (analysis.bodyPartAnalysis) {
+    const nosePart = analysis.bodyPartAnalysis.find(
+      (bp) => bp.partName === 'nose'
+    );
+    if (nosePart?.primaryColor) {
+      noseHex = nosePart.primaryColor;
+    }
+  }
+  if (noseHex === '#000000' && analysis.colors.accent) {
+    noseHex = analysis.colors.accent;
+  }
+  // Only add if not already present from the body-part loop above
+  if (!assignments.find((a) => a.colorKey === 'nose')) {
+    assignments.push({
+      colorKey: 'nose',
+      hexCode: noseHex,
+      yarnName: hexToColorName(noseHex),
+    });
+  }
 
   return assignments;
+}
+
+/**
+ * Find the best color name for a body part by checking AI analysis,
+ * then falling back to preset colorZones, then to 'primary'.
+ */
+function getBodyPartColorName(
+  partName: string,
+  analysis: DogAnalysisResult,
+  customizations: PatternCustomizations
+): string {
+  // 1. Check AI bodyPartAnalysis for this specific body part
+  const aiPartName = PRESET_TO_AI_PART[partName] || partName;
+  if (analysis.bodyPartAnalysis) {
+    const bp = analysis.bodyPartAnalysis.find(
+      (b) => b.partName === aiPartName || b.partName === partName
+    );
+    if (bp?.primaryColor) {
+      // Find a matching color assignment by hex
+      const match = customizations.colorAssignments.find(
+        (a) => a.hexCode.toLowerCase() === bp.primaryColor.toLowerCase()
+      );
+      if (match) {
+        return match.yarnName || match.colorKey;
+      }
+      // Fallback: just return the color name from hex
+      return hexToColorName(bp.primaryColor);
+    }
+  }
+
+  // 2. For nose, look up the 'nose' assignment
+  if (partName === 'nose') {
+    const noseAssignment = customizations.colorAssignments.find(
+      (a) => a.colorKey === 'nose'
+    );
+    if (noseAssignment) return noseAssignment.yarnName || 'Black';
+  }
+
+  // 3. Fall back to primary
+  const primary = customizations.colorAssignments.find(
+    (a) => a.colorKey === 'primary'
+  );
+  return primary?.yarnName || 'Main Color';
 }
 
 // ============================================================================
@@ -408,9 +522,33 @@ function generatePatternSections(
 
     // Add stuffing guidance to notes
     const stuffLevel = STUFFING_LEVEL[partName] || 'moderately';
-    const notesWithStuffing = assemblyNotesText
-      ? `Stuff ${stuffLevel}. ${assemblyNotesText}`
-      : `Stuff ${stuffLevel}.`;
+
+    // Determine the starting yarn color from AI body part analysis
+    const startingColorName = getBodyPartColorName(
+      partName,
+      analysis,
+      customizations
+    );
+
+    // Look up AI crochet notes for this body part
+    const aiPartName = PRESET_TO_AI_PART[partName] || partName;
+    const aiBp = analysis.bodyPartAnalysis?.find(
+      (b) => b.partName === aiPartName || b.partName === partName
+    );
+    const aiCrochetNotes = aiBp?.crochetNotes || '';
+
+    // Build the section notes with starting color, hook size, stuffing, and AI guidance
+    const hookSize = customizations.hookSizeOverride || preset.hookSize;
+    const notesParts: string[] = [];
+    notesParts.push(`With ${startingColorName} yarn, ${hookSize} hook.`);
+    if (aiCrochetNotes) {
+      notesParts.push(aiCrochetNotes);
+    }
+    notesParts.push(`Stuff ${stuffLevel}.`);
+    if (assemblyNotesText) {
+      notesParts.push(assemblyNotesText);
+    }
+    const notesWithStuffing = notesParts.join(' ');
 
     const section: PatternSection = {
       name: formatBodyPartName(partName),
@@ -514,8 +652,18 @@ function generateInstructionsFromJsonRows(
 
     let instruction = row.instructions;
 
-    // Add color change note if color changes from previous row
-    if (i > 0) {
+    // Add color change note if color changes from previous row,
+    // OR if this is the first row (so the user knows which yarn to start with)
+    if (i === 0) {
+      // First row: always state the starting color
+      const colorAssignment = customizations.colorAssignments.find(
+        (a) => a.colorKey === colorKey
+      );
+      const colorName = colorAssignment
+        ? colorAssignment.yarnName || colorKey
+        : colorKey;
+      instruction = `With ${colorName} yarn: ${instruction}`;
+    } else {
       const prevColorKey =
         rows[i - 1].colorKey ||
         rowColorMap.get(rows[i - 1].rowNumber) ||

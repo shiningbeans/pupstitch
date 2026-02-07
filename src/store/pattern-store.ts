@@ -50,6 +50,9 @@ export interface PatternStore {
   loadPattern: (id: string) => Promise<void>;
   loadAllSaved: () => Promise<void>;
   deletePattern: (id: string) => Promise<void>;
+  updateColorAssignment: (colorKey: string, hexCode: string) => void;
+  addColorAssignment: (colorKey: string, hexCode: string, yarnName: string) => void;
+  updateBodyPartColor: (partName: string, hexCode: string) => void;
   clearCurrent: () => void;
   setError: (error: string | null) => void;
 }
@@ -342,6 +345,68 @@ export const usePatternStore = create<PatternStore>()(
             : 'Failed to delete pattern';
           set({ error: errorMessage });
         }
+      },
+
+      updateColorAssignment: (colorKey: string, hexCode: string) => {
+        const state = get();
+        if (!state.currentPattern) return;
+        const updated = { ...state.currentPattern };
+        const assignments = [...updated.customizations.colorAssignments];
+        const idx = assignments.findIndex((a) => a.colorKey === colorKey);
+        if (idx >= 0) {
+          assignments[idx] = { ...assignments[idx], hexCode };
+        }
+        updated.customizations = { ...updated.customizations, colorAssignments: assignments };
+        updated.updatedAt = new Date();
+        set({ currentPattern: updated });
+      },
+
+      addColorAssignment: (colorKey: string, hexCode: string, yarnName: string) => {
+        const state = get();
+        if (!state.currentPattern) return;
+        const updated = { ...state.currentPattern };
+        const assignments = [...updated.customizations.colorAssignments];
+        // Avoid duplicates
+        if (!assignments.find((a) => a.colorKey === colorKey)) {
+          assignments.push({ colorKey, hexCode, yarnName });
+        }
+        updated.customizations = { ...updated.customizations, colorAssignments: assignments };
+        updated.updatedAt = new Date();
+        set({ currentPattern: updated });
+      },
+
+      updateBodyPartColor: (partName: string, hexCode: string) => {
+        const state = get();
+        if (!state.currentPattern) return;
+        const updated = { ...state.currentPattern };
+
+        // Update the bodyPartAnalysis color
+        if (updated.analysisResult?.bodyPartAnalysis) {
+          const parts = updated.analysisResult.bodyPartAnalysis.map((bp) =>
+            bp.partName === partName
+              ? { ...bp, primaryColor: hexCode, colors: [hexCode, ...bp.colors.slice(1)] }
+              : bp
+          );
+          updated.analysisResult = { ...updated.analysisResult, bodyPartAnalysis: parts };
+        }
+
+        // Also update the analysis result in state
+        const analysisResult = state.analysisResult;
+        if (analysisResult?.bodyPartAnalysis) {
+          const parts = analysisResult.bodyPartAnalysis.map((bp) =>
+            bp.partName === partName
+              ? { ...bp, primaryColor: hexCode, colors: [hexCode, ...bp.colors.slice(1)] }
+              : bp
+          );
+          set({
+            currentPattern: updated,
+            analysisResult: { ...analysisResult, bodyPartAnalysis: parts },
+          });
+          return;
+        }
+
+        updated.updatedAt = new Date();
+        set({ currentPattern: updated });
       },
 
       clearCurrent: () => {

@@ -15,6 +15,13 @@ function buildPrompt(userBreeds?: string[]): string {
 
   return `You are analyzing a dog photo to create a crochet amigurumi (stuffed toy) pattern. Your job is to extract the visual details needed to create a yarn pattern that looks like this specific dog — accurate colors, markings, proportions, and features.${breedHint}
 
+COLOR PRIORITY — CRITICALLY IMPORTANT:
+1. PHOTO FIRST: Sample ALL colors directly from the actual pixels in the photo. Do NOT invent colors.
+2. BE FAITHFUL: If the dog is mostly one color, return that color as primary and set secondary/tertiary to null. Do NOT force contrast by making up a lighter or darker version.
+3. ONLY REAL DIFFERENCES: Only return a secondary color if you can clearly see a distinctly different color region in the photo (e.g., a white chest on a brown dog, tan points on a black dog). Subtle lighting variation on the same color is NOT a second color.
+4. BREED AS FALLBACK ONLY: Use breed knowledge only when the photo is ambiguous or poorly lit. Never override what you clearly see in the photo with what a breed "typically" looks like.
+5. PER-BODY-PART ACCURACY: Each body part's primaryColor should be sampled from that specific area of the photo. A golden retriever's ears, body, and legs may all be the same golden color — that's correct, report them all as the same color.
+
 Analyze this image carefully and return a JSON object. Be precise about hex colors — sample them from the actual coat in the photo. Pay special attention to unique markings and color patterns that make this dog individual.
 
 IMPORTANT: Analyze each body part individually. For each part, describe the exact colors, markings, texture, and shape so that a crocheter can recreate this specific dog's appearance in yarn. This is what makes the pattern unique to THIS dog.
@@ -25,10 +32,10 @@ Return ONLY valid JSON, no other text:
   "confidenceScore": 0.0 to 1.0,
   "alternativeBreeds": ["other possible breeds if uncertain"],
   "colors": {
-    "primary": "#hex color of the dominant coat color (sample from the image)",
-    "secondary": "#hex of second most common coat color, or null if solid",
-    "tertiary": "#hex of third color if present, or null",
-    "accent": "#hex for nose/paw pads/eye rims — usually dark brown or black"
+    "primary": "#hex of the dominant coat color — sample directly from the largest color area in the photo",
+    "secondary": "#hex of second color ONLY if clearly visible as a distinct region — null if the dog is solid-colored or nearly so",
+    "tertiary": "#hex of third color ONLY if clearly present — null otherwise",
+    "accent": "#hex for nose/paw pads/eye rims — sample from the photo if visible"
   },
   "colorConfidence": 0.0 to 1.0,
   "markings": [
