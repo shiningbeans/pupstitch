@@ -134,7 +134,7 @@ export default function EditorPage() {
   }
 
   // Safely extract body part analysis
-  const bodyParts = pattern.analysisResult?.bodyPartAnalysis ?? [];
+  const bodyParts = pattern?.analysisResult?.bodyPartAnalysis ?? [];
 
   return (
     <div className="min-h-screen bg-gradient-honey">
