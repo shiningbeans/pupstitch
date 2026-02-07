@@ -75,13 +75,16 @@ export default function EditorPage() {
     init();
   }, [patternId]);
 
-  // When pattern becomes available after init (e.g., store update propagates), clear loading
+  // When pattern becomes available after init (e.g., store update propagates), clear loading AND error
   useEffect(() => {
-    if (pattern && isLoading) {
-      console.log('[Editor] Pattern arrived via store update, clearing loading');
-      setIsLoading(false);
+    if (pattern) {
+      if (isLoading || error) {
+        console.log('[Editor] Pattern arrived via store update, clearing loading/error');
+        setError(null);
+        setIsLoading(false);
+      }
     }
-  }, [pattern, isLoading]);
+  }, [pattern, isLoading, error]);
 
   const handleDownloadPDF = async () => {
     if (!pattern) return;
@@ -113,7 +116,7 @@ export default function EditorPage() {
     );
   }
 
-  if (error || !pattern) {
+  if (!pattern && (error || !isLoading)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-honey">
         <div className="text-center max-w-md">
