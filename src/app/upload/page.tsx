@@ -30,9 +30,11 @@ export default function UploadPage() {
     currentPattern,
     selectedBreeds,
     selectedSize,
+    dogName,
     error,
     toggleBreed,
     setSelectedSize,
+    setDogName,
     setUploadedImage,
     analyzeImage,
     generateFromAnalysis,
@@ -168,6 +170,24 @@ export default function UploadPage() {
             <BreedSelector
               selectedBreeds={selectedBreeds}
               onToggle={toggleBreed}
+            />
+          </section>
+
+          <hr className="border-amber-100" />
+
+          {/* Section: Dog's Name */}
+          <section>
+            <h2 className="text-lg font-bold text-amber-900 mb-1">Dog&apos;s Name <span className="text-sm font-normal text-amber-500">(optional)</span></h2>
+            <p className="text-sm text-amber-600 mb-4">
+              Give your pattern a personal touch
+            </p>
+            <input
+              type="text"
+              value={dogName}
+              onChange={(e) => setDogName(e.target.value)}
+              placeholder="e.g., Buddy, Luna, Max..."
+              maxLength={30}
+              className="w-full px-4 py-3 rounded-xl border-2 border-amber-200 bg-white text-amber-900 placeholder-amber-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none transition-all text-lg"
             />
           </section>
 

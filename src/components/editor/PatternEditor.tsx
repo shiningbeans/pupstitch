@@ -16,8 +16,9 @@ export default function PatternEditor({ pattern }: PatternEditorProps) {
   const updateColorAssignment = usePatternStore((s) => s.updateColorAssignment);
   const addColorAssignment = usePatternStore((s) => s.addColorAssignment);
   const updateBodyPartColor = usePatternStore((s) => s.updateBodyPartColor);
-  const regeneratePattern = usePatternStore((s) => s.regeneratePattern);
+  const reanalyzeWithColors = usePatternStore((s) => s.reanalyzeWithColors);
   const isGenerating = usePatternStore((s) => s.isGenerating);
+  const isAnalyzing = usePatternStore((s) => s.isAnalyzing);
 
   const handleColorChange = (colorKey: string, newColor: string) => {
     updateColorAssignment(colorKey, newColor);
@@ -32,7 +33,7 @@ export default function PatternEditor({ pattern }: PatternEditorProps) {
   };
 
   const handleRegenerate = async () => {
-    await regeneratePattern();
+    await reanalyzeWithColors();
   };
 
   return (
@@ -80,16 +81,16 @@ export default function PatternEditor({ pattern }: PatternEditorProps) {
             <div className="mt-6 pt-4 border-t-2 border-amber-100">
               <button
                 onClick={handleRegenerate}
-                disabled={isGenerating}
+                disabled={isGenerating || isAnalyzing}
                 className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {isGenerating ? (
+                {isGenerating || isAnalyzing ? (
                   <>
                     <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Regenerating...
+                    {isAnalyzing ? 'Re-analyzing with your colors...' : 'Regenerating...'}
                   </>
                 ) : (
                   <>
@@ -101,7 +102,7 @@ export default function PatternEditor({ pattern }: PatternEditorProps) {
                 )}
               </button>
               <p className="text-xs text-amber-500 text-center mt-2">
-                Updates the pattern instructions with your color changes
+                Re-analyzes the photo with your color choices and regenerates the pattern
               </p>
             </div>
           </div>

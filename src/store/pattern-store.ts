@@ -35,6 +35,7 @@ export interface PatternStore {
   selectedBreeds: string[]; // up to 4 breeds for mixed breed support
   selectedSize: DollSize | null;
   initialized: boolean;
+  dogName: string;
 
   // Actions
   initStorage: () => Promise<void>;
@@ -42,10 +43,12 @@ export interface PatternStore {
   setSelectedBreeds: (breeds: string[]) => void;
   toggleBreed: (breed: string) => void;
   setSelectedSize: (size: DollSize) => void;
+  setDogName: (name: string) => void;
   analyzeImage: (file: File) => Promise<void>;
   generateFromAnalysis: (customizations?: Partial<PatternCustomizations>) => Promise<void>;
   updateCustomization: (key: keyof PatternCustomizations, value: unknown) => void;
   regeneratePattern: () => Promise<void>;
+  reanalyzeWithColors: () => Promise<void>;
   saveCurrentPattern: () => Promise<void>;
   loadPattern: (id: string) => Promise<void>;
   loadAllSaved: () => Promise<void>;
@@ -76,6 +79,7 @@ export const usePatternStore = create<PatternStore>()(
       selectedBreeds: [],
       selectedSize: null,
       initialized: false,
+      dogName: '',
 
       /**
        * Initialize storage: migrate from localStorage if needed, then load saved patterns
@@ -113,6 +117,10 @@ export const usePatternStore = create<PatternStore>()(
 
       setSelectedSize: (size: DollSize) => {
         set({ selectedSize: size });
+      },
+
+      setDogName: (name: string) => {
+        set({ dogName: name });
       },
 
       analyzeImage: async (file: File) => {
@@ -173,6 +181,17 @@ export const usePatternStore = create<PatternStore>()(
           );
 
           pattern.userId = 'current-user';
+
+          // Apply dog name if available
+          const dogName = get().dogName;
+          if (dogName.trim()) {
+            pattern.dogName = dogName.trim();
+            const displayBreed = (pattern.breedId || 'custom').split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            pattern.name = `${dogName.trim()}'s ${displayBreed} Amigurumi`;
+            if (pattern.generatedPattern) {
+              pattern.generatedPattern.title = `${dogName.trim()}'s ${displayBreed} Amigurumi Pattern`;
+            }
+          }
 
           // Keep the uploaded photo in memory for the live preview
           if (state.uploadedImage) {
@@ -260,6 +279,18 @@ export const usePatternStore = create<PatternStore>()(
 
           pattern.id = state.currentPattern.id;
           pattern.userId = state.currentPattern.userId;
+          pattern.dogPhotoUrl = state.currentPattern.dogPhotoUrl || '';
+          pattern.previewImageUrl = state.currentPattern.previewImageUrl;
+          pattern.dogName = state.currentPattern.dogName;
+
+          // Restore dog name in pattern title
+          if (state.currentPattern.dogName) {
+            const displayBreed = (pattern.breedId || 'custom').split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            pattern.name = `${state.currentPattern.dogName}'s ${displayBreed} Amigurumi`;
+            if (pattern.generatedPattern) {
+              pattern.generatedPattern.title = `${state.currentPattern.dogName}'s ${displayBreed} Amigurumi Pattern`;
+            }
+          }
 
           set({ currentPattern: pattern, isGenerating: false });
         } catch (error) {
@@ -267,6 +298,88 @@ export const usePatternStore = create<PatternStore>()(
             ? error.message
             : 'Failed to regenerate pattern';
           set({ isGenerating: false, error: errorMessage });
+        }
+      },
+
+      reanalyzeWithColors: async () => {
+        const state = get();
+        if (!state.currentPattern) {
+          set({ error: 'No pattern to re-analyze' });
+          return;
+        }
+
+        // Build color context from current customizations
+        const colorContext: { yarnColors: Array<{name: string, hex: string, bodyPart?: string}> } = {
+          yarnColors: []
+        };
+
+        // Add color assignments
+        for (const a of state.currentPattern.customizations.colorAssignments) {
+          const bodyPart = a.colorKey.startsWith('bp-') ? a.colorKey.replace('bp-', '') : undefined;
+          colorContext.yarnColors.push({
+            name: a.yarnName || a.colorKey,
+            hex: a.hexCode,
+            bodyPart,
+          });
+        }
+
+        // We need the original image to re-analyze
+        const imageDataUrl = state.uploadedImage || state.currentPattern.dogPhotoUrl;
+        if (!imageDataUrl) {
+          // No photo available — fall back to regular regeneration
+          await get().regeneratePattern();
+          return;
+        }
+
+        set({ isAnalyzing: true, isGenerating: true, error: null });
+
+        try {
+          // Convert data URL to File for analyzeImage
+          const res = await fetch(imageDataUrl);
+          const blob = await res.blob();
+          const file = new File([blob], 'dog-photo.jpg', { type: blob.type || 'image/jpeg' });
+
+          // Re-analyze with color context
+          const result = await analyzeImage(file, state.selectedBreeds.length > 0 ? state.selectedBreeds : [state.currentPattern.breedId], colorContext);
+
+          set({ analysisResult: result, isAnalyzing: false });
+
+          // Now regenerate pattern with the new analysis
+          const presetBreedId = getPresetBreedId(result.detectedBreed);
+          const preset = getPreset(presetBreedId);
+          if (!preset) {
+            throw new Error(`Preset not found for breed: ${presetBreedId}`);
+          }
+
+          const pattern = generatePattern(
+            result,
+            preset,
+            state.currentPattern.customizations
+          );
+
+          // Preserve identity
+          pattern.id = state.currentPattern.id;
+          pattern.userId = state.currentPattern.userId;
+          pattern.dogPhotoUrl = state.currentPattern.dogPhotoUrl;
+          pattern.previewImageUrl = state.currentPattern.previewImageUrl;
+          pattern.dogName = state.currentPattern.dogName;
+
+          // Use dog name if available
+          const dogName = state.currentPattern.dogName;
+          if (dogName && dogName.trim()) {
+            const displayBreed = state.currentPattern.breedId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            pattern.name = `${dogName}'s ${displayBreed} Amigurumi`;
+            pattern.generatedPattern.title = `${dogName}'s ${displayBreed} Amigurumi Pattern`;
+          }
+
+          await savePattern(pattern);
+          set({ currentPattern: pattern, isGenerating: false });
+
+          const updatedSaved = await loadAllPatterns();
+          set({ savedPatterns: updatedSaved });
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Failed to re-analyze with colors';
+          set({ isAnalyzing: false, isGenerating: false, error: errorMessage });
         }
       },
 
@@ -415,6 +528,7 @@ export const usePatternStore = create<PatternStore>()(
           analysisResult: null,
           uploadedImage: null,
           error: null,
+          dogName: '',
         });
       },
 

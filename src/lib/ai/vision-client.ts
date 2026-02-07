@@ -130,7 +130,8 @@ async function resizeAndConvertToBase64(
  */
 export async function analyzeImage(
   imageFile: File,
-  selectedBreeds?: string[] | null
+  selectedBreeds?: string[] | null,
+  colorContext?: { yarnColors: Array<{name: string, hex: string, bodyPart?: string}> }
 ): Promise<DogAnalysisResult> {
   // Resize and convert to base64 (prevents oversized payloads)
   const { base64, mimeType } = await resizeAndConvertToBase64(imageFile);
@@ -145,6 +146,7 @@ export async function analyzeImage(
         imageBase64: base64,
         mimeType,
         selectedBreeds: selectedBreeds && selectedBreeds.length > 0 ? selectedBreeds : undefined,
+        colorContext: colorContext || undefined,
       }),
     });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

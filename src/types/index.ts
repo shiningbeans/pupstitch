@@ -404,6 +404,7 @@ export interface CustomPattern {
   userId: string;
   name: string;
   description?: string;
+  dogName?: string;
   dogPhotoUrl: string;
   dogPhotoThumbnailUrl?: string;
   breedId: DogBreed;

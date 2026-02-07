@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-function buildPrompt(userBreeds?: string[]): string {
+function buildPrompt(userBreeds?: string[], colorContext?: { yarnColors: Array<{name: string, hex: string, bodyPart?: string}> }): string {
   let breedHint = '';
   if (userBreeds && userBreeds.length > 0) {
     if (userBreeds.length === 1) {
@@ -13,7 +13,15 @@ function buildPrompt(userBreeds?: string[]): string {
     }
   }
 
-  return `You are analyzing a dog photo to create a crochet amigurumi (stuffed toy) pattern. Your job is to extract the visual details needed to create a yarn pattern that looks like this specific dog — accurate colors, markings, proportions, and features.${breedHint}
+  let colorHint = '';
+  if (colorContext && colorContext.yarnColors.length > 0) {
+    const colorLines = colorContext.yarnColors.map(c =>
+      `- ${c.name} (${c.hex})${c.bodyPart ? ` for ${c.bodyPart}` : ''}`
+    ).join('\n');
+    colorHint = `\n\nUSER'S YARN COLOR CHOICES:\nThe user has selected these specific yarn colors for their amigurumi. When providing crochet notes in bodyPartAnalysis, reference these exact yarn color names instead of generic color descriptions:\n${colorLines}\nFor example, instead of "use a lighter color for the belly", say "switch to the [specific yarn name] yarn for the belly". Adjust your crochetNotes to be specific about which of these yarns to use for each part.`;
+  }
+
+  return `You are analyzing a dog photo to create a crochet amigurumi (stuffed toy) pattern. Your job is to extract the visual details needed to create a yarn pattern that looks like this specific dog — accurate colors, markings, proportions, and features.${breedHint}${colorHint}
 
 COLOR PRIORITY — CRITICALLY IMPORTANT:
 1. PHOTO FIRST: Sample ALL colors directly from the actual pixels in the photo. Do NOT invent colors.
@@ -143,7 +151,7 @@ Return ONLY valid JSON, no other text:
 
 export async function POST(request: NextRequest) {
   try {
-    const { imageBase64, mimeType, selectedBreeds } = await request.json();
+    const { imageBase64, mimeType, selectedBreeds, colorContext } = await request.json();
 
     if (!imageBase64) {
       return NextResponse.json(
@@ -159,7 +167,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = buildPrompt(selectedBreeds || undefined);
+    const prompt = buildPrompt(selectedBreeds || undefined, colorContext || undefined);
 
     // Call Gemini Vision API
     const response = await fetch(
