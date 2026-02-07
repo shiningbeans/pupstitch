@@ -208,45 +208,136 @@ export function generatePattern(
 }
 
 // ============================================================================
+// HEX → HUMAN-READABLE COLOR NAME
+// ============================================================================
+
+/**
+ * Convert a hex color code to a human-readable yarn color name.
+ * Covers the most common dog coat / yarn colors.
+ */
+function hexToColorName(hex: string): string {
+  // Normalize
+  const h = hex.replace('#', '').toLowerCase();
+  if (h.length !== 6) return hex;
+
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+
+  const brightness = (r + g + b) / 3;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const saturation = max === 0 ? 0 : (max - min) / max;
+
+  // Near-black
+  if (brightness < 30) return 'Black';
+  // Near-white
+  if (brightness > 230 && saturation < 0.1) return 'White';
+  // Grays
+  if (saturation < 0.12) {
+    if (brightness < 80) return 'Charcoal';
+    if (brightness < 140) return 'Gray';
+    if (brightness < 200) return 'Light Gray';
+    return 'Off-White';
+  }
+
+  // Compute hue
+  let hue = 0;
+  if (max === min) {
+    hue = 0;
+  } else if (max === r) {
+    hue = 60 * (((g - b) / (max - min)) % 6);
+  } else if (max === g) {
+    hue = 60 * ((b - r) / (max - min) + 2);
+  } else {
+    hue = 60 * ((r - g) / (max - min) + 4);
+  }
+  if (hue < 0) hue += 360;
+
+  // Warm browns / tans / golds (most common for dog yarn)
+  if (hue >= 15 && hue <= 50) {
+    if (brightness < 60) return 'Dark Brown';
+    if (brightness < 100) return 'Brown';
+    if (brightness < 140) return 'Warm Brown';
+    if (brightness < 180) return 'Tan';
+    return 'Golden';
+  }
+
+  // Orange / rust
+  if (hue >= 10 && hue < 15) {
+    if (brightness < 100) return 'Rust';
+    return 'Orange';
+  }
+  if (hue >= 50 && hue < 70) {
+    if (brightness < 120) return 'Olive';
+    return 'Yellow';
+  }
+
+  // Reds / maroons
+  if (hue < 10 || hue >= 340) {
+    if (brightness < 80) return 'Maroon';
+    if (brightness < 140) return 'Dark Red';
+    return 'Red';
+  }
+
+  // Greens
+  if (hue >= 70 && hue < 170) return 'Green';
+  // Blues
+  if (hue >= 170 && hue < 260) return 'Blue';
+  // Purples
+  if (hue >= 260 && hue < 300) return 'Purple';
+  // Pinks
+  if (hue >= 300 && hue < 340) return 'Pink';
+
+  return 'Medium';
+}
+
+// ============================================================================
 // COLOR ASSIGNMENT
 // ============================================================================
 
 function buildColorAssignments(
   analysis: DogAnalysisResult
 ): PatternCustomizations['colorAssignments'] {
+  const primaryName = hexToColorName(analysis.colors.primary);
   const assignments: PatternCustomizations['colorAssignments'] = [
     {
       colorKey: 'primary',
       hexCode: analysis.colors.primary,
-      yarnName: `Main Color (${formatBreedDisplay(analysis.detectedBreed)})`,
+      yarnName: primaryName,
     },
   ];
 
   if (analysis.colors.secondary) {
+    const secName = hexToColorName(analysis.colors.secondary);
+    // If same name as primary, disambiguate
+    const label = secName === primaryName ? `Light ${secName}` : secName;
     assignments.push({
       colorKey: 'secondary',
       hexCode: analysis.colors.secondary,
-      yarnName: 'Contrast Color',
+      yarnName: label,
     });
   }
   if (analysis.colors.tertiary) {
+    const name = hexToColorName(analysis.colors.tertiary);
     assignments.push({
       colorKey: 'tertiary',
       hexCode: analysis.colors.tertiary,
-      yarnName: 'Accent Color',
+      yarnName: name,
     });
   }
   if (analysis.colors.accent) {
+    const name = hexToColorName(analysis.colors.accent);
     assignments.push({
       colorKey: 'accent',
       hexCode: analysis.colors.accent,
-      yarnName: 'Detail Color',
+      yarnName: name,
     });
   }
   assignments.push({
     colorKey: 'nose',
     hexCode: '#000000',
-    yarnName: 'Black (nose & details)',
+    yarnName: 'Black',
   });
 
   return assignments;
@@ -465,13 +556,21 @@ function generateInstructionsFromJsonRows(
       instruction.toLowerCase().includes('fasten off') ||
       instruction.toLowerCase().includes('pull through remaining');
 
+    // Look up the actual color name for notes
+    const colorNoteAssignment = customizations.colorAssignments.find(
+      (a) => a.colorKey === colorKey
+    );
+    const colorNoteName = colorNoteAssignment
+      ? colorNoteAssignment.yarnName || colorKey
+      : colorKey;
+
     if (isFinalRow) {
       // Replace with standard fasten-off text
       instructions.push({
         rowNumber: rowNum,
         instruction: 'FO. Cut yarn, leaving a ~12-inch tail for sewing. Weave end through remaining stitches and pull tight to close.',
         stitchesUsed: [],
-        notes: colorKey !== 'primary' ? `Color: ${colorKey}` : undefined,
+        notes: colorKey !== 'primary' ? `Color: ${colorNoteName}` : undefined,
       });
     } else {
       // Standard row with [X sts] bracket notation
@@ -484,7 +583,7 @@ function generateInstructionsFromJsonRows(
         rowNumber: rowNum,
         instruction: finalInstruction,
         stitchesUsed: extractStitches(instruction) as StitchType[],
-        notes: colorKey !== 'primary' ? `Color: ${colorKey}` : undefined,
+        notes: colorKey !== 'primary' ? `Color: ${colorNoteName}` : undefined,
       });
     }
   }
