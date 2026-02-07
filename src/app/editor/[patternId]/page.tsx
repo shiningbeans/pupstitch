@@ -133,8 +133,11 @@ export default function EditorPage() {
     );
   }
 
+  // If we get here without a pattern, show nothing (shouldn't happen, but satisfies TypeScript)
+  if (!pattern) return null;
+
   // Safely extract body part analysis
-  const bodyParts = pattern?.analysisResult?.bodyPartAnalysis ?? [];
+  const bodyParts = pattern.analysisResult?.bodyPartAnalysis ?? [];
 
   return (
     <div className="min-h-screen bg-gradient-honey">
