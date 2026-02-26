@@ -81,6 +81,12 @@ export default function PatternCard({
               🐕
             </div>
           )}
+          {/* Product Type Badge */}
+          {pattern.productType && pattern.productType !== 'pupstitch' && (
+            <div className="absolute top-3 left-3 bg-amber-500 text-white rounded-full px-2.5 py-0.5 text-xs font-bold shadow-sm">
+              {pattern.productType === 'both' ? '🐕 + 🧶' : '🐕 LeashBuddy'}
+            </div>
+          )}
           {/* Breed Badge */}
           <div className="absolute top-3 right-3 bg-white bg-opacity-95 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-semibold text-warm-primary border border-amber-100 shadow-sm">
             {pattern.analysisResult.detectedBreed

@@ -6,9 +6,12 @@ import {
   PatternCustomizations,
   DollSize,
 } from '@/types';
+import { ProductType, LeashBuddyProductSpec } from '@/types/product-types';
 import { analyzeImage, getDefaultAnalysisForBreed } from '@/lib/ai/vision-client';
 import { generatePattern } from '@/lib/patterns/generator';
 import { generatePreviewImage } from '@/lib/ai/preview-generator';
+import { generateProductPreviewImage } from '@/lib/ai/product-preview-generator';
+import { generateLeashBuddySpec } from '@/lib/products/leash-buddy-generator';
 import { getPreset, getPresetBreedId } from '@/lib/patterns/presets';
 import {
   savePattern,
@@ -37,6 +40,13 @@ export interface PatternStore {
   initialized: boolean;
   dogName: string;
 
+  // LeashBuddy dual-product state
+  selectedProductType: ProductType;
+  leashBuddySpec: LeashBuddyProductSpec | null;
+  isGeneratingProductSpec: boolean;
+  isGeneratingProductPreview: boolean;
+  productPreviewUrl: string | null;
+
   // Actions
   initStorage: () => Promise<void>;
   setUploadedImage: (dataUrl: string) => void;
@@ -44,8 +54,11 @@ export interface PatternStore {
   toggleBreed: (breed: string) => void;
   setSelectedSize: (size: DollSize) => void;
   setDogName: (name: string) => void;
+  setProductType: (type: ProductType) => void;
   analyzeImage: (file: File) => Promise<void>;
   generateFromAnalysis: (customizations?: Partial<PatternCustomizations>) => Promise<void>;
+  generateLeashBuddyFromAnalysis: () => Promise<void>;
+  generateProductPreview: () => Promise<void>;
   updateCustomization: (key: keyof PatternCustomizations, value: unknown) => void;
   regeneratePattern: () => Promise<void>;
   reanalyzeWithColors: () => Promise<void>;
@@ -80,6 +93,13 @@ export const usePatternStore = create<PatternStore>()(
       selectedSize: null,
       initialized: false,
       dogName: '',
+
+      // LeashBuddy dual-product state
+      selectedProductType: 'both' as ProductType,
+      leashBuddySpec: null,
+      isGeneratingProductSpec: false,
+      isGeneratingProductPreview: false,
+      productPreviewUrl: null,
 
       /**
        * Initialize storage: migrate from localStorage if needed, then load saved patterns
@@ -121,6 +141,10 @@ export const usePatternStore = create<PatternStore>()(
 
       setDogName: (name: string) => {
         set({ dogName: name });
+      },
+
+      setProductType: (type: ProductType) => {
+        set({ selectedProductType: type });
       },
 
       analyzeImage: async (file: File) => {
@@ -234,11 +258,101 @@ export const usePatternStore = create<PatternStore>()(
                 set({ isGeneratingPreview: false });
               });
           }
+
+          // Dual-product: also generate LeashBuddy spec if product type includes it
+          const productType = get().selectedProductType;
+          if (productType === 'leash-buddy' || productType === 'both') {
+            get().generateLeashBuddyFromAnalysis();
+          }
         } catch (error) {
           const errorMessage = error instanceof Error
             ? error.message
             : 'Failed to generate pattern';
           set({ isGenerating: false, error: errorMessage });
+        }
+      },
+
+      /**
+       * Generate LeashBuddy manufacturing spec from the current analysis
+       */
+      generateLeashBuddyFromAnalysis: async () => {
+        const state = get();
+        const analysis = state.analysisResult;
+        if (!analysis) {
+          console.warn('[Store] No analysis result for LeashBuddy spec generation');
+          return;
+        }
+
+        set({ isGeneratingProductSpec: true });
+
+        try {
+          const spec = generateLeashBuddySpec(
+            analysis,
+            state.selectedSize || 'medium',
+            state.dogName.trim() || undefined
+          );
+
+          // Store the spec in state and also attach to the current pattern
+          set({ leashBuddySpec: spec, isGeneratingProductSpec: false });
+
+          // Update the current pattern with productType and spec
+          const current = get().currentPattern;
+          if (current) {
+            const updated = {
+              ...current,
+              productType: get().selectedProductType,
+              leashBuddySpec: spec,
+            };
+            set({ currentPattern: updated });
+            await savePattern(updated);
+          }
+
+          // Generate product preview in background
+          get().generateProductPreview();
+        } catch (error) {
+          console.error('[Store] LeashBuddy spec generation error:', error);
+          set({ isGeneratingProductSpec: false });
+        }
+      },
+
+      /**
+       * Generate 3D nanobannana-style product preview image
+       */
+      generateProductPreview: async () => {
+        const state = get();
+        const spec = state.leashBuddySpec;
+        const analysis = state.analysisResult;
+        if (!spec || !analysis) {
+          console.warn('[Store] No spec or analysis for product preview');
+          return;
+        }
+
+        set({ isGeneratingProductPreview: true });
+
+        try {
+          const imageUrl = await generateProductPreviewImage(spec, analysis);
+          if (imageUrl) {
+            // Update spec with preview URL
+            const updatedSpec = { ...spec, previewImageUrl: imageUrl };
+            set({
+              productPreviewUrl: imageUrl,
+              leashBuddySpec: updatedSpec,
+              isGeneratingProductPreview: false,
+            });
+
+            // Save to current pattern
+            const current = get().currentPattern;
+            if (current) {
+              const updated = { ...current, leashBuddySpec: updatedSpec };
+              set({ currentPattern: updated });
+              await savePattern(updated);
+            }
+          } else {
+            set({ isGeneratingProductPreview: false });
+          }
+        } catch (error) {
+          console.warn('[Store] Product preview generation failed (non-fatal):', error);
+          set({ isGeneratingProductPreview: false });
         }
       },
 
@@ -529,6 +643,8 @@ export const usePatternStore = create<PatternStore>()(
           uploadedImage: null,
           error: null,
           dogName: '',
+          leashBuddySpec: null,
+          productPreviewUrl: null,
         });
       },
 

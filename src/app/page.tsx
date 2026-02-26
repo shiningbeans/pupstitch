@@ -25,13 +25,13 @@ export default function Home() {
       <section className="py-16 md:py-24 gradient-sunset">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 text-balance">
-            Ready to Create Your Dog&apos;s Pattern?
+            Ready to Create Your Custom LeashBuddy?
           </h2>
           <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            Your adorable amigurumi is just one upload away. Let&apos;s get started!
+            Upload a photo of your dog and get a custom product designed just for them.
           </p>
           <Link href="/upload" className="btn-primary text-lg inline-block">
-            Upload Your Dog&apos;s Photo →
+            Get Started
           </Link>
         </div>
       </section>

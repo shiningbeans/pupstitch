@@ -421,6 +421,10 @@ export interface CustomPattern {
   tags?: string[];
   isTemplate?: boolean; // whether this can be used as a template for others
   visibility?: 'private' | 'shared' | 'public';
+
+  // LeashBuddy dual-product support
+  productType?: import('./product-types').ProductType;
+  leashBuddySpec?: import('./product-types').LeashBuddyProductSpec;
 }
 
 // ============================================================================

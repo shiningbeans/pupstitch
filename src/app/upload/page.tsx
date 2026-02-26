@@ -7,8 +7,35 @@ import { usePatternStore } from '@/store/pattern-store';
 import BreedSelector from '@/components/upload/BreedSelector';
 import ImageUploader from '@/components/upload/ImageUploader';
 import AnalysisProgress from '@/components/upload/AnalysisProgress';
+import { ProductType } from '@/types/product-types';
 
 type DollSize = 'small' | 'medium' | 'large';
+
+const PRODUCT_TYPE_OPTIONS: Array<{
+  id: ProductType;
+  label: string;
+  description: string;
+  emoji: string;
+}> = [
+  {
+    id: 'leash-buddy',
+    label: 'LeashBuddy',
+    description: 'Custom poop bag holder that looks like your dog',
+    emoji: '🐕',
+  },
+  {
+    id: 'pupstitch',
+    label: 'PupStitch',
+    description: 'Crochet amigurumi pattern for a stuffed dog',
+    emoji: '🧶',
+  },
+  {
+    id: 'both',
+    label: 'Both',
+    description: 'Get a LeashBuddy product spec + crochet pattern',
+    emoji: '✨',
+  },
+];
 
 const SIZE_OPTIONS: Array<{
   id: DollSize;
@@ -31,10 +58,12 @@ export default function UploadPage() {
     selectedBreeds,
     selectedSize,
     dogName,
+    selectedProductType,
     error,
     toggleBreed,
     setSelectedSize,
     setDogName,
+    setProductType,
     setUploadedImage,
     analyzeImage,
     generateFromAnalysis,
@@ -101,13 +130,23 @@ export default function UploadPage() {
               <AnalysisProgress uploadedImage={uploadedImage} />
             ) : (
               <div className="flex flex-col items-center gap-6 py-12">
-                <div className="text-6xl animate-spin">🧶</div>
+                <div className="text-6xl animate-spin">
+                  {selectedProductType === 'leash-buddy' ? '🐕' : selectedProductType === 'both' ? '✨' : '🧶'}
+                </div>
                 <div className="space-y-2 text-center">
                   <p className="text-lg font-semibold text-amber-900">
-                    Generating Your Pattern
+                    {selectedProductType === 'leash-buddy'
+                      ? 'Generating Your LeashBuddy'
+                      : selectedProductType === 'both'
+                        ? 'Generating Your Products'
+                        : 'Generating Your Pattern'}
                   </p>
                   <p className="text-amber-700 text-sm">
-                    Creating row-by-row instructions for your {selectedBreeds.join(' / ')} amigurumi...
+                    {selectedProductType === 'leash-buddy'
+                      ? `Creating manufacturing specs for your ${selectedBreeds.join(' / ')} LeashBuddy...`
+                      : selectedProductType === 'both'
+                        ? `Creating pattern + product specs for your ${selectedBreeds.join(' / ')}...`
+                        : `Creating row-by-row instructions for your ${selectedBreeds.join(' / ')} amigurumi...`}
                   </p>
                 </div>
                 <div className="w-full max-w-xs">
@@ -160,6 +199,38 @@ export default function UploadPage() {
 
         {/* Main Form */}
         <div className="bg-white rounded-2xl shadow-lg border-2 border-amber-100 p-6 sm:p-8 space-y-8">
+
+          {/* Section 0: Product Type */}
+          <section>
+            <h2 className="text-lg font-bold text-amber-900 mb-1">What would you like to create?</h2>
+            <p className="text-sm text-amber-600 mb-4">
+              Choose your product type
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              {PRODUCT_TYPE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setProductType(opt.id)}
+                  className={`relative p-4 rounded-xl transition-all duration-200 border-2 text-center ${
+                    selectedProductType === opt.id
+                      ? 'border-amber-500 bg-amber-50 shadow-md'
+                      : 'border-amber-200 bg-white hover:border-amber-300'
+                  }`}
+                >
+                  <div className="text-2xl mb-1">{opt.emoji}</div>
+                  <p className="font-bold text-amber-900 text-sm">{opt.label}</p>
+                  <p className="text-xs text-amber-600 mt-1">{opt.description}</p>
+                  {selectedProductType === opt.id && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs">
+                      ✓
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <hr className="border-amber-100" />
 
           {/* Section 1: Breed Selection */}
           <section>
@@ -251,8 +322,16 @@ export default function UploadPage() {
                 ? 'Select a breed to continue'
                 : 'Pick a size to continue'
               : uploadedImage
-                ? 'Analyze Photo & Generate Pattern'
-                : 'Generate Pattern'}
+                ? selectedProductType === 'leash-buddy'
+                  ? 'Analyze Photo & Generate LeashBuddy'
+                  : selectedProductType === 'both'
+                    ? 'Analyze Photo & Generate Both'
+                    : 'Analyze Photo & Generate Pattern'
+                : selectedProductType === 'leash-buddy'
+                  ? 'Generate LeashBuddy'
+                  : selectedProductType === 'both'
+                    ? 'Generate Both Products'
+                    : 'Generate Pattern'}
           </button>
         </div>
       </div>

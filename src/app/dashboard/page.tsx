@@ -29,24 +29,24 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="mb-12">
-          <h1 className="section-title text-4xl md:text-5xl mb-2">My Patterns</h1>
+          <h1 className="section-title text-4xl md:text-5xl mb-2">My Creations</h1>
           <p className="section-subtitle text-lg md:text-xl text-warm-secondary">
-            Your saved amigurumi creations
+            Your saved LeashBuddy specs and PupStitch patterns
           </p>
         </div>
 
         {/* Empty State */}
         {!isLoading && savedPatterns.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 px-4">
-            <div className="text-6xl mb-6">🧶</div>
+            <div className="text-6xl mb-6">🐕</div>
             <h2 className="text-2xl font-bold text-warm-primary mb-3 text-center">
-              No patterns yet!
+              No creations yet!
             </h2>
             <p className="text-warm-secondary text-lg mb-8 text-center max-w-md">
-              Upload a photo to get started and create your first amigurumi pattern.
+              Upload a photo of your dog to create your first LeashBuddy product or crochet pattern.
             </p>
             <Link href="/upload" className="btn-primary text-lg px-8 py-4">
-              Upload Your First Pattern →
+              Create Your First LeashBuddy
             </Link>
           </div>
         )}

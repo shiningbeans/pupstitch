@@ -12,9 +12,9 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-3xl">🐾</span>
+            <span className="text-3xl">🐕</span>
             <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent group-hover:from-amber-700 group-hover:to-orange-600 transition-all">
-              PupStitch
+              LeashBuddy
             </span>
           </Link>
 
@@ -30,7 +30,7 @@ export default function Navigation() {
               href="/upload"
               className="text-warm-secondary font-medium hover:text-amber-700 transition-colors duration-200"
             >
-              Upload
+              Create
             </Link>
             <Link
               href="/dashboard"
@@ -92,7 +92,7 @@ export default function Navigation() {
               className="block py-2 text-warm-secondary font-medium hover:text-amber-700 transition-colors"
               onClick={() => setIsOpen(false)}
             >
-              Upload
+              Create
             </Link>
             <Link
               href="/dashboard"

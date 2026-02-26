@@ -17,17 +17,19 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "PupStitch - Turn Your Dog Into a Crochet Pattern",
+  title: "LeashBuddy - Custom Dog Accessories Powered by AI",
   description:
-    "Generate custom amigurumi crochet patterns from your dog's photo using AI. Upload a picture and get your unique pattern in minutes!",
+    "Create custom dog accessories that look just like your pup. Upload a photo and get AI-generated product specs, 3D previews, and crochet patterns powered by PupStitch.",
   keywords: [
+    "leashbuddy",
+    "dog accessories",
+    "poop bag holder",
+    "treat pouch",
+    "custom pet products",
+    "AI",
     "crochet",
     "amigurumi",
-    "dog",
-    "pattern",
-    "AI",
-    "custom",
-    "handmade",
+    "pupstitch",
   ],
 };
 
