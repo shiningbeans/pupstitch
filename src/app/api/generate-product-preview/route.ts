@@ -19,33 +19,47 @@ function buildProductPreviewPrompt(data: {
   embroideryDescription?: string;
   dogName?: string;
 }): string {
-  const sizeLabel = data.productSize === 'small' ? 'compact' : data.productSize === 'large' ? 'oversized' : 'standard';
+  // Map ear style to a constrained description
+  const earDesc = data.earStyle === 'pointy'
+    ? 'small pointed fabric ears that extend slightly above the top edge'
+    : data.earStyle === 'rose'
+    ? 'small folded rose-shaped fabric ears on the sides near the top'
+    : data.earStyle === 'button'
+    ? 'small folded button ears on the sides near the top'
+    : 'small floppy fabric ears that drape slightly to the sides near the top';
 
-  return `Generate a high-quality 3D product render of a cute custom dog-shaped poop bag holder / treat pouch called "LeashBuddy". This product clips to a dog leash and is designed to look like a ${data.breedName}.
+  return `Generate a high-quality product photo of a small dog-themed poop bag dispenser pouch called "LeashBuddy", customized to look like a ${data.breedName}.
 
-Product design specifications:
-- Shape: A small pouch (${data.dimensions.heightCm}cm tall × ${data.dimensions.widthCm}cm wide × ${data.dimensions.depthCm}cm deep) shaped like a ${data.breedName}'s face/head
-- Material: Durable canvas/nylon fabric with a soft, premium feel
-- Primary color: ${data.primaryColor} (main body)
-- Secondary color: ${data.secondaryColor} (ears, trim, paw accents)
-- Accent color: ${data.accentColor} (binding edges)
-- Ears: 3D ${data.earStyle} ears that stick out from the top — double-layered, matching the breed
-- Face: Embroidered on the front flap — cute stylized ${data.breedName} face with bead eyes and embroidered nose/mouth
-${data.embroideryDescription ? `- Embroidery details: ${data.embroideryDescription}` : ''}
-- Hardware: Small silver carabiner clip on top for leash attachment
-- Bottom: Zippered compartment with a small round hole for dispensing poop bags
-- Back: Two belt-loop D-ring attachments
-- Closure: Metal snap button on the front flap
+CRITICAL SHAPE AND PROPORTIONS — follow exactly:
+- The product is a COMPACT RECTANGULAR POUCH, approximately ${data.dimensions.heightCm}cm tall × ${data.dimensions.widthCm}cm wide × ${data.dimensions.depthCm}cm deep
+- It is sized to hold a standard poop bag roll (3.5cm diameter) in the bottom compartment
+- The overall silhouette is a clean, contained rectangle — NO parts (ears, paws, tail) extend far beyond the main body frame
+- Think of it as a small fabric pouch about the size of a playing card deck, with subtle dog character features
 
-Style requirements:
-- 3D product render style — clean, professional, photorealistic
-- Soft studio lighting on a clean white/light gradient background
-- Product floating or on a minimal surface, shot at a 3/4 angle showing front and one side
-- The style should feel like a premium Kickstarter/DTC product render — aspirational, cute, and giftable
-- Nanobannana aesthetic: slightly rounded, plush proportions with a kawaii/cute character feel while remaining a functional accessory
-- The ${data.breedName} likeness should be immediately recognizable
-- Size: ${sizeLabel} (${data.dimensions.heightCm}cm tall)
-${data.dogName ? `- This is a custom LeashBuddy for a dog named "${data.dogName}"` : ''}
+STRUCTURE (top to bottom):
+1. TOP: A fabric loop/tab at the top center with a silver spring-hook carabiner clip for attaching to a leash
+2. UPPER HALF — FACE FLAP: A hinged flap that opens via a snap button. The flap has an embroidered cute ${data.breedName} face: two small round black bead eyes, a small embroidered nose and mouth/smile. The face is simple, stylized, and kawaii-cute
+3. EARS: ${earDesc}. The ears are small, subtle, and decorative — they do NOT extend more than 1-2cm beyond the body
+4. FRONT BODY (below the flap): Two small embroidered paw prints side by side
+5. LOWER HALF — BAG COMPARTMENT: A zippered compartment on the bottom/back that holds a poop bag roll, with a small round rubber grommet hole at the very bottom for dispensing bags. Dark gray poop bags hang slightly out of the bottom hole
+6. BACK: Clean back panel with a small embossed dog silhouette logo, two vertical belt-loop slots for attaching to a belt or strap, and the zipper for the bag compartment running across the back
+
+MATERIALS AND COLORS:
+- Main body fabric: Durable woven canvas/nylon in ${data.primaryColor}
+- Ears and accent patches: ${data.secondaryColor}
+- Edge binding/trim: ${data.accentColor}
+- All edges have neat binding/piping for a clean finished look
+- Hardware: Silver-tone carabiner, snap button, and zipper pull
+${data.embroideryDescription ? `- Embroidery: ${data.embroideryDescription}` : ''}
+
+STYLE AND CAMERA:
+- Clean product photography style, studio-lit on a pure white background
+- Shot at a slight 3/4 angle showing the front face and one side
+- Photorealistic, like a professional e-commerce/Kickstarter product shot
+- The product should look premium, compact, well-made, and giftable
+- Cute but functional — this is a real accessory, not a plush toy
+- The ${data.breedName} likeness comes from the COLOR PALETTE and embroidered face, not from the shape being dog-shaped
+${data.dogName ? `- Custom product for a dog named "${data.dogName}"` : ''}
 
 Do NOT include any text, watermarks, logos, or human hands in the image.`;
 }
