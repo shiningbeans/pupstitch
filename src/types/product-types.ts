@@ -162,11 +162,54 @@ export interface LeashBuddyProductSpec {
 // PRODUCT CUSTOMIZATIONS (user-adjustable settings)
 // ============================================================================
 
+export type ProductMaterial = 'canvas' | 'leather' | 'faux-leather' | 'neoprene' | 'cordura';
+
+export type EarSize = 'small' | 'medium' | 'large';
+
+export interface LeashBuddyCustomizations {
+  productSize: LeashBuddySize;
+  material: ProductMaterial;
+  earStyle: ProductEarStyle;
+  earSize: EarSize;
+  // Per-body-part color overrides
+  bodyColor?: string;        // Main body color
+  earColor?: string;         // Ear outer color
+  earInnerColor?: string;    // Ear inner color
+  bindingColor?: string;     // Edge binding/trim color
+  flapColor?: string;        // Front flap color
+  liningColor?: string;      // Interior lining color
+  includeNameEmbroidery: boolean;
+  notes?: string;
+}
+
+export const DEFAULT_LEASHBUDDY_CUSTOMIZATIONS: LeashBuddyCustomizations = {
+  productSize: 'medium',
+  material: 'canvas',
+  earStyle: 'floppy',
+  earSize: 'medium',
+  includeNameEmbroidery: false,
+};
+
+export const MATERIAL_OPTIONS: Array<{ id: ProductMaterial; label: string; description: string }> = [
+  { id: 'canvas', label: 'Canvas', description: 'Durable woven cotton canvas — classic & breathable' },
+  { id: 'cordura', label: 'Cordura Nylon', description: 'Military-grade nylon — ultra-durable & water-resistant' },
+  { id: 'leather', label: 'Genuine Leather', description: 'Premium full-grain leather — ages beautifully' },
+  { id: 'faux-leather', label: 'Vegan Leather', description: 'PU faux leather — cruelty-free & stylish' },
+  { id: 'neoprene', label: 'Neoprene', description: 'Soft & flexible — waterproof & easy to clean' },
+];
+
+export const EAR_SIZE_OPTIONS: Array<{ id: EarSize; label: string; description: string }> = [
+  { id: 'small', label: 'Small', description: 'Subtle ears, barely extend past body' },
+  { id: 'medium', label: 'Medium', description: 'Standard sized decorative ears' },
+  { id: 'large', label: 'Large', description: 'Prominent ears for maximum character' },
+];
+
+// Legacy alias
 export interface ProductCustomizations {
   productSize: LeashBuddySize;
-  primaryColorOverride?: string;   // Override AI-detected primary color
+  primaryColorOverride?: string;
   secondaryColorOverride?: string;
   earStyleOverride?: ProductEarStyle;
-  includeNameEmbroidery?: boolean; // Embroider dog's name on back
+  includeNameEmbroidery?: boolean;
   notes?: string;
 }

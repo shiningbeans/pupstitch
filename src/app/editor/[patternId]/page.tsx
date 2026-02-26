@@ -20,6 +20,9 @@ export default function EditorPage() {
   const leashBuddySpec = usePatternStore((s) => s.leashBuddySpec);
   const isGeneratingProductPreview = usePatternStore((s) => s.isGeneratingProductPreview);
   const productPreviewUrl = usePatternStore((s) => s.productPreviewUrl);
+  const leashBuddyCustomizations = usePatternStore((s) => s.leashBuddyCustomizations);
+  const updateLeashBuddyCustomizations = usePatternStore((s) => s.updateLeashBuddyCustomizations);
+  const generateProductPreview = usePatternStore((s) => s.generateProductPreview);
 
   const [isDownloading, setIsDownloading] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -187,6 +190,9 @@ export default function EditorPage() {
               spec={(leashBuddySpec || pattern.leashBuddySpec)!}
               previewUrl={productPreviewUrl || (leashBuddySpec || pattern.leashBuddySpec)?.previewImageUrl || null}
               isGeneratingPreview={isGeneratingProductPreview}
+              customizations={leashBuddyCustomizations}
+              onUpdateCustomizations={updateLeashBuddyCustomizations}
+              onRegenerate={generateProductPreview}
             />
           </div>
         ) : (
