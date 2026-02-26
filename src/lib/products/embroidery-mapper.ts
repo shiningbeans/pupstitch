@@ -42,8 +42,6 @@ function generateFaceEmbroidery(analysis: DogAnalysisResult): EmbroiderySpec {
   const breed = analysis.detectedBreed.replace(/-/g, ' ');
   const primaryColor = analysis.colors.primary || '#000000';
   const secondaryColor = analysis.colors.secondary || '#333333';
-  const accentColor = analysis.colors.accent || '#000000';
-
   // Eye style based on breed
   const eyeColors: EmbroiderySpec['threadColors'] = [
     { hex: '#000000', name: 'Black', usage: 'eyes (solid circles, 4mm diameter)' },

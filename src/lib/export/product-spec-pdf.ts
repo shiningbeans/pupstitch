@@ -51,21 +51,6 @@ function drawSectionHeading(doc: jsPDF, title: string, y: number): number {
 }
 
 /**
- * Draw a key-value row
- */
-function drawKVRow(doc: jsPDF, key: string, value: string, y: number): number {
-  y = checkPage(doc, y, 6);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(TEXT_MED);
-  doc.text(key, ML, y);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(TEXT_DARK);
-  doc.text(value, ML + 50, y);
-  return y + 5;
-}
-
-/**
  * Draw a color swatch (small rectangle)
  */
 function drawSwatch(doc: jsPDF, hex: string, x: number, y: number, size: number = 4) {
