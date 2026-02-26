@@ -3,9 +3,7 @@
 import { useState } from 'react';
 import {
   LeashBuddyCustomizations,
-  ProductMaterial,
   ProductEarStyle,
-  EarSize,
   MATERIAL_OPTIONS,
   EAR_SIZE_OPTIONS,
 } from '@/types/product-types';
