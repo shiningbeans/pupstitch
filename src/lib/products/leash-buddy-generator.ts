@@ -165,7 +165,7 @@ function generateBOM(
     uniqueMaterials.get(key)!.push(fc);
   }
 
-  for (const [, fabrics] of uniqueMaterials) {
+  for (const [, fabrics] of Array.from(uniqueMaterials)) {
     const f = fabrics[0];
     items.push({
       name: `${f.material.charAt(0).toUpperCase() + f.material.slice(1)} Fabric — ${f.colorName}`,
@@ -237,7 +237,7 @@ function generateBOM(
     }
   }
 
-  for (const [hex, name] of uniqueThreadColors) {
+  for (const [hex, name] of Array.from(uniqueThreadColors)) {
     items.push({
       name: `Embroidery Thread — ${name}`,
       category: 'thread',
