@@ -169,6 +169,8 @@ export interface LeashBuddyCustomizations {
   bodyColor?: string;
   earColor?: string;
   earInnerColor?: string;
+  muzzleColor?: string;
+  noseColor?: string;
   bindingColor?: string;
   flapColor?: string;
   liningColor?: string;

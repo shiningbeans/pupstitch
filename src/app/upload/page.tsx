@@ -7,6 +7,7 @@ import { usePatternStore } from '@/store/pattern-store';
 import BreedSelector from '@/components/upload/BreedSelector';
 import ImageUploader from '@/components/upload/ImageUploader';
 import AnalysisProgress from '@/components/upload/AnalysisProgress';
+import DogColorModel from '@/components/upload/DogColorModel';
 import { BRAND } from '@/lib/brand';
 import {
   ProductType,
@@ -69,6 +70,7 @@ export default function UploadPage() {
     isAnalyzing,
     isGenerating,
     currentPattern,
+    analysisResult,
     selectedBreeds,
     selectedSize,
     dogName,
@@ -338,6 +340,17 @@ export default function UploadPage() {
                       </button>
                     ))}
                   </div>
+                </div>
+
+                {/* Dog Color Map */}
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold text-slate-700 mb-1">Color Map</h3>
+                  <p className="text-xs text-slate-400 mb-3">Click any region to adjust colors for the product</p>
+                  <DogColorModel
+                    analysisResult={analysisResult}
+                    customizations={leashBuddyCustomizations}
+                    onColorChange={updateLeashBuddyCustomizations}
+                  />
                 </div>
               </section>
             </>

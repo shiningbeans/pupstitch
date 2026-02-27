@@ -53,6 +53,8 @@ function buildRequestBody(
     accentColor: customizations?.bindingColor || binding?.colorName || analysis.colors.accent || analysis.colors.secondary || '#8B7355',
     flapColor: customizations?.flapColor || flap?.colorName,
     liningColor: customizations?.liningColor || lining?.colorName,
+    muzzleColor: customizations?.muzzleColor,
+    noseColor: customizations?.noseColor,
     material: customizations?.material || 'canvas',
     productSize: spec.productSize,
     dimensions: spec.dimensions,

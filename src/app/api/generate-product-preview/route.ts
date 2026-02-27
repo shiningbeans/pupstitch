@@ -32,6 +32,8 @@ interface PreviewRequestData {
   primaryColor: string;
   secondaryColor: string;
   earInnerColor?: string;
+  muzzleColor?: string;
+  noseColor?: string;
   accentColor: string;
   flapColor?: string;
   liningColor?: string;
@@ -108,8 +110,8 @@ FRONT VIEW — TOP TO BOTTOM:
    The top section is a flap that opens downward, secured by a small silver snap button at its bottom center. When CLOSED (as shown in this photo), the flap sits flush with the lower body — the seam between flap and body is barely visible. The flap has a FLAT EMBROIDERED FACE covering its surface — a cute ${data.breedName} face in the following FLAT, GRAPHIC style:
 
    - EYES: Two solid BLACK FILLED CIRCLES (approximately 6-8mm) made of dense satin-stitch embroidery thread — completely FLAT against the fabric. Each eye has a TINY white highlight dot (1-2mm) in the upper-right area, also embroidered. The eyes look like two little black buttons drawn in a cute cartoon style. They are NOT 3D, NOT plastic, NOT raised, NOT glossy, NOT safety eyes — they are FLAT embroidered circles flush with the fabric surface.
-   - MUZZLE/SNOUT: A flat fabric applique piece in a light beige, cream, or skin-tone color, cut in a wide rounded U-shape or bean shape, sewn flat onto the lower portion of the flap. The muzzle is completely flush with the surface. It takes up roughly the bottom third of the face area.
-   - NOSE: A small solid BLACK embroidered shape (rounded triangle or inverted heart) centered at the top of the muzzle, between and slightly below the eyes. Flat satin-stitch fill.
+   - MUZZLE/SNOUT: A flat fabric applique piece in ${data.muzzleColor || 'a light beige, cream, or skin-tone color'}, cut in a wide rounded U-shape or bean shape, sewn flat onto the lower portion of the flap. The muzzle is completely flush with the surface. It takes up roughly the bottom third of the face area.
+   - NOSE: A small solid ${data.noseColor ? `${data.noseColor} colored` : 'BLACK'} embroidered shape (rounded triangle or inverted heart) centered at the top of the muzzle, between and slightly below the eyes. Flat satin-stitch fill.
    - MOUTH: A tiny cute embroidered line below the nose — a simple "w" shape or gentle smile curve, stitched in dark thread. May include small whisker dots (3 tiny embroidered dots on each side of the muzzle).
    - BREED MARKINGS: For breeds with distinctive markings (eye patches, two-tone face, color splits), these are rendered as FLAT colored fabric applique pieces or dense flat embroidery fill in ${data.secondaryColor}. For example: beagle gets a brown patch over one eye area; husky gets a symmetrical face mask pattern; dalmatian gets flat black spots. These markings are clean-edged, graphic, and proportional to the flap size.
 
@@ -151,7 +153,7 @@ BINDING/EDGE DETAIL:
 MATERIALS AND COLORS:
 - Main body material: ${materialDesc} in ${data.primaryColor}
 ${data.flapColor ? `- Face flap base: ${data.flapColor}` : `- Face flap base: Same as main body (${data.primaryColor})`}
-- Muzzle/snout applique: light beige, cream, or skin-tone fabric (lighter than body), sewn flat
+- Muzzle/snout applique: ${data.muzzleColor || 'light beige, cream, or skin-tone'} fabric, sewn flat
 - Breed marking appliques/embroidery: ${data.secondaryColor}, flat
 - Eyes: FLAT black embroidered circles with tiny white highlight dot — NOT plastic, NOT 3D, NOT safety eyes
 - Nose: solid black flat embroidered shape
