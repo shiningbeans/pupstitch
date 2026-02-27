@@ -9,10 +9,10 @@ interface AnalysisProgressProps {
 const messages = [
   'Detecting breed...',
   'Analyzing markings...',
-  'Measuring those adorable ears...',
-  'Studying that tail wag...',
+  'Measuring ear shape...',
+  'Studying proportions...',
   'Checking color patterns...',
-  'Understanding proportions...',
+  'Mapping unique features...',
   'Almost done analyzing...',
 ];
 
@@ -25,59 +25,44 @@ export default function AnalysisProgress({
     const interval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % messages.length);
     }, 2000);
-
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* Image Section */}
         <div className="flex justify-center">
-          <div className="relative rounded-2xl overflow-hidden border-2 border-amber-200 bg-white shadow-lg max-w-sm">
+          <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm max-w-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={uploadedImage}
-              alt="Dog photo being analyzed"
-              className="w-full h-80 object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+            <img src={uploadedImage} alt="Dog photo being analyzed" className="w-full h-72 object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
           </div>
         </div>
 
-        {/* Analysis Section */}
         <div className="space-y-6">
           <div>
-            <h2 className="text-3xl font-bold text-amber-900 mb-4">
-              AI Analysis in Progress
-            </h2>
-            <p className="text-amber-700 text-lg">
-              We&apos;re carefully analyzing your pup&apos;s unique characteristics...
+            <h2 className="text-2xl font-bold text-slate-900 mb-3">Analyzing Your Dog</h2>
+            <p className="text-slate-500">
+              Identifying unique characteristics and features...
             </p>
           </div>
 
-          {/* Animated Spinner */}
           <div className="flex items-center gap-4">
-            <div className="relative w-16 h-16 flex-shrink-0">
-              <div className="absolute inset-0 rounded-full border-4 border-amber-200" />
-              <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-amber-500 border-r-amber-500 animate-spin" />
-              <div className="absolute inset-2 rounded-full bg-gradient-to-br from-amber-50 to-transparent flex items-center justify-center text-2xl">
-                🐕
-              </div>
+            <div className="relative w-12 h-12 flex-shrink-0">
+              <div className="absolute inset-0 rounded-full border-2 border-slate-100" />
+              <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[var(--primary)] border-r-[var(--primary)] animate-spin" />
             </div>
-
             <div className="flex-1">
-              <div className="mb-3 h-2 bg-amber-100 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 animate-pulse" />
+              <div className="mb-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] animate-pulse rounded-full" />
               </div>
-              <p className="text-amber-700 font-semibold text-lg min-h-7">
+              <p className="text-slate-600 font-medium text-sm min-h-5">
                 {messages[messageIndex]}
               </p>
             </div>
           </div>
 
-          {/* Progress Steps */}
-          <div className="space-y-3 pt-4">
+          <div className="space-y-2.5 pt-2">
             {[
               { label: 'Breed Detection', done: true },
               { label: 'Color Analysis', done: messageIndex > 1 },
@@ -86,42 +71,25 @@ export default function AnalysisProgress({
             ].map((step, idx) => (
               <div key={idx} className="flex items-center gap-3">
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                  className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                     step.done
-                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white'
-                      : 'bg-amber-100 text-amber-600'
+                      ? 'bg-[var(--success)] text-white'
+                      : 'bg-slate-100 text-slate-400'
                   }`}
                 >
-                  {step.done ? '✓' : idx + 1}
+                  {step.done ? (
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    idx + 1
+                  )}
                 </div>
-                <span
-                  className={`text-sm font-medium ${
-                    step.done ? 'text-amber-700' : 'text-amber-600'
-                  }`}
-                >
+                <span className={`text-sm ${step.done ? 'text-slate-700 font-medium' : 'text-slate-400'}`}>
                   {step.label}
                 </span>
               </div>
             ))}
-          </div>
-
-          {/* Decorative elements */}
-          <div className="flex gap-2 pt-4">
-            <span className="text-2xl animate-bounce" style={{ animationDelay: '0s' }}>
-              🎨
-            </span>
-            <span
-              className="text-2xl animate-bounce"
-              style={{ animationDelay: '0.2s' }}
-            >
-              🧶
-            </span>
-            <span
-              className="text-2xl animate-bounce"
-              style={{ animationDelay: '0.4s' }}
-            >
-              🐕
-            </span>
           </div>
         </div>
       </div>

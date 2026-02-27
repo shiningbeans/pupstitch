@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { BRAND } from "@/lib/brand";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,20 +18,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "LeashBuddy - Custom Dog Accessories Powered by AI",
-  description:
-    "Create custom dog accessories that look just like your pup. Upload a photo and get AI-generated product specs, 3D previews, and crochet patterns powered by PupStitch.",
-  keywords: [
-    "leashbuddy",
-    "dog accessories",
-    "poop bag holder",
-    "treat pouch",
-    "custom pet products",
-    "AI",
-    "crochet",
-    "amigurumi",
-    "pupstitch",
-  ],
+  title: `${BRAND.name} — ${BRAND.tagline}`,
+  description: BRAND.description,
+  keywords: BRAND.keywords,
 };
 
 export default function RootLayout({
@@ -40,10 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background-warm text-text-warm`}
-        style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Navigation />
         <main className="min-h-screen">{children}</main>
         <Footer />

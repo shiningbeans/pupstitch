@@ -11,29 +11,25 @@ const DIFFICULTY_OPTIONS: Array<{
   value: DifficultyLevel;
   label: string;
   description: string;
-  stars: number;
-  color: string;
+  dots: number;
 }> = [
   {
     value: 'simplified',
     label: 'Simplified',
     description: 'Fewer details, great for beginners',
-    stars: 1,
-    color: 'from-amber-400 to-amber-500',
+    dots: 1,
   },
   {
     value: 'standard',
     label: 'Standard',
     description: 'Full pattern with all features',
-    stars: 2,
-    color: 'from-amber-500 to-amber-600',
+    dots: 2,
   },
   {
     value: 'detailed',
     label: 'Detailed',
     description: 'Extra texture and finishing details',
-    stars: 3,
-    color: 'from-amber-600 to-orange-600',
+    dots: 3,
   },
 ];
 
@@ -48,43 +44,54 @@ export default function DifficultySelector({
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            className={`p-5 rounded-lg border-2 transition-all text-center ${
+            className={`p-5 rounded-xl border transition-all text-center ${
               difficulty === option.value
-                ? 'border-amber-500 bg-amber-50 shadow-md'
-                : 'border-gray-200 bg-white hover:border-amber-300'
+                ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
+                : 'border-slate-200 bg-white hover:border-slate-300'
             }`}
           >
-            <div className={`text-3xl mb-3 inline-block bg-gradient-to-r ${option.color} bg-clip-text text-transparent font-bold`}>
-              {'⭐'.repeat(option.stars)}
+            <div className="flex justify-center gap-1.5 mb-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    i < option.dots
+                      ? difficulty === option.value
+                        ? 'bg-[var(--primary)]'
+                        : 'bg-slate-400'
+                      : 'bg-slate-200'
+                  }`}
+                />
+              ))}
             </div>
-            <h3 className="text-lg font-bold text-warm-primary mb-2">{option.label}</h3>
-            <p className="text-sm text-warm-secondary">{option.description}</p>
+            <h3 className="text-base font-bold text-slate-900 mb-1">{option.label}</h3>
+            <p className="text-xs text-slate-500">{option.description}</p>
           </button>
         ))}
       </div>
 
       {difficulty === 'simplified' && (
-        <div className="p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
-          <p className="text-sm text-blue-900">
-            <strong>Perfect for:</strong> Beginners who want a quick, simple pattern with basic stitches
+        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <p className="text-sm text-slate-600">
+            <span className="font-semibold">Perfect for:</span> Beginners who want a quick, simple pattern with basic stitches
             and fewer color changes.
           </p>
         </div>
       )}
 
       {difficulty === 'standard' && (
-        <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded">
-          <p className="text-sm text-green-900">
-            <strong>Perfect for:</strong> Intermediate crafters who want the full pattern with all the
+        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <p className="text-sm text-slate-600">
+            <span className="font-semibold">Perfect for:</span> Intermediate crafters who want the full pattern with all the
             details that make your dog unique.
           </p>
         </div>
       )}
 
       {difficulty === 'detailed' && (
-        <div className="p-4 bg-purple-50 border-l-4 border-purple-500 rounded">
-          <p className="text-sm text-purple-900">
-            <strong>Perfect for:</strong> Advanced crafters who love intricate details, special stitches,
+        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <p className="text-sm text-slate-600">
+            <span className="font-semibold">Perfect for:</span> Advanced crafters who love intricate details, special stitches,
             and texture work.
           </p>
         </div>

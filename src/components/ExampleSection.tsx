@@ -1,133 +1,100 @@
 "use client";
 
+const features = [
+  {
+    title: "AI-Powered Customization",
+    description: "Colors, markings, and features tailored to your specific dog",
+  },
+  {
+    title: "Complete Specifications",
+    description: "Manufacturing-ready product specs with material and color details",
+  },
+  {
+    title: "Instant Results",
+    description: "Get your custom design in minutes, no waiting or complicated process",
+  },
+  {
+    title: "Multiple Products",
+    description: "Choose a poop bag holder, crochet pattern, or both",
+  },
+];
+
 export default function ExampleSection() {
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Left: Testimonial/Example Text */}
+    <section className="py-20 md:py-28">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-warm-primary mb-6">
-              From Photo to Pattern in Minutes
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+              From Photo to Product in Minutes
             </h2>
-            <p className="text-lg text-warm-secondary mb-6 leading-relaxed">
-              Imagine holding a custom crochet pattern that captures the essence of your
-              beloved pup. That&apos;s the PupStitch experience.
+            <p className="text-lg text-slate-500 mb-8 leading-relaxed">
+              Upload a photo of your dog and receive a fully customized product design — complete with color matching, material specs, and 3D preview.
             </p>
 
-            {/* Features List */}
-            <div className="space-y-4 mb-8">
-              <div className="flex items-start gap-4">
-                <span className="text-3xl flex-shrink-0">✅</span>
-                <div>
-                  <h3 className="font-bold text-warm-primary mb-1">AI-Powered Customization</h3>
-                  <p className="text-warm-secondary">
-                    Unique colors, markings, and features tailored to your specific dog
-                  </p>
+            <div className="space-y-5 mb-10">
+              {features.map((feature) => (
+                <div key={feature.title} className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-[var(--success)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h3 className="font-semibold text-slate-900 text-sm">{feature.title}</h3>
+                    <p className="text-slate-500 text-sm">{feature.description}</p>
+                  </div>
                 </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <span className="text-3xl flex-shrink-0">✅</span>
-                <div>
-                  <h3 className="font-bold text-warm-primary mb-1">Complete Instructions</h3>
-                  <p className="text-warm-secondary">
-                    Step-by-step guide with yarn recommendations and all stitch details
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <span className="text-3xl flex-shrink-0">✅</span>
-                <div>
-                  <h3 className="font-bold text-warm-primary mb-1">Instant Download</h3>
-                  <p className="text-warm-secondary">
-                    Get your pattern instantly. No waiting, no complicated ordering process
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <span className="text-3xl flex-shrink-0">✅</span>
-                <div>
-                  <h3 className="font-bold text-warm-primary mb-1">Perfect Gift Idea</h3>
-                  <p className="text-warm-secondary">
-                    Share the pattern with friends or keep it as a keepsake for yourself
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 py-8 border-y border-amber-200">
+            <div className="flex gap-8 py-6 border-y border-slate-100">
               <div className="text-center">
-                <div className="text-3xl font-bold text-amber-600">5 min</div>
-                <p className="text-sm text-warm-secondary">Average time</p>
+                <div className="text-3xl font-bold text-slate-900">5 min</div>
+                <p className="text-xs text-slate-400 mt-1">Average time</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-amber-600">🎯</div>
-                <p className="text-sm text-warm-secondary">100% custom</p>
+                <div className="text-3xl font-bold text-slate-900">100%</div>
+                <p className="text-xs text-slate-400 mt-1">Custom</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-amber-600">📥</div>
-                <p className="text-sm text-warm-secondary">Instant DL</p>
+                <div className="text-3xl font-bold text-slate-900">Instant</div>
+                <p className="text-xs text-slate-400 mt-1">Download</p>
               </div>
             </div>
           </div>
 
-          {/* Right: Decorative Illustration Area */}
           <div className="flex items-center justify-center">
-            <div className="relative w-full">
-              {/* Decorative Cards showing before/after */}
-              <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-8 border-2 border-amber-200 shadow-lg">
-                <div className="text-center">
-                  <div className="flex justify-around mb-8">
-                    <div className="text-center">
-                      <div className="text-7xl mb-4">🐕</div>
-                      <p className="font-bold text-warm-primary">Your Dog&apos;s Photo</p>
-                    </div>
-                    <div className="flex items-center justify-center text-4xl text-amber-500">
-                      →
-                    </div>
-                    <div className="text-center">
-                      <div className="text-7xl mb-4">🧶</div>
-                      <p className="font-bold text-warm-primary">Your Pattern</p>
-                    </div>
+            <div className="glass p-8 w-full max-w-md">
+              <div className="flex items-center justify-between mb-8">
+                <div className="text-center flex-1">
+                  <div className="w-20 h-20 rounded-2xl bg-slate-100 mx-auto mb-3 flex items-center justify-center">
+                    <svg className="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                    </svg>
                   </div>
-
-                  {/* Pattern Preview */}
-                  <div className="mt-8 bg-white rounded-lg p-6 border border-amber-100 text-left">
-                    <h3 className="font-bold text-warm-primary mb-3">Pattern Preview</h3>
-                    <pre className="text-xs text-warm-secondary font-mono bg-amber-50 p-3 rounded overflow-auto max-h-40">
-{`Materials:
-- Yarn (Amber #D97706)
-- Yarn (Cream #FEF3C7)
-- Crochet Hook Size 4mm
-
-Abbreviations:
-SC = Single Crochet
-INC = Increase
-DEC = Decrease
-
-Head: 6sc in magic ring
-Round 2: Inc in each st (12)
-Round 3: sc 1, inc, repeat (18)
-...`}
-                    </pre>
+                  <p className="text-sm font-medium text-slate-600">Your Photo</p>
+                </div>
+                <svg className="w-6 h-6 text-slate-300 mx-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+                <div className="text-center flex-1">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--primary)]/10 to-[var(--secondary)]/10 mx-auto mb-3 flex items-center justify-center">
+                    <svg className="w-10 h-10 text-[var(--primary)]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                    </svg>
                   </div>
-
-                  <p className="mt-6 text-sm text-warm-secondary italic">
-                    ✨ Fully customized for your pup&apos;s unique look
-                  </p>
+                  <p className="text-sm font-medium text-slate-600">Custom Product</p>
                 </div>
               </div>
 
-              {/* Floating Elements for Visual Interest */}
-              <div className="absolute top-0 right-0 text-5xl opacity-50 animate-pulse">
-                🧵
-              </div>
-              <div className="absolute bottom-0 left-0 text-5xl opacity-50 animate-pulse animation-delay-1000">
-                🪡
+              <div className="bg-slate-50 rounded-xl p-4">
+                <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-2">Preview</p>
+                <pre className="text-xs text-slate-500 font-mono leading-relaxed">
+{`Material: Canvas (600D)
+Body: #D4A574
+Ears: Floppy, Felt
+Binding: #8B6F47
+Size: 4" × 3" × 1.5"`}
+                </pre>
               </div>
             </div>
           </div>

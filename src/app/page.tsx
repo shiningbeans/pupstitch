@@ -5,32 +5,26 @@ import HeroSection from "@/components/HeroSection";
 import HowItWorks from "@/components/HowItWorks";
 import SupportedBreeds from "@/components/SupportedBreeds";
 import ExampleSection from "@/components/ExampleSection";
+import { BRAND } from "@/lib/brand";
 
 export default function Home() {
   return (
-    <div className="bg-background-warm">
-      {/* Hero Section */}
+    <div>
       <HeroSection />
-
-      {/* How It Works Section */}
       <HowItWorks />
-
-      {/* Supported Breeds Section */}
       <SupportedBreeds />
-
-      {/* Example/Testimonial Section */}
       <ExampleSection />
 
-      {/* Final CTA Section */}
-      <section className="py-16 md:py-24 gradient-sunset">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 text-balance">
-            Ready to Create Your Custom LeashBuddy?
+      {/* Final CTA */}
+      <section className="py-20 md:py-28 gradient-cta">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight text-balance">
+            Ready to Create Your Custom {BRAND.product.pouch}?
           </h2>
-          <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+          <p className="text-lg text-white/80 mb-10 max-w-xl mx-auto">
             Upload a photo of your dog and get a custom product designed just for them.
           </p>
-          <Link href="/upload" className="btn-primary text-lg inline-block">
+          <Link href="/upload" className="inline-block px-8 py-4 bg-white text-slate-900 font-semibold rounded-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
             Get Started
           </Link>
         </div>

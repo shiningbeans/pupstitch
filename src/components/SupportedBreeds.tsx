@@ -1,50 +1,39 @@
 "use client";
 
-export default function SupportedBreeds() {
-  const breeds = [
-    { name: "Labrador", emoji: "🦮" },
-    { name: "German Shepherd", emoji: "🐕" },
-    { name: "Golden Retriever", emoji: "🐕" },
-    { name: "French Bulldog", emoji: "🐶" },
-    { name: "Bulldog", emoji: "🐕" },
-    { name: "Poodle", emoji: "🐩" },
-    { name: "Beagle", emoji: "🐕" },
-    { name: "Rottweiler", emoji: "🐕" },
-    { name: "Dachshund", emoji: "🐕" },
-    { name: "Corgi", emoji: "🐕" },
-  ];
+const breeds = [
+  "Labrador Retriever",
+  "German Shepherd",
+  "Golden Retriever",
+  "French Bulldog",
+  "Bulldog",
+  "Poodle",
+  "Beagle",
+  "Rottweiler",
+  "Dachshund",
+  "Corgi",
+];
 
+export default function SupportedBreeds() {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-white to-amber-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="section-title">Supported Breeds</h2>
+    <section className="py-20 md:py-28 bg-slate-50/50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="section-title">Popular Breeds</h2>
         <p className="section-subtitle">
-          We have preset patterns optimized for these popular dog breeds
+          Optimized presets for these breeds, plus full support for any dog
         </p>
 
-        {/* Breeds Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6">
-          {breeds.map((breed, index) => (
-            <div
-              key={index}
-              className="breed-card group hover:scale-110 hover:shadow-xl hover:bg-gradient-to-br hover:from-amber-50 hover:to-yellow-50 transition-all duration-300"
-            >
-              <div className="text-5xl mb-3 group-hover:scale-125 transition-transform duration-300">
-                {breed.emoji}
-              </div>
-              <h3 className="font-bold text-warm-primary text-center">
-                {breed.name}
-              </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
+          {breeds.map((breed) => (
+            <div key={breed} className="breed-card">
+              <span className="text-sm font-semibold text-slate-700">{breed}</span>
             </div>
           ))}
         </div>
 
-        {/* Note about custom breeds */}
-        <div className="mt-12 bg-white card p-6 md:p-8 max-w-2xl mx-auto">
-          <p className="text-center text-warm-secondary">
-            <span className="font-semibold text-warm-primary">💡 Tip:</span> Don&apos;t
-            see your breed? No problem! Our AI can create custom patterns for any
-            dog. Upload your pup&apos;s photo for a personalized pattern.
+        <div className="mt-10 glass-solid p-6 max-w-xl mx-auto text-center">
+          <p className="text-sm text-slate-500">
+            <span className="font-semibold text-slate-700">Any breed works.</span>{" "}
+            Our AI creates custom designs for every dog — upload your photo for a personalized result.
           </p>
         </div>
       </div>
