@@ -20,9 +20,9 @@ const MATERIAL_DESCRIPTIONS: Record<string, string> = {
  * Ear size descriptions for the prompt
  */
 const EAR_SIZE_DESCRIPTIONS: Record<string, string> = {
-  'small': 'very small and subtle, extending less than 1cm beyond the body edge',
-  'medium': 'medium-sized, extending about 1-2cm beyond the body edge',
-  'large': 'prominent and expressive, extending 2-3cm beyond the body edge',
+  'small': 'very small and subtle, extending less than 0.5cm beyond the body edge',
+  'medium': 'small and compact, extending about 0.5-1cm beyond the body edge',
+  'large': 'moderately sized, extending about 1-1.5cm beyond the body edge',
 };
 
 interface PreviewRequestData {
@@ -68,13 +68,15 @@ function buildProductPreviewPrompt(data: PreviewRequestData, photoCount: number)
     : '';
 
   const colorSamplingInstructions = hasPhotos
-    ? `\n\nCOLOR ACCURACY — CRITICAL:
+    ? `\n\nCOLOR ACCURACY — THIS IS THE MOST IMPORTANT RULE:
 Study the dog photo${photoCount > 1 ? 's' : ''} and estimate the percentage breakdown of colors on the dog's coat/fur ONLY. For example: "60% golden brown, 25% cream, 15% black".
 - Use ONLY colors visible on the DOG'S FUR and COAT — completely IGNORE background colors (walls, floors, furniture, grass, human hands, clothing, blankets, or any non-dog element in the photo).
-- The pouch BODY COLOR must use the dog's DOMINANT coat color (the highest percentage color on the dog). Do NOT default to white or cream unless the dog is actually predominantly white or cream.
+- THE ENTIRE POUCH BODY FABRIC must be dyed/colored to match the dog's DOMINANT coat color. If the dog is black-and-white, the body should be the dominant of those two. If the dog is mostly black with white markings, the body is BLACK. If mostly white with black markings, the body is WHITE. If the dog is brown/golden/tan, the body is that brown/golden/tan.
+- NEVER default the body to plain white unless the dog's coat is genuinely predominantly white (over 50% white fur).
+- The face flap, lower body, and all fabric surfaces should reflect the dog's actual coloring — not a generic white pouch with colored patches on top.
 - Apply the dog's SECONDARY coat colors as the marking patches, ear colors, and accent pieces — proportional to how much of the dog's coat they actually cover.
-- If the dog has a brown/golden/tan coat, the pouch body MUST be that brown/golden/tan color — NOT white.
-- The muzzle/snout piece should match the actual color around the dog's mouth and chin area.`
+- The muzzle/snout applique should match the actual color around the dog's mouth and chin area.
+- Think of the pouch as being "dressed" in the dog's coat — the fabric IS the dog's fur color, not a blank canvas.`
     : '';
 
   return `Generate a photorealistic product photograph of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy", designed to look like a cute ${data.breedName}.${photoContext}${colorSamplingInstructions}
@@ -99,8 +101,8 @@ FRONT VIEW — TOP TO BOTTOM:
 1. SPRING HOOK + FABRIC TAB (top):
    A 3.5cm fabric loop tab sewn at the top center of the pouch. A silver/dark spring-gate carabiner clip hangs from this tab. The tab is the same ${materialDesc} as the body.
 
-2. DOUBLE-LAYER EARS (top corners):
-   ${earStyleDesc}. The ears are ${earSizeDesc}. Each ear is double-layered: outer fabric in ${data.secondaryColor}, inner fabric in ${data.earInnerColor || 'a lighter contrasting shade'}. They are sewn into the top-left and top-right seams of the pouch body and extend outward, breaking the rectangular silhouette. The ears are one of the most characterful design elements.
+2. SMALL DOUBLE-LAYER EARS (top corners):
+   ${earStyleDesc}. The ears are ${earSizeDesc}. Each ear is double-layered: outer fabric in ${data.secondaryColor}, inner fabric in ${data.earInnerColor || 'a lighter contrasting shade'}. They are sewn into the top-left and top-right SIDE seams of the pouch body at the very top corners, extending outward to the SIDES (not upward). They break the rectangular silhouette slightly but are COMPACT — they must NOT be so large that they would interfere with the face flap opening upward. Think of them as small decorative flaps at the corners, not oversized floppy appendages. PRACTICALITY: the flap hinges at the top edge and opens upward/backward — the ears sit at the corners and fold to the sides, out of the way.
 
 3. FACE FLAP / OPENING FLAP (upper ~5cm of front):
    The top section is a rectangular flap that opens downward, secured by a small silver snap button at its bottom center. This flap has a FLAT EMBROIDERED FACE covering its surface — a cute ${data.breedName} face in the following FLAT, GRAPHIC style:
@@ -181,14 +183,15 @@ CRITICAL CONSTRAINTS:
 - The face should look like a CUTE CARTOON DOG FACE — bold, graphic, kawaii/vector-illustration style
 - NO text, watermarks, or branding visible anywhere
 - NO human hands in the image
-- Ears extend from the top corners — they break the rectangular silhouette
+- Ears are SMALL and COMPACT at the top corners — they break the silhouette slightly but do NOT interfere with the flap opening. They extend to the SIDES, not upward
 - Bottom paw tabs are VERY SMALL and SUBTLE — not chunky, not dangling, not prominent
 - TWO compartments: upper (snap flap) and lower (back zipper)
 - The product must look manufacturable and real — not fantastical
 - Do NOT make it look like a plush toy or stuffed animal — it is a FUNCTIONAL POUCH with cute dog character
 - NO ZIPPER on the front — the zipper is ONLY on the BACK, running horizontally
 - Show the binding/piping trim around edges — but it must be TONAL (same family as body color), NEVER bright or contrasting
-- COLOR PALETTE RULE: The ONLY colors on this product should be: the dog's coat colors (for body, ears, markings), black (eyes, nose, hardware), white/cream/beige (muzzle), dark grey/charcoal (small paw tabs, zipper), and silver (hardware). Do NOT introduce any other colors like red, blue, green, orange, pink, or any bright/saturated hue anywhere on the product.`;
+- BODY COLOR RULE: The pouch body fabric color MUST match the dog's dominant coat color. Do NOT make a white/cream pouch unless the dog is actually predominantly white. The pouch should look like it's "wearing" the dog's coat color.
+- COLOR PALETTE RULE: The ONLY colors on this product should be: the dog's actual coat colors (for body, ears, markings), black (eyes, nose, hardware), white/cream/beige (muzzle only if appropriate), dark grey/charcoal (small paw tabs, zipper), and silver (hardware). Do NOT introduce any other colors like red, blue, green, orange, pink, or any bright/saturated hue anywhere on the product.`;
 }
 
 /**
