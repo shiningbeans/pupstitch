@@ -21,8 +21,8 @@ const MATERIAL_DESCRIPTIONS: Record<string, string> = {
  */
 const EAR_SIZE_DESCRIPTIONS: Record<string, string> = {
   'small': 'very small and subtle, extending less than 0.5cm beyond the body edge',
-  'medium': 'small and compact, extending about 0.5-1cm beyond the body edge',
-  'large': 'moderately sized, extending about 1-1.5cm beyond the body edge',
+  'medium': 'compact, extending about 0.5-1.5cm beyond the body edge',
+  'large': 'moderately sized, extending about 1.5-2cm beyond the body edge',
 };
 
 interface PreviewRequestData {
@@ -68,108 +68,131 @@ function buildProductPreviewPrompt(data: PreviewRequestData, photoCount: number)
     : '';
 
   const colorSamplingInstructions = hasPhotos
-    ? `\n\nCOLOR ACCURACY — THIS IS THE MOST IMPORTANT RULE:
+    ? `\n\nCOLOR ACCURACY — CRITICAL (OVERRIDE ALL HEX COLOR VALUES BELOW):
 Study the dog photo${photoCount > 1 ? 's' : ''} and estimate the percentage breakdown of colors on the dog's coat/fur ONLY. For example: "60% golden brown, 25% cream, 15% black".
+- IGNORE any specific hex color values mentioned later in this prompt. Determine ALL colors from the dog photo${photoCount > 1 ? 's' : ''} instead.
 - Use ONLY colors visible on the DOG'S FUR and COAT — completely IGNORE background colors (walls, floors, furniture, grass, human hands, clothing, blankets, or any non-dog element in the photo).
-- THE ENTIRE POUCH BODY FABRIC must be dyed/colored to match the dog's DOMINANT coat color. If the dog is black-and-white, the body should be the dominant of those two. If the dog is mostly black with white markings, the body is BLACK. If mostly white with black markings, the body is WHITE. If the dog is brown/golden/tan, the body is that brown/golden/tan.
-- NEVER default the body to plain white unless the dog's coat is genuinely predominantly white (over 50% white fur).
-- The face flap, lower body, and all fabric surfaces should reflect the dog's actual coloring — not a generic white pouch with colored patches on top.
+- The pouch BODY FABRIC must be dyed/colored to match the dog's DOMINANT coat color (the highest percentage color). The body IS the dog's base fur color. Do NOT default to white or cream unless the dog is actually predominantly white or cream (over 50% white fur).
 - Apply the dog's SECONDARY coat colors as the marking patches, ear colors, and accent pieces — proportional to how much of the dog's coat they actually cover.
-- The muzzle/snout applique should match the actual color around the dog's mouth and chin area.
-- Think of the pouch as being "dressed" in the dog's coat — the fabric IS the dog's fur color, not a blank canvas.`
+- If the dog has a brown/golden/tan coat, the pouch body MUST be that brown/golden/tan color — NOT white.
+- The muzzle/snout piece should match the actual color around the dog's mouth and chin area.
+- Think of it this way: the pouch fabric IS the dog's fur. The body color should be the base coat color, with markings layered on top.`
     : '';
-
-  // When photos are provided, let Gemini determine colors from the photos
-  // instead of using potentially incorrect hex values from the analysis step
-  const secondaryColorDesc = hasPhotos
-    ? 'the dog\'s secondary/marking coat color as seen in the reference photo(s)'
-    : `${data.secondaryColor}`;
 
   return `Generate a photorealistic product photograph of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy", designed to look like a cute ${data.breedName}.${photoContext}${colorSamplingInstructions}
 
-WHAT THIS PRODUCT LOOKS LIKE:
-A compact rectangular fabric pouch (about the size of a deck of cards) shaped and decorated to look like a cute ${data.breedName} dog face. From the front, you see a DOG FACE that covers the ENTIRE front surface — eyes, nose, muzzle, and breed markings all embroidered/appliqued directly onto the front panel. Small fabric ears poke out from the top corners. The whole thing clips to a leash via a carabiner at the top.
+CORE CONCEPT:
+This is a compact rectangular fabric pouch — NOT a plush toy, NOT a stuffed animal. The front face flap has a FLAT EMBROIDERED face design of a cute ${data.breedName}. The entire face design is FLAT — machine embroidery thread and flat fabric applique pieces sewn flush to the surface. Nothing on the face is raised or 3D. The pouch also has double-layer fabric ears at the top corners and embroidered paw prints on the lower front body.
 
-CRITICAL LAYOUT — THE FACE COVERS THE ENTIRE FRONT:
-The dog face embroidery/applique spans the FULL FRONT of the pouch from top to bottom. There is NO separate lid, NO plain panel above or below the face. The eyes sit in the upper third, the muzzle/nose sit in the middle-to-lower area. The face IS the front of the pouch. When viewed from the front, you see ONLY the dog face design — it dominates the entire front surface.
+EMBROIDERY STYLE — CRITICAL:
+The face embroidery must look like a clean, flat, VECTOR-ILLUSTRATION style design — the kind produced by a modern computerized embroidery machine. Think: cute kawaii graphic design rendered in thread, NOT a 3D sculpture or stuffed animal face. Every element is FLAT and flush with the fabric surface. The style is bold, clean lines with solid filled areas of color — like a simplified cartoon/icon.
 
-(Construction note: internally, the upper portion of the front is a flap that hinges open for access to a treat compartment, secured by a small snap button hidden at the seam line. But from the OUTSIDE looking at it CLOSED, you cannot see any separation — it looks like one continuous dog face panel.)
-
-EMBROIDERY STYLE:
-The face is a clean, flat, VECTOR-ILLUSTRATION style design — like a cute dog face emoji or app icon rendered as machine embroidery. Bold, clean lines. Solid filled areas of color. Everything is FLAT and flush with the fabric surface. NOT 3D, NOT sculptural, NOT a stuffed animal face.
-
-EXACT DIMENSIONS:
+EXACT DIMENSIONS (per engineering drawing):
 - Total height (body only, no tab/clip): ${data.dimensions.heightCm}cm
 - Width: ${data.dimensions.widthCm}cm
 - Depth: ${data.dimensions.depthCm}cm
-- Fabric tab above body: 3.5cm (connects to carabiner)
-- For scale: roughly the size of a deck of playing cards
+- Face flap area: approximately 5cm tall (the upper section)
+- Lower body section: approximately 4.5cm tall (below the flap)
+- Fabric tab above body: 3.5cm (connects to spring hook/carabiner)
+- For scale: roughly the size of a deck of playing cards or a small smartphone
 
-FRONT VIEW DESCRIPTION (what the camera sees):
+FRONT VIEW — TOP TO BOTTOM:
 
-1. CARABINER + TAB (very top): A small fabric loop tab at the top center with a silver/dark carabiner clip hanging from it.
+1. SPRING HOOK + FABRIC TAB (top):
+   A 3.5cm fabric loop tab sewn at the top center of the pouch. A silver/dark spring-gate carabiner clip hangs from this tab. The tab is the same ${materialDesc} as the body.
 
-2. SMALL EARS (top corners): ${earStyleDesc}. The ears are ${earSizeDesc}. Double-layered: outer in ${secondaryColorDesc}, inner in ${data.earInnerColor || 'a lighter shade'}. They sit at the top-left and top-right corners, extending to the SIDES. They are small and practical — decorative but compact.
+2. DOUBLE-LAYER EARS (top corners):
+   ${earStyleDesc}. The ears are ${earSizeDesc}. Each ear is double-layered: outer fabric in ${data.secondaryColor}, inner fabric in ${data.earInnerColor || 'a lighter contrasting shade'}. They are sewn into the top-left and top-right seams of the pouch body and extend outward to the SIDES, breaking the rectangular silhouette. The ears must be small enough that they do NOT interfere with the face flap opening — they sit at the side corners, out of the way of the top hinge.
 
-3. THE DOG FACE (covers the ENTIRE front surface):
-   The entire front of the pouch IS the dog face. The fabric body color IS the dog's base coat color. Embroidered and appliqued onto this are:
+3. FACE FLAP / OPENING FLAP (upper ~5cm of front):
+   The top section is a flap that opens downward, secured by a small silver snap button at its bottom center. When CLOSED (as shown in this photo), the flap sits flush with the lower body — the seam between flap and body is barely visible. The flap has a FLAT EMBROIDERED FACE covering its surface — a cute ${data.breedName} face in the following FLAT, GRAPHIC style:
 
-   - EYES: Two solid BLACK embroidered circles (6-8mm), FLAT satin-stitch, with a tiny white highlight dot in each. Positioned in the upper third of the front. Like cute cartoon eyes — simple, clean, flat.
-   - BREED MARKINGS: Flat applique patches in ${secondaryColorDesc} for any distinctive markings (eye patches, face mask, color splits, spots). These are cut fabric pieces sewn flat onto the face area.
-   - MUZZLE: A flat fabric applique in light beige/cream, bean-shaped or rounded U-shape, in the lower-center of the front. Takes up roughly the bottom third of the face.
-   - NOSE: Small solid BLACK embroidered triangle/heart shape at the top of the muzzle.
-   - MOUTH: Tiny embroidered smile line ("w" or curve) below the nose.
+   - EYES: Two solid BLACK FILLED CIRCLES (approximately 6-8mm) made of dense satin-stitch embroidery thread — completely FLAT against the fabric. Each eye has a TINY white highlight dot (1-2mm) in the upper-right area, also embroidered. The eyes look like two little black buttons drawn in a cute cartoon style. They are NOT 3D, NOT plastic, NOT raised, NOT glossy, NOT safety eyes — they are FLAT embroidered circles flush with the fabric surface.
+   - MUZZLE/SNOUT: A flat fabric applique piece in a light beige, cream, or skin-tone color, cut in a wide rounded U-shape or bean shape, sewn flat onto the lower portion of the flap. The muzzle is completely flush with the surface. It takes up roughly the bottom third of the face area.
+   - NOSE: A small solid BLACK embroidered shape (rounded triangle or inverted heart) centered at the top of the muzzle, between and slightly below the eyes. Flat satin-stitch fill.
+   - MOUTH: A tiny cute embroidered line below the nose — a simple "w" shape or gentle smile curve, stitched in dark thread. May include small whisker dots (3 tiny embroidered dots on each side of the muzzle).
+   - BREED MARKINGS: For breeds with distinctive markings (eye patches, two-tone face, color splits), these are rendered as FLAT colored fabric applique pieces or dense flat embroidery fill in ${data.secondaryColor}. For example: beagle gets a brown patch over one eye area; husky gets a symmetrical face mask pattern; dalmatian gets flat black spots. These markings are clean-edged, graphic, and proportional to the flap size.
 
-   The face design fills edge-to-edge. No blank space above the eyes — the forehead area is filled with the body color and any breed markings.
+   IMPORTANT: The entire face design should look like a flat graphic illustration printed/stitched onto fabric. Imagine a cute dog face emoji or app icon rendered as machine embroidery — clean, bold, minimal, flat.
 
-4. PAW PRINTS (lower front area): Two small flat embroidered paw prints near the bottom of the front, partially overlapping with the lower face/chin area.
+4. SNAP BUTTON (at flap bottom edge):
+   A small silver metal snap button at the bottom-center of the face flap, securing it to the body below. This is the main closure for the upper compartment.
 
-5. SMALL PAW TABS (bottom edge): Two very small (1cm) charcoal grey felt tabs peeking out from the bottom edge. Minimal and subtle.
+5. LOWER BODY (below flap, ~4.5cm):
+   The lower front section has TWO SMALL EMBROIDERED PAW PRINTS side by side — cute paw pad designs stitched flat in ${data.accentColor || 'a slightly darker tone'}. Each paw print is a rounded arch/dome shape with small toe pad circles inside, all flat embroidery. This section covers the MAIN COMPARTMENT which has space for treats and extra items.
 
-BODY FABRIC COLOR — MOST IMPORTANT:
-${hasPhotos ? `IGNORE any hex color values — determine the body color ENTIRELY from the dog reference photo(s). The entire pouch body fabric must be dyed/colored to match the dog's DOMINANT coat color. If the dog is mostly brown, the pouch is brown. If mostly black, the pouch is black. If tricolor, use the most prevalent color. The body color is NOT white/cream unless the dog genuinely is predominantly white.` : `The body fabric is ${materialDesc} in ${data.primaryColor}.`}
+6. SMALL FABRIC PAW TABS (bottom):
+   At the very bottom of the pouch, two VERY SMALL, SUBTLE flat fabric tabs (each roughly 1-1.5cm) extend slightly below the body edge — shaped like tiny simplified paw silhouettes in dark charcoal grey felt. These are small and understated, just peeking out from the bottom edge. They should NOT be large, chunky, or dangling — they are minimal decorative accents only.
 
-The fabric body color should match the dog's primary/dominant coat color so the face markings sit naturally on top — like the pouch IS the dog's face, with the fabric being the "skin/fur" base.
+7. RUBBER GROMMET (bottom center):
+   A round rubber grommet hole at the very bottom center of the back/underside where dark poop bags can be pulled through from the lower compartment.
 
-BACK AND SIDES:
-- Clean back panel with a small embroidered dog silhouette logo
-- Horizontal zipper on the BACK only (for poop bag compartment)
-- Two belt-loop slots on the back
-- Rubber grommet at the bottom for dispensing bags
-- NO zipper visible from the front
+TWO SEPARATE COMPARTMENTS:
+The pouch has TWO distinct internal compartments separated by a horizontal seam/binding:
+- UPPER COMPARTMENT: Accessed via the face flap with snap button. Holds treats, keys, or small items.
+- LOWER COMPARTMENT: Holds a poop bag roll. This compartment's zipper access is on the BACK only. Bags feed out through the rubber grommet at the bottom.
 
-BINDING/EDGES:
-Subtle tonal binding — slightly darker shade of the body color. NEVER bright or contrasting. Nearly invisible.
+ZIPPER PLACEMENT — CRITICAL:
+- The zipper is on the BACK of the pouch, running horizontally across the lower compartment area, wrapping slightly around to the sides.
+- The zipper is NEVER visible from the front view. There is NO zipper on the front at all.
+- The zipper provides access to load/replace the poop bag roll in the lower compartment.
 
-MATERIALS:
-- Body: ${materialDesc}
-- All embroidery and applique: flat, flush with surface
-- Eyes: FLAT embroidered (NOT plastic, NOT 3D, NOT safety eyes)
-- Hardware: dark/brushed silver carabiner, silver snap, dark zipper
-- Ears: fabric, double-layer
-- Small paw tabs: charcoal grey felt
+BACK PANEL:
+- Clean flat back in ${data.primaryColor} ${materialDesc}
+- A small embroidered dog silhouette logo (subtle, tonal, flat)
+- Two vertical fabric belt-loop slots for threading onto a belt or bag strap
+- The horizontal zipper for the lower bag compartment (wraps from back to sides)
 
-PHOTOGRAPHY:
-- Pure white background, professional product photography
-- Studio lighting: soft diffused
-- Camera angle: straight-on front view or very slight 3/4 angle
-- Sharp focus, premium e-commerce style
-- The product should look PREMIUM, COMPACT, WELL-CRAFTED
-${data.dogName ? `- Custom product for "${data.dogName}"` : ''}
+BINDING/EDGE DETAIL:
+- All raw edges of the pouch are finished with SUBTLE TONAL binding/piping — a neat narrow trim that runs around the perimeter of the body, the flap edges, and compartment seams.
+- The binding color should be a SLIGHTLY DARKER shade of the main body color, or a neutral grey/taupe. It should BLEND with the body, not contrast against it.
+- NEVER use a bright or saturated color (red, blue, green, orange, pink, etc.) for the binding/piping. It should be nearly invisible — just a clean finished edge.
 
-ABSOLUTE RULES:
-- The face covers the ENTIRE front — there is NO visible separate flap, lid, or panel division from the outside
-- ALL face elements are FLAT embroidery/applique — nothing raised, nothing 3D, no plastic eyes
-- Body fabric color MUST match the dog's dominant coat color${hasPhotos ? ' as seen in the photo' : ''}
-- NO white/cream body unless the dog is actually predominantly white
-- Ears are SMALL and to the sides — they do NOT impede the top opening
-- NO zipper visible from front
-- NO text, watermarks, or branding
-- NO human hands
-- Binding is TONAL (blends with body), never bright/contrasting
-- COLOR PALETTE: Only the dog's coat colors + black + cream/beige (muzzle) + charcoal grey + silver. No other colors.
-- This is a FUNCTIONAL POUCH, not a plush toy
-- Must look manufacturable and real`;
+MATERIALS AND COLORS:
+- Main body material: ${materialDesc} in ${data.primaryColor}
+${data.flapColor ? `- Face flap base: ${data.flapColor}` : `- Face flap base: Same as main body (${data.primaryColor})`}
+- Muzzle/snout applique: light beige, cream, or skin-tone fabric (lighter than body), sewn flat
+- Breed marking appliques/embroidery: ${data.secondaryColor}, flat
+- Eyes: FLAT black embroidered circles with tiny white highlight dot — NOT plastic, NOT 3D, NOT safety eyes
+- Nose: solid black flat embroidered shape
+- Ears outer: ${data.secondaryColor}
+${data.earInnerColor ? `- Ears inner: ${data.earInnerColor}` : ''}
+- Edge binding/piping: a subtle tone-on-tone shade slightly darker than the body (NOT a contrasting color — should nearly blend in)
+- Hardware: Dark/brushed silver carabiner (spring hook), silver snap button, dark zipper pull
+- Zipper: Dark tone (#5 nylon coil) — on the BACK only
+- Small paw tabs at bottom: dark charcoal grey felt, very small and subtle
+${data.liningColor ? `- Interior lining: ${data.liningColor}` : ''}
+
+PHOTOGRAPHY STYLE:
+- Clean, professional product photography on a PURE WHITE background
+- Studio lighting: soft diffused key light from upper-left, subtle fill light
+- Camera angle: 3/4 front view showing the full face and one side edge
+- Sharp focus, slight background depth-of-field blur
+- Style: premium e-commerce / Kickstarter product shot — the kind you'd see on a high-end pet accessories brand
+- The product should look PREMIUM, COMPACT, WELL-CRAFTED, and GIFTABLE
+${data.dogName ? `- Custom product made for a dog named "${data.dogName}"` : ''}
+
+CRITICAL CONSTRAINTS:
+- ALL face embroidery is FLAT — flush with the fabric. NO raised elements, NO 3D elements, NO plastic eyes, NO safety eyes, NO bulging anything
+- Eyes are FLAT solid black embroidered circles with a tiny white highlight dot — like a cute cartoon/emoji eye style
+- The muzzle is a FLAT lighter-colored fabric applique piece sewn onto the flap
+- The nose is a FLAT black embroidered shape
+- The mouth is a simple FLAT embroidered line
+- The entire face looks like a FLAT GRAPHIC ILLUSTRATION — clean vector-art style rendered in embroidery thread
+- Do NOT render the face as screen printing, a sewn-on circular patch/badge, or a medallion
+- The face should look like a CUTE CARTOON DOG FACE — bold, graphic, kawaii/vector-illustration style
+- NO text, watermarks, or branding visible anywhere
+- NO human hands in the image
+- Ears extend from the top corners — they break the rectangular silhouette
+- Bottom paw tabs are VERY SMALL and SUBTLE — not chunky, not dangling, not prominent
+- TWO compartments: upper (snap flap) and lower (back zipper)
+- The product must look manufacturable and real — not fantastical
+- Do NOT make it look like a plush toy or stuffed animal — it is a FUNCTIONAL POUCH with cute dog character
+- NO ZIPPER on the front — the zipper is ONLY on the BACK, running horizontally
+- Show the binding/piping trim around edges — but it must be TONAL (same family as body color), NEVER bright or contrasting
+- BODY COLOR: The pouch body fabric MUST match the dog's dominant coat color${hasPhotos ? ' as seen in the reference photo — NOT white/cream unless the dog is genuinely predominantly white' : ''}. The body IS the dog's base fur color.
+- Ears extend to the SIDES from the top corners — small and practical, not oversized
+- COLOR PALETTE RULE: The ONLY colors on this product should be: the dog's coat colors (for body, ears, markings), black (eyes, nose, hardware), white/cream/beige (muzzle), dark grey/charcoal (small paw tabs, zipper), and silver (hardware). Do NOT introduce any other colors like red, blue, green, orange, pink, or any bright/saturated hue anywhere on the product.`;
 }
 
 /**
