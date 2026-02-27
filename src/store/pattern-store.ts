@@ -32,7 +32,7 @@ export interface PatternStore {
   isGenerating: boolean;
   isGeneratingPreview: boolean;
   analysisResult: DogAnalysisResult | null;
-  uploadedImage: string | null; // data URL
+  uploadedImages: string[]; // data URLs (up to 3 photos)
   error: string | null;
   lastGeneratedPatternId: string | null;
   selectedBreeds: string[]; // up to 4 breeds for mixed breed support
@@ -52,7 +52,7 @@ export interface PatternStore {
 
   // Actions
   initStorage: () => Promise<void>;
-  setUploadedImage: (dataUrl: string) => void;
+  setUploadedImages: (dataUrls: string[]) => void;
   setSelectedBreeds: (breeds: string[]) => void;
   toggleBreed: (breed: string) => void;
   setSelectedSize: (size: DollSize) => void;
@@ -91,7 +91,7 @@ export const usePatternStore = create<PatternStore>()(
       isGenerating: false,
       isGeneratingPreview: false,
       analysisResult: null,
-      uploadedImage: null,
+      uploadedImages: [],
       error: null,
       lastGeneratedPatternId: null,
       selectedBreeds: [],
@@ -125,8 +125,8 @@ export const usePatternStore = create<PatternStore>()(
       },
 
       // Actions
-      setUploadedImage: (dataUrl: string) => {
-        set({ uploadedImage: dataUrl });
+      setUploadedImages: (dataUrls: string[]) => {
+        set({ uploadedImages: dataUrls });
       },
 
       setSelectedBreeds: (breeds: string[]) => {
@@ -226,8 +226,8 @@ export const usePatternStore = create<PatternStore>()(
           }
 
           // Keep the uploaded photo in memory for the live preview
-          if (state.uploadedImage) {
-            pattern.dogPhotoUrl = state.uploadedImage;
+          if (state.uploadedImages.length > 0) {
+            pattern.dogPhotoUrl = state.uploadedImages[0];
           }
 
           // Save to IndexedDB (no quota issues — hundreds of MB available)
@@ -352,11 +352,16 @@ export const usePatternStore = create<PatternStore>()(
           productPreviewUrl: null,
         });
 
-        const dogPhoto = state.uploadedImage || state.currentPattern?.dogPhotoUrl || null;
+        // Collect all dog photos — uploaded images + fallback to pattern's saved photo
+        const dogPhotos = state.uploadedImages.length > 0
+          ? state.uploadedImages
+          : state.currentPattern?.dogPhotoUrl
+            ? [state.currentPattern.dogPhotoUrl]
+            : [];
         const customizations = state.leashBuddyCustomizations;
 
         try {
-          const options = await generateProductPreviewOptions(spec, analysis, dogPhoto, customizations);
+          const options = await generateProductPreviewOptions(spec, analysis, dogPhotos, customizations);
           if (options.length > 0) {
             set({
               productPreviewOptions: options,
@@ -483,7 +488,7 @@ export const usePatternStore = create<PatternStore>()(
         }
 
         // We need the original image to re-analyze
-        const imageDataUrl = state.uploadedImage || state.currentPattern.dogPhotoUrl;
+        const imageDataUrl = state.uploadedImages[0] || state.currentPattern.dogPhotoUrl;
         if (!imageDataUrl) {
           // No photo available — fall back to regular regeneration
           await get().regeneratePattern();
@@ -578,7 +583,7 @@ export const usePatternStore = create<PatternStore>()(
           set({
             currentPattern: pattern,
             analysisResult: pattern.analysisResult,
-            uploadedImage: pattern.dogPhotoUrl || null,
+            uploadedImages: pattern.dogPhotoUrl ? [pattern.dogPhotoUrl] : [],
           });
         } catch (error) {
           const errorMessage = error instanceof Error
@@ -685,7 +690,7 @@ export const usePatternStore = create<PatternStore>()(
         set({
           currentPattern: null,
           analysisResult: null,
-          uploadedImage: null,
+          uploadedImages: [],
           error: null,
           dogName: '',
           leashBuddySpec: null,

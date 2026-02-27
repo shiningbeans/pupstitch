@@ -3,28 +3,41 @@
 import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 
 interface ImageUploaderProps {
-  onImageSelected: (file: File, dataUrl: string) => void;
-  selectedImage?: string;
+  onImagesSelected: (files: File[], dataUrls: string[]) => void;
+  selectedImages?: string[];
+  maxPhotos?: number;
 }
 
 export default function ImageUploader({
-  onImageSelected,
-  selectedImage,
+  onImagesSelected,
+  selectedImages = [],
+  maxPhotos = 3,
 }: ImageUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file (JPEG or PNG)');
-      return;
+  const handleFiles = async (newFiles: FileList | File[]) => {
+    const validFiles: File[] = [];
+    const validDataUrls: string[] = [];
+
+    const filesToProcess = Array.from(newFiles).slice(0, maxPhotos - selectedImages.length);
+
+    for (const file of filesToProcess) {
+      if (!file.type.startsWith('image/')) continue;
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.readAsDataURL(file);
+      });
+      validFiles.push(file);
+      validDataUrls.push(dataUrl);
     }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result as string;
-      onImageSelected(file, dataUrl);
-    };
-    reader.readAsDataURL(file);
+
+    if (validFiles.length > 0) {
+      // Merge with existing images — we pass ALL data urls (existing + new)
+      // The parent manages the full array via the store
+      onImagesSelected(validFiles, [...selectedImages, ...validDataUrls]);
+    }
   };
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -43,26 +56,68 @@ export default function ImageUploader({
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) handleFile(files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFiles(e.dataTransfer.files);
+    }
   };
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.currentTarget.files;
-    if (files && files.length > 0) handleFile(files[0]);
+    if (files && files.length > 0) handleFiles(files);
+    // Reset so the same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleBrowseClick = () => fileInputRef.current?.click();
 
-  const handleRemove = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    onImageSelected(new File([], ''), '');
+  const handleRemove = (index: number) => {
+    const updated = selectedImages.filter((_, i) => i !== index);
+    onImagesSelected([], updated);
   };
 
+  const canAddMore = selectedImages.length < maxPhotos;
+
   return (
-    <div className="w-full">
-      {!selectedImage ? (
+    <div className="w-full space-y-3">
+      {/* Thumbnails of uploaded images */}
+      {selectedImages.length > 0 && (
+        <div className="grid grid-cols-3 gap-3">
+          {selectedImages.map((img, idx) => (
+            <div key={idx} className="relative rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={img} alt={`Dog photo ${idx + 1}`} className="w-full aspect-square object-cover" />
+              <button
+                onClick={() => handleRemove(idx)}
+                className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm hover:bg-white text-slate-600 rounded-full p-1.5 transition-all duration-200 shadow-sm hover:shadow opacity-0 group-hover:opacity-100"
+                aria-label={`Remove photo ${idx + 1}`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <div className="absolute bottom-1.5 left-1.5 px-2 py-0.5 bg-black/50 text-white text-xs font-medium rounded-md">
+                {idx + 1}/{selectedImages.length}
+              </div>
+            </div>
+          ))}
+
+          {/* Add more button (if room) */}
+          {canAddMore && (
+            <button
+              onClick={handleBrowseClick}
+              className="flex flex-col items-center justify-center aspect-square rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-slate-50 transition-all duration-200 cursor-pointer"
+            >
+              <svg className="w-6 h-6 text-slate-300 mb-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              <span className="text-xs text-slate-400 font-medium">Add Photo</span>
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Drop zone (shown when no images yet) */}
+      {selectedImages.length === 0 && (
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -74,45 +129,35 @@ export default function ImageUploader({
               : 'border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-slate-50'
           }`}
         >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png"
-            onChange={handleFileInputChange}
-            className="hidden"
-            aria-label="Upload dog photo"
-          />
           <div className="flex flex-col items-center gap-3">
             <svg className="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
             <div>
-              <h3 className="text-base font-semibold text-slate-700 mb-1">Upload Your Dog&apos;s Photo</h3>
+              <h3 className="text-base font-semibold text-slate-700 mb-1">Upload Your Dog&apos;s Photos</h3>
               <p className="text-sm text-slate-400">Drag and drop or click to browse</p>
-              <p className="text-xs text-slate-300 mt-1">JPEG or PNG</p>
+              <p className="text-xs text-slate-300 mt-1">JPEG or PNG &middot; Up to {maxPhotos} photos for best results</p>
             </div>
           </div>
         </div>
-      ) : (
-        <div className="space-y-3">
-          <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={selectedImage} alt="Uploaded dog photo" className="w-full h-80 object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-            <button
-              onClick={handleRemove}
-              className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm hover:bg-white text-slate-600 rounded-full p-2 transition-all duration-200 shadow-sm hover:shadow"
-              aria-label="Remove image"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          <button onClick={handleBrowseClick} className="w-full btn-secondary text-sm">
-            Choose Different Photo
-          </button>
-        </div>
+      )}
+
+      {/* Hidden file input (supports multiple) */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png"
+        multiple
+        onChange={handleFileInputChange}
+        className="hidden"
+        aria-label="Upload dog photos"
+      />
+
+      {/* Hint text */}
+      {selectedImages.length > 0 && selectedImages.length < maxPhotos && (
+        <p className="text-xs text-slate-400 text-center">
+          Multiple angles help the AI capture your dog&apos;s colors and markings more accurately
+        </p>
       )}
     </div>
   );

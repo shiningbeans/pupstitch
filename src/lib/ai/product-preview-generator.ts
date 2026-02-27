@@ -2,12 +2,22 @@ import { DogAnalysisResult } from '@/types';
 import { LeashBuddyProductSpec, LeashBuddyCustomizations } from '@/types/product-types';
 
 /**
- * Build the common request body for product preview generation
+ * Parse a data URL into base64 data + mime type
+ */
+function parseDataUrl(dataUrl: string): { data: string; mimeType: string } | null {
+  const match = dataUrl.match(/^data:(image\/[^;]+);base64,(.+)$/);
+  if (match) return { mimeType: match[1], data: match[2] };
+  return null;
+}
+
+/**
+ * Build the common request body for product preview generation.
+ * Now accepts an array of dog photos for multi-angle reference.
  */
 function buildRequestBody(
   spec: LeashBuddyProductSpec,
   analysis: DogAnalysisResult,
-  dogPhotoBase64?: string | null,
+  dogPhotos?: string[],
   customizations?: Partial<LeashBuddyCustomizations> | null,
   count?: number,
 ) {
@@ -23,17 +33,17 @@ function buildRequestBody(
   const flap = spec.fabricColors.find(f => f.part === 'front-flap');
   const lining = spec.fabricColors.find(f => f.part === 'interior-lining');
 
-  let dogPhotoData: string | undefined;
-  let dogPhotoMimeType: string | undefined;
-  if (dogPhotoBase64 && dogPhotoBase64.startsWith('data:')) {
-    const match = dogPhotoBase64.match(/^data:(image\/[^;]+);base64,(.+)$/);
-    if (match) {
-      dogPhotoMimeType = match[1];
-      dogPhotoData = match[2];
+  // Parse all dog photos into base64 data
+  const parsedPhotos: Array<{ data: string; mimeType: string }> = [];
+  if (dogPhotos && dogPhotos.length > 0) {
+    for (const photoUrl of dogPhotos) {
+      const parsed = parseDataUrl(photoUrl);
+      if (parsed) parsedPhotos.push(parsed);
     }
   }
 
-  return {
+  // Build the request body
+  const body: Record<string, unknown> = {
     breedName: spec.breedName,
     earStyle: customizations?.earStyle || spec.earStyle,
     earSize: customizations?.earSize || 'medium',
@@ -48,10 +58,19 @@ function buildRequestBody(
     dimensions: spec.dimensions,
     embroideryDescription,
     dogName: spec.dogName,
-    dogPhoto: dogPhotoData,
-    dogPhotoMimeType,
-    ...(count ? { count } : {}),
   };
+
+  // Send photos: use dogPhotos array for multiple, fallback to single dogPhoto for compat
+  if (parsedPhotos.length > 1) {
+    body.dogPhotos = parsedPhotos;
+  } else if (parsedPhotos.length === 1) {
+    body.dogPhoto = parsedPhotos[0].data;
+    body.dogPhotoMimeType = parsedPhotos[0].mimeType;
+  }
+
+  if (count) body.count = count;
+
+  return body;
 }
 
 /**
@@ -60,11 +79,11 @@ function buildRequestBody(
 export async function generateProductPreviewImage(
   spec: LeashBuddyProductSpec,
   analysis: DogAnalysisResult,
-  dogPhotoBase64?: string | null,
+  dogPhotos?: string[],
   customizations?: Partial<LeashBuddyCustomizations> | null
 ): Promise<string | null> {
   try {
-    const body = buildRequestBody(spec, analysis, dogPhotoBase64, customizations);
+    const body = buildRequestBody(spec, analysis, dogPhotos, customizations);
 
     const response = await fetch('/api/generate-product-preview', {
       method: 'POST',
@@ -98,11 +117,11 @@ export async function generateProductPreviewImage(
 export async function generateProductPreviewOptions(
   spec: LeashBuddyProductSpec,
   analysis: DogAnalysisResult,
-  dogPhotoBase64?: string | null,
+  dogPhotos?: string[],
   customizations?: Partial<LeashBuddyCustomizations> | null
 ): Promise<string[]> {
   try {
-    const body = buildRequestBody(spec, analysis, dogPhotoBase64, customizations, 2);
+    const body = buildRequestBody(spec, analysis, dogPhotos, customizations, 2);
 
     const response = await fetch('/api/generate-product-preview', {
       method: 'POST',

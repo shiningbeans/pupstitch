@@ -65,7 +65,7 @@ const EAR_STYLE_OPTIONS: Array<{
 export default function UploadPage() {
   const router = useRouter();
   const {
-    uploadedImage,
+    uploadedImages,
     isAnalyzing,
     isGenerating,
     currentPattern,
@@ -79,7 +79,7 @@ export default function UploadPage() {
     setSelectedSize,
     setDogName,
     setProductType,
-    setUploadedImage,
+    setUploadedImages,
     analyzeImage,
     generateFromAnalysis,
     updateLeashBuddyCustomizations,
@@ -87,7 +87,7 @@ export default function UploadPage() {
   } = usePatternStore();
 
   const initStorage = usePatternStore((s) => s.initStorage);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -107,9 +107,12 @@ export default function UploadPage() {
     }
   }, [isAnalyzing, isProcessing, error, isGenerating, generateFromAnalysis]);
 
-  const handleImageSelected = (file: File, dataUrl: string) => {
-    setSelectedFile(file);
-    setUploadedImage(dataUrl);
+  const handleImagesSelected = (files: File[], dataUrls: string[]) => {
+    // If new files were added, accumulate them
+    if (files.length > 0) {
+      setSelectedFiles((prev) => [...prev, ...files]);
+    }
+    setUploadedImages(dataUrls);
   };
 
   // LeashBuddy doesn't need size selection (fixed size), PupStitch does
@@ -121,8 +124,8 @@ export default function UploadPage() {
     setIsProcessing(true);
     setError(null);
 
-    if (selectedFile && uploadedImage) {
-      await analyzeImage(selectedFile);
+    if (selectedFiles.length > 0 && uploadedImages.length > 0) {
+      await analyzeImage(selectedFiles[0]);
     } else {
       await generateFromAnalysis();
     }
@@ -141,8 +144,8 @@ export default function UploadPage() {
       <div className="min-h-screen py-12 px-4">
         <div className="max-w-3xl mx-auto">
           <div className="glass p-6 sm:p-8">
-            {isAnalyzing && uploadedImage ? (
-              <AnalysisProgress uploadedImage={uploadedImage} />
+            {isAnalyzing && uploadedImages.length > 0 ? (
+              <AnalysisProgress uploadedImage={uploadedImages[0]} />
             ) : (
               <div className="flex flex-col items-center gap-6 py-12">
                 <svg className="w-12 h-12 text-[var(--primary)] animate-spin" fill="none" viewBox="0 0 24 24">
@@ -381,7 +384,7 @@ export default function UploadPage() {
           <section>
             <h2 className="text-base font-bold text-slate-900 mb-1">Photo <span className="text-sm font-normal text-slate-400">(optional)</span></h2>
             <p className="text-sm text-slate-500 mb-4">Upload a photo for accurate color and marking detection</p>
-            <ImageUploader onImageSelected={handleImageSelected} selectedImage={uploadedImage ?? undefined} />
+            <ImageUploader onImagesSelected={handleImagesSelected} selectedImages={uploadedImages} />
           </section>
         </div>
 
@@ -402,7 +405,7 @@ export default function UploadPage() {
                 : needsSize
                   ? 'Pick a size to continue'
                   : 'Select a breed to continue'
-              : uploadedImage
+              : uploadedImages.length > 0
                 ? selectedProductType === 'leash-buddy'
                   ? `Analyze Photo & Generate ${BRAND.product.pouch}`
                   : selectedProductType === 'both'

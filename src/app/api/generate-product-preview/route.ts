@@ -40,15 +40,16 @@ interface PreviewRequestData {
   dimensions: { heightCm: number; widthCm: number; depthCm: number };
   embroideryDescription?: string;
   dogName?: string;
-  dogPhoto?: string;       // base64 image data (no prefix)
+  dogPhoto?: string;       // single base64 image data (no prefix) — backward compat
   dogPhotoMimeType?: string;
+  dogPhotos?: Array<{ data: string; mimeType: string }>;  // multiple photos
   count?: number;          // number of preview variants to generate (1 or 2)
 }
 
 /**
  * Build the detailed product preview prompt
  */
-function buildProductPreviewPrompt(data: PreviewRequestData): string {
+function buildProductPreviewPrompt(data: PreviewRequestData, photoCount: number): string {
   // Map ear style to description
   const earStyleDesc = data.earStyle === 'pointy'
     ? 'pointed fabric ears that stand upright, sewn to the top-left and top-right corners of the pouch'
@@ -61,12 +62,22 @@ function buildProductPreviewPrompt(data: PreviewRequestData): string {
   const earSizeDesc = EAR_SIZE_DESCRIPTIONS[data.earSize] || EAR_SIZE_DESCRIPTIONS['medium'];
   const materialDesc = MATERIAL_DESCRIPTIONS[data.material] || MATERIAL_DESCRIPTIONS['canvas'];
 
-  const hasDogPhoto = !!data.dogPhoto;
-  const photoContext = hasDogPhoto
-    ? `\n\nREFERENCE PHOTO: I've attached a photo of the actual ${data.breedName} dog. Study this dog's face carefully — its COLORING, MARKINGS, EYE PLACEMENT, and FACIAL STRUCTURE. The front of the pouch must look like a cute simplified cartoon version of THIS SPECIFIC DOG'S FACE, using the pouch's full front surface as the face canvas. Match the dog's colors using different colored fabric panels for markings and patches.`
+  const hasPhotos = photoCount > 0;
+  const photoContext = hasPhotos
+    ? `\n\nREFERENCE PHOTO${photoCount > 1 ? 'S' : ''}: I've attached ${photoCount} photo${photoCount > 1 ? 's' : ''} of the actual ${data.breedName} dog. Study ${photoCount > 1 ? 'ALL photos carefully from multiple angles' : 'this photo carefully'} — focusing on the dog's COLORING, MARKINGS, EYE PLACEMENT, and FACIAL STRUCTURE. The front of the pouch must look like a cute simplified cartoon version of THIS SPECIFIC DOG'S FACE, using the pouch's full front surface as the face canvas. Match the dog's colors using different colored fabric panels for markings and patches.`
     : '';
 
-  return `Generate a photorealistic product photograph of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy", designed to look like a cute ${data.breedName} face.${photoContext}
+  const colorSamplingInstructions = hasPhotos
+    ? `\n\nCOLOR ACCURACY — CRITICAL:
+Study the dog photo${photoCount > 1 ? 's' : ''} and estimate the percentage breakdown of colors on the dog's coat/fur ONLY. For example: "60% golden brown, 25% cream, 15% black".
+- Use ONLY colors visible on the DOG'S FUR and COAT — completely IGNORE background colors (walls, floors, furniture, grass, human hands, clothing, blankets, or any non-dog element in the photo).
+- The pouch BODY COLOR must use the dog's DOMINANT coat color (the highest percentage color on the dog). Do NOT default to white or cream unless the dog is actually predominantly white or cream.
+- Apply the dog's SECONDARY coat colors as the marking patches, ear colors, and accent pieces — proportional to how much of the dog's coat they actually cover.
+- If the dog has a brown/golden/tan coat, the pouch body MUST be that brown/golden/tan color — NOT white.
+- The muzzle/snout piece should match the actual color around the dog's mouth and chin area.`
+    : '';
+
+  return `Generate a photorealistic product photograph of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy", designed to look like a cute ${data.breedName} face.${photoContext}${colorSamplingInstructions}
 
 THE SINGLE MOST IMPORTANT DESIGN PRINCIPLE:
 When you look at the FRONT of this pouch, the ENTIRE FRONT IS THE DOG'S FACE. The pouch doesn't have a face "on" it — the pouch IS the face. The face is not a small embroidered design, not a patch, not a badge, not a medallion, not a circular detail sitting on the fabric. The whole front surface — from ear to ear, from forehead down to chin — IS a cute, simplified, cartoon-style ${data.breedName} face.
@@ -91,13 +102,19 @@ EXACT DIMENSIONS AND SCALE:
 - Depth: ${data.dimensions.depthCm}cm
 - For scale reference: roughly the size of a deck of playing cards or a small smartphone
 
-PRODUCT STRUCTURE (from top to bottom):
+PRODUCT STRUCTURE (from top to bottom, FRONT VIEW):
 1. CARABINER CLIP + TAB: A fabric loop tab at the top center, with a silver spring-gate carabiner clip hanging from it for leash attachment.
 2. FACE FLAP (upper ~45% of front): A rectangular flap that opens downward, secured by a small silver snap button at bottom-center. THE ENTIRE FRONT SURFACE OF THIS FLAP IS THE DOG FACE as described above — large bead eyes, big muzzle piece, breed-colored fabric patches, cute nose. The face fills the flap edge-to-edge.
 3. EARS: 3D double-layer ${earStyleDesc}. The ears are ${earSizeDesc}. Outer fabric: ${data.secondaryColor}. Inner fabric: ${data.earInnerColor || 'lighter contrasting shade'}. They extend outward from the top corners of the pouch — the ears are one of the most characterful elements.
-4. LOWER BODY (below the flap): Two small paw print designs side by side. These paw prints are also fabric pieces (not embroidery) — small circles with toe-pad shapes in a slightly darker or contrasting color. Below the paw area is the binding/seam separating the upper compartment from the bag compartment.
-5. BAG DISPENSER (bottom): A zippered compartment holding a poop bag roll, with a round rubber grommet hole at the very bottom where dark poop bags peek out.
-6. BACK PANEL: Clean flat back with a small embossed/printed dog silhouette logo, two vertical fabric belt-loop slots, and the horizontal zipper for the bag compartment.
+4. LOWER BODY (below the flap): Two small paw print designs side by side. These paw prints are also fabric pieces (not embroidery) — small circles with toe-pad shapes in a slightly darker or contrasting color. Below the paw area is a seam/binding line.
+5. BAG DISPENSER (bottom): A round rubber grommet hole at the very bottom center of the front where dark poop bags peek out.
+
+ZIPPER PLACEMENT — CRITICAL (read carefully):
+- The zipper is ONLY on the BACK panel of the pouch. It runs HORIZONTALLY across the lower third of the back, wrapping slightly around to the sides.
+- The zipper is NEVER visible from the front view. There is NO zipper on the front of the pouch at all.
+- FRONT VIEW should show (top to bottom): carabiner tab, face flap with snap button, paw prints, grommet hole. NO zipper on the front.
+- In a 3/4 view, you may see the back zipper wrapping slightly around one side — this is the SAME horizontal back zipper, NOT a separate vertical zipper.
+- The back panel also has: a small embossed/printed dog silhouette logo, and two vertical fabric belt-loop slots for threading a belt or strap.
 
 MATERIALS AND COLORS:
 - Main body & face base material: ${materialDesc} in ${data.primaryColor}
@@ -110,7 +127,7 @@ ${data.flapColor ? `- Face flap base panel: ${data.flapColor}` : `- Face flap ba
 ${data.earInnerColor ? `- Ears inner: ${data.earInnerColor}` : ''}
 - Edge binding/piping: ${data.accentColor} — neat narrow trim around all raw edges
 - Hardware: Brushed silver carabiner, snap button, zipper pull
-- Zipper: Dark tone (#5 nylon coil)
+- Zipper: Dark tone (#5 nylon coil) — on the BACK only
 
 PHOTOGRAPHY STYLE:
 - Clean, professional product photography on a PURE WHITE background
@@ -133,7 +150,8 @@ CRITICAL CONSTRAINTS — READ CAREFULLY:
 - NO human hands in the image
 - Ears extend from the top corners — they are the main element breaking the rectangular silhouette
 - The product must look manufacturable and real — not fantastical
-- Do NOT make it look like a plush toy or stuffed animal — it is a functional BAG with a cute face`;
+- Do NOT make it look like a plush toy or stuffed animal — it is a functional BAG with a cute face
+- NO ZIPPER on the front — the zipper is ONLY on the BACK, running horizontally`;
 }
 
 /**
@@ -144,7 +162,7 @@ async function generateOneImage(
   contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>,
   prompt: string,
   apiKey: string,
-  hasDogPhoto: boolean,
+  photoCount: number,
 ): Promise<{ imageBase64: string; mimeType: string } | null> {
   const IMAGE_MODELS = [
     'gemini-2.0-flash-exp-image-generation',
@@ -152,7 +170,7 @@ async function generateOneImage(
   ];
 
   for (const model of IMAGE_MODELS) {
-    console.log(`[ProductPreview] Trying model: ${model}${hasDogPhoto ? ' (with dog photo reference)' : ''}`);
+    console.log(`[ProductPreview] Trying model: ${model}${photoCount > 0 ? ` (with ${photoCount} dog photo reference${photoCount > 1 ? 's' : ''})` : ''}`);
     const result = await tryGeminiImageGen(contentParts, model, apiKey);
     if (result) return result;
   }
@@ -169,6 +187,7 @@ export async function POST(request: NextRequest) {
       breedName,
       dogPhoto,
       dogPhotoMimeType,
+      dogPhotos,
     } = body;
 
     if (!breedName) {
@@ -196,30 +215,45 @@ export async function POST(request: NextRequest) {
     body.dimensions = body.dimensions || { heightCm: 9.5, widthCm: 6.5, depthCm: 5.5 };
     body.breedName = body.breedName.replace(/-/g, ' ');
 
-    const prompt = buildProductPreviewPrompt(body);
-
-    // Build content parts — text prompt + optional dog photo reference
+    // Build content parts — all dog photos first, then text prompt
     const contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [];
+    let photoCount = 0;
 
-    if (dogPhoto && dogPhotoMimeType) {
+    // Multi-photo support: dogPhotos array takes priority
+    if (dogPhotos && dogPhotos.length > 0) {
+      for (const photo of dogPhotos) {
+        if (photo.data && photo.mimeType) {
+          contentParts.push({
+            inlineData: {
+              mimeType: photo.mimeType,
+              data: photo.data,
+            },
+          });
+          photoCount++;
+        }
+      }
+    } else if (dogPhoto && dogPhotoMimeType) {
+      // Backward compat: single photo
       contentParts.push({
         inlineData: {
           mimeType: dogPhotoMimeType,
           data: dogPhoto,
         },
       });
+      photoCount = 1;
     }
 
+    const prompt = buildProductPreviewPrompt(body, photoCount);
     contentParts.push({ text: prompt });
 
     const requestedCount = Math.min(Math.max(body.count || 1, 1), 2);
 
     if (requestedCount === 2) {
       // Fire two generations in parallel
-      console.log('[ProductPreview] Generating 2 preview options in parallel');
+      console.log(`[ProductPreview] Generating 2 preview options in parallel (${photoCount} reference photos)`);
       const [resultA, resultB] = await Promise.all([
-        generateOneImage(contentParts, prompt, GEMINI_API_KEY, !!dogPhoto),
-        generateOneImage(contentParts, prompt, GEMINI_API_KEY, !!dogPhoto),
+        generateOneImage(contentParts, prompt, GEMINI_API_KEY, photoCount),
+        generateOneImage(contentParts, prompt, GEMINI_API_KEY, photoCount),
       ]);
 
       const images: Array<{ imageBase64: string; mimeType: string }> = [];
@@ -237,7 +271,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Single image (default / backward compatible)
-    const result = await generateOneImage(contentParts, prompt, GEMINI_API_KEY, !!dogPhoto);
+    const result = await generateOneImage(contentParts, prompt, GEMINI_API_KEY, photoCount);
     if (result) {
       return NextResponse.json(result);
     }
@@ -257,7 +291,7 @@ export async function POST(request: NextRequest) {
 
 /**
  * Try generating an image using a Gemini model with generateContent + IMAGE modality
- * Now supports multimodal input (text + image reference)
+ * Now supports multimodal input (text + multiple image references)
  */
 async function tryGeminiImageGen(
   contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>,
