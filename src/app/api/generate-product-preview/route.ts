@@ -136,7 +136,9 @@ BACK PANEL:
 - The horizontal zipper for the lower bag compartment (wraps from back to sides)
 
 BINDING/EDGE DETAIL:
-- All raw edges of the pouch are finished with ${data.accentColor} binding/piping — a neat narrow trim that runs around the perimeter of the body, the flap edges, and compartment seams.
+- All raw edges of the pouch are finished with SUBTLE TONAL binding/piping — a neat narrow trim that runs around the perimeter of the body, the flap edges, and compartment seams.
+- The binding color should be a SLIGHTLY DARKER shade of the main body color, or a neutral grey/taupe. It should BLEND with the body, not contrast against it.
+- NEVER use a bright or saturated color (red, blue, green, orange, pink, etc.) for the binding/piping. It should be nearly invisible — just a clean finished edge.
 
 MATERIALS AND COLORS:
 - Main body material: ${materialDesc} in ${data.primaryColor}
@@ -147,7 +149,7 @@ ${data.flapColor ? `- Face flap base: ${data.flapColor}` : `- Face flap base: Sa
 - Nose: solid black embroidered or fabric
 - Ears outer: ${data.secondaryColor}
 ${data.earInnerColor ? `- Ears inner: ${data.earInnerColor}` : ''}
-- Edge binding/piping: ${data.accentColor}
+- Edge binding/piping: a subtle tone-on-tone shade slightly darker than the body (NOT a contrasting color — should nearly blend in)
 - Hardware: Dark/brushed silver carabiner (spring hook), silver snap button, dark zipper pull
 - Zipper: Dark tone (#5 nylon coil) — on the BACK only
 - Dangling paw pieces: dark charcoal grey felt
@@ -176,7 +178,8 @@ CRITICAL CONSTRAINTS:
 - The product must look manufacturable and real — not fantastical
 - Do NOT make it look like a plush toy or stuffed animal — it is a FUNCTIONAL POUCH with cute dog character
 - NO ZIPPER on the front — the zipper is ONLY on the BACK, running horizontally
-- Show the binding/piping trim around edges`;
+- Show the binding/piping trim around edges — but it must be TONAL (same family as body color), NEVER bright or contrasting
+- COLOR PALETTE RULE: The ONLY colors on this product should be: the dog's coat colors (for body, ears, markings), black (eyes, nose, paws, hardware), white/cream (muzzle), dark grey/charcoal (dangling paw pieces, zipper), and silver (hardware). Do NOT introduce any other colors like red, blue, green, orange, pink, or any bright/saturated hue anywhere on the product.`;
 }
 
 /**
