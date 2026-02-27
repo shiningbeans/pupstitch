@@ -42,6 +42,7 @@ interface PreviewRequestData {
   dogName?: string;
   dogPhoto?: string;       // base64 image data (no prefix)
   dogPhotoMimeType?: string;
+  count?: number;          // number of preview variants to generate (1 or 2)
 }
 
 /**
@@ -135,6 +136,32 @@ CRITICAL CONSTRAINTS — READ CAREFULLY:
 - Do NOT make it look like a plush toy or stuffed animal — it is a functional BAG with a cute face`;
 }
 
+/**
+ * Generate one image using the model fallback chain.
+ * Returns a single { imageBase64, mimeType } or null.
+ */
+async function generateOneImage(
+  contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>,
+  prompt: string,
+  apiKey: string,
+  hasDogPhoto: boolean,
+): Promise<{ imageBase64: string; mimeType: string } | null> {
+  const IMAGE_MODELS = [
+    'gemini-2.0-flash-exp-image-generation',
+    'gemini-2.5-flash-image',
+  ];
+
+  for (const model of IMAGE_MODELS) {
+    console.log(`[ProductPreview] Trying model: ${model}${hasDogPhoto ? ' (with dog photo reference)' : ''}`);
+    const result = await tryGeminiImageGen(contentParts, model, apiKey);
+    if (result) return result;
+  }
+
+  // Fallback: Imagen 4 Fast (text-only)
+  console.log('[ProductPreview] Trying Imagen 4 Fast fallback (text-only)');
+  return await tryImagen(prompt, apiKey);
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body: PreviewRequestData = await request.json();
@@ -174,7 +201,6 @@ export async function POST(request: NextRequest) {
     // Build content parts — text prompt + optional dog photo reference
     const contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [];
 
-    // Add dog photo as reference if provided
     if (dogPhoto && dogPhotoMimeType) {
       contentParts.push({
         inlineData: {
@@ -186,25 +212,34 @@ export async function POST(request: NextRequest) {
 
     contentParts.push({ text: prompt });
 
-    // Try each Gemini image generation model in order
-    const IMAGE_MODELS = [
-      'gemini-2.0-flash-exp-image-generation',
-      'gemini-2.5-flash-image',
-    ];
+    const requestedCount = Math.min(Math.max(body.count || 1, 1), 2);
 
-    for (const model of IMAGE_MODELS) {
-      console.log(`[ProductPreview] Trying model: ${model}${dogPhoto ? ' (with dog photo reference)' : ''}`);
-      const result = await tryGeminiImageGen(contentParts, model, GEMINI_API_KEY);
-      if (result) {
-        return NextResponse.json(result);
+    if (requestedCount === 2) {
+      // Fire two generations in parallel
+      console.log('[ProductPreview] Generating 2 preview options in parallel');
+      const [resultA, resultB] = await Promise.all([
+        generateOneImage(contentParts, prompt, GEMINI_API_KEY, !!dogPhoto),
+        generateOneImage(contentParts, prompt, GEMINI_API_KEY, !!dogPhoto),
+      ]);
+
+      const images: Array<{ imageBase64: string; mimeType: string }> = [];
+      if (resultA) images.push(resultA);
+      if (resultB) images.push(resultB);
+
+      if (images.length === 0) {
+        return NextResponse.json(
+          { error: 'Product preview generation not available. All models failed.' },
+          { status: 503 }
+        );
       }
+
+      return NextResponse.json({ images });
     }
 
-    // Fallback: try Imagen 4 Fast (text-only, no image reference support)
-    console.log('[ProductPreview] Trying Imagen 4 Fast fallback (text-only)');
-    const imagenResult = await tryImagen(prompt, GEMINI_API_KEY);
-    if (imagenResult) {
-      return NextResponse.json(imagenResult);
+    // Single image (default / backward compatible)
+    const result = await generateOneImage(contentParts, prompt, GEMINI_API_KEY, !!dogPhoto);
+    if (result) {
+      return NextResponse.json(result);
     }
 
     return NextResponse.json(

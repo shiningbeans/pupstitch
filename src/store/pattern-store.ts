@@ -10,7 +10,7 @@ import { ProductType, LeashBuddyProductSpec, LeashBuddyCustomizations, DEFAULT_L
 import { analyzeImage, getDefaultAnalysisForBreed } from '@/lib/ai/vision-client';
 import { generatePattern } from '@/lib/patterns/generator';
 import { generatePreviewImage } from '@/lib/ai/preview-generator';
-import { generateProductPreviewImage } from '@/lib/ai/product-preview-generator';
+import { generateProductPreviewOptions } from '@/lib/ai/product-preview-generator';
 import { generateLeashBuddySpec } from '@/lib/products/leash-buddy-generator';
 import { getPreset, getPresetBreedId } from '@/lib/patterns/presets';
 import {
@@ -45,7 +45,9 @@ export interface PatternStore {
   leashBuddySpec: LeashBuddyProductSpec | null;
   isGeneratingProductSpec: boolean;
   isGeneratingProductPreview: boolean;
-  productPreviewUrl: string | null;
+  productPreviewOptions: string[];        // 0-2 preview data URLs to choose from
+  selectedPreviewIndex: number | null;    // which option the user picked
+  productPreviewUrl: string | null;       // final chosen preview URL
   leashBuddyCustomizations: LeashBuddyCustomizations;
 
   // Actions
@@ -60,6 +62,7 @@ export interface PatternStore {
   generateFromAnalysis: (customizations?: Partial<PatternCustomizations>) => Promise<void>;
   generateLeashBuddyFromAnalysis: () => Promise<void>;
   generateProductPreview: () => Promise<void>;
+  selectProductPreview: (index: number) => Promise<void>;
   updateLeashBuddyCustomizations: (updates: Partial<LeashBuddyCustomizations>) => void;
   updateCustomization: (key: keyof PatternCustomizations, value: unknown) => void;
   regeneratePattern: () => Promise<void>;
@@ -101,6 +104,8 @@ export const usePatternStore = create<PatternStore>()(
       leashBuddySpec: null,
       isGeneratingProductSpec: false,
       isGeneratingProductPreview: false,
+      productPreviewOptions: [],
+      selectedPreviewIndex: null,
       productPreviewUrl: null,
       leashBuddyCustomizations: { ...DEFAULT_LEASHBUDDY_CUSTOMIZATIONS },
 
@@ -329,7 +334,7 @@ export const usePatternStore = create<PatternStore>()(
       },
 
       /**
-       * Generate product preview image with dog photo reference and customizations
+       * Generate two product preview options in parallel
        */
       generateProductPreview: async () => {
         const state = get();
@@ -340,36 +345,59 @@ export const usePatternStore = create<PatternStore>()(
           return;
         }
 
-        set({ isGeneratingProductPreview: true });
+        set({
+          isGeneratingProductPreview: true,
+          productPreviewOptions: [],
+          selectedPreviewIndex: null,
+          productPreviewUrl: null,
+        });
 
-        // Get the dog photo from store or pattern
         const dogPhoto = state.uploadedImage || state.currentPattern?.dogPhotoUrl || null;
         const customizations = state.leashBuddyCustomizations;
 
         try {
-          const imageUrl = await generateProductPreviewImage(spec, analysis, dogPhoto, customizations);
-          if (imageUrl) {
-            // Update spec with preview URL
-            const updatedSpec = { ...spec, previewImageUrl: imageUrl };
+          const options = await generateProductPreviewOptions(spec, analysis, dogPhoto, customizations);
+          if (options.length > 0) {
             set({
-              productPreviewUrl: imageUrl,
-              leashBuddySpec: updatedSpec,
+              productPreviewOptions: options,
               isGeneratingProductPreview: false,
             });
-
-            // Save to current pattern
-            const current = get().currentPattern;
-            if (current) {
-              const updated = { ...current, leashBuddySpec: updatedSpec };
-              set({ currentPattern: updated });
-              await savePattern(updated);
-            }
           } else {
             set({ isGeneratingProductPreview: false });
           }
         } catch (error) {
           console.warn('[Store] Product preview generation failed (non-fatal):', error);
           set({ isGeneratingProductPreview: false });
+        }
+      },
+
+      /**
+       * User selects one of the preview options
+       */
+      selectProductPreview: async (index: number) => {
+        const state = get();
+        const options = state.productPreviewOptions;
+        if (index < 0 || index >= options.length) return;
+
+        const chosenUrl = options[index];
+        const spec = state.leashBuddySpec;
+
+        set({
+          selectedPreviewIndex: index,
+          productPreviewUrl: chosenUrl,
+        });
+
+        // Save the chosen preview into the spec and pattern
+        if (spec) {
+          const updatedSpec = { ...spec, previewImageUrl: chosenUrl };
+          set({ leashBuddySpec: updatedSpec });
+
+          const current = get().currentPattern;
+          if (current) {
+            const updated = { ...current, leashBuddySpec: updatedSpec };
+            set({ currentPattern: updated });
+            await savePattern(updated);
+          }
         }
       },
 
@@ -661,6 +689,8 @@ export const usePatternStore = create<PatternStore>()(
           error: null,
           dogName: '',
           leashBuddySpec: null,
+          productPreviewOptions: [],
+          selectedPreviewIndex: null,
           productPreviewUrl: null,
           leashBuddyCustomizations: { ...DEFAULT_LEASHBUDDY_CUSTOMIZATIONS },
         });

@@ -10,12 +10,29 @@ interface LeashBuddySpecPanelProps {
   spec: LeashBuddyProductSpec;
   previewUrl: string | null;
   isGeneratingPreview: boolean;
+  previewOptions: string[];
+  selectedPreviewIndex: number | null;
+  onSelectPreview: (index: number) => void;
 }
 
-export default function LeashBuddySpecPanel({ spec, previewUrl, isGeneratingPreview }: LeashBuddySpecPanelProps) {
+export default function LeashBuddySpecPanel({
+  spec,
+  previewUrl,
+  isGeneratingPreview,
+  previewOptions,
+  selectedPreviewIndex,
+  onSelectPreview,
+}: LeashBuddySpecPanelProps) {
   return (
     <div className="space-y-6">
-      <ProductPreviewHero spec={spec} previewUrl={previewUrl} isGenerating={isGeneratingPreview} />
+      <ProductPreviewHero
+        spec={spec}
+        previewUrl={previewUrl}
+        isGenerating={isGeneratingPreview}
+        previewOptions={previewOptions}
+        selectedPreviewIndex={selectedPreviewIndex}
+        onSelectPreview={onSelectPreview}
+      />
       <div className="glass-solid p-4 sm:p-6 border border-slate-200/50"><FabricSwatches fabrics={spec.fabricColors} /></div>
       <div className="glass-solid p-4 sm:p-6 border border-slate-200/50"><EmbroiderySpecDisplay specs={spec.embroiderySpecs} /></div>
       <div className="glass-solid p-4 sm:p-6 border border-slate-200/50"><BOMTable items={spec.manufacturingBOM} /></div>
