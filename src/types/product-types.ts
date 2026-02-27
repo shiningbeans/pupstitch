@@ -99,28 +99,23 @@ export interface ProductDimensions {
   faceHeightCm: number;
 }
 
+/**
+ * Fixed LeashBuddy dimensions — single standard size based on poop bag roll (3.5cm diameter).
+ * Small/medium/large sizing is only for PupStitch crochet patterns.
+ */
+export const FIXED_LEASHBUDDY_DIMENSIONS: ProductDimensions = {
+  heightCm: 9.5,
+  widthCm: 6.5,
+  depthCm: 5.5,
+  faceWidthCm: 5,
+  faceHeightCm: 3.7,
+};
+
+/** @deprecated Use FIXED_LEASHBUDDY_DIMENSIONS for LeashBuddy. Kept for PupStitch size system. */
 export const PRODUCT_DIMENSIONS: Record<LeashBuddySize, ProductDimensions> = {
-  small: {
-    heightCm: 8,
-    widthCm: 5.5,
-    depthCm: 4.5,
-    faceWidthCm: 4,
-    faceHeightCm: 3,
-  },
-  medium: {
-    heightCm: 9.5,
-    widthCm: 6.5,
-    depthCm: 5.5,
-    faceWidthCm: 5,
-    faceHeightCm: 3.7,
-  },
-  large: {
-    heightCm: 11.5,
-    widthCm: 7.5,
-    depthCm: 6.5,
-    faceWidthCm: 6,
-    faceHeightCm: 4.5,
-  },
+  small: { heightCm: 8, widthCm: 5.5, depthCm: 4.5, faceWidthCm: 4, faceHeightCm: 3 },
+  medium: FIXED_LEASHBUDDY_DIMENSIONS,
+  large: { heightCm: 11.5, widthCm: 7.5, depthCm: 6.5, faceWidthCm: 6, faceHeightCm: 4.5 },
 };
 
 // ============================================================================
@@ -167,23 +162,21 @@ export type ProductMaterial = 'canvas' | 'leather' | 'faux-leather' | 'neoprene'
 export type EarSize = 'small' | 'medium' | 'large';
 
 export interface LeashBuddyCustomizations {
-  productSize: LeashBuddySize;
   material: ProductMaterial;
   earStyle: ProductEarStyle;
   earSize: EarSize;
-  // Per-body-part color overrides
-  bodyColor?: string;        // Main body color
-  earColor?: string;         // Ear outer color
-  earInnerColor?: string;    // Ear inner color
-  bindingColor?: string;     // Edge binding/trim color
-  flapColor?: string;        // Front flap color
-  liningColor?: string;      // Interior lining color
+  // Per-body-part color overrides (optional — AI-detected colors used as defaults)
+  bodyColor?: string;
+  earColor?: string;
+  earInnerColor?: string;
+  bindingColor?: string;
+  flapColor?: string;
+  liningColor?: string;
   includeNameEmbroidery: boolean;
   notes?: string;
 }
 
 export const DEFAULT_LEASHBUDDY_CUSTOMIZATIONS: LeashBuddyCustomizations = {
-  productSize: 'medium',
   material: 'canvas',
   earStyle: 'floppy',
   earSize: 'medium',

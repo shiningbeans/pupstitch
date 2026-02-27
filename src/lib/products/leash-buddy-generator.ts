@@ -4,30 +4,20 @@
  * for the LeashBuddy poop bag holder / treat pouch
  */
 
-import { DogAnalysisResult, DollSize } from '@/types';
+import { DogAnalysisResult } from '@/types';
 import {
   LeashBuddyProductSpec,
-  LeashBuddySize,
+  LeashBuddyCustomizations,
   FabricColorSpec,
   BOMItem,
-  PRODUCT_DIMENSIONS,
+  FIXED_LEASHBUDDY_DIMENSIONS,
+  ProductDimensions,
 } from '@/types/product-types';
 import {
   generateAllEmbroiderySpecs,
   mapEarShapeToStyle,
   hexToColorName,
 } from './embroidery-mapper';
-
-/**
- * Map DollSize to LeashBuddySize
- */
-function mapSize(dollSize: DollSize): LeashBuddySize {
-  switch (dollSize) {
-    case 'small': return 'small';
-    case 'large': return 'large';
-    default: return 'medium';
-  }
-}
 
 /**
  * Generate fabric color assignments from AI analysis
@@ -57,7 +47,7 @@ function generateFabricColors(analysis: DogAnalysisResult): FabricColorSpec[] {
       hex: primary,
       colorName: primaryName,
       material: 'canvas',
-      notes: 'Flap with embroidered face — same as body',
+      notes: 'Flap with face design — same as body',
     },
     {
       part: 'back-panel',
@@ -65,7 +55,7 @@ function generateFabricColors(analysis: DogAnalysisResult): FabricColorSpec[] {
       hex: primary,
       colorName: primaryName,
       material: 'canvas',
-      notes: 'Back panel with logo embroidery and belt loops',
+      notes: 'Back panel with logo and belt loops',
     },
     // Interior
     {
@@ -132,7 +122,7 @@ function generateFabricColors(analysis: DogAnalysisResult): FabricColorSpec[] {
       hex: secondary,
       colorName: secondaryName,
       material: 'canvas',
-      notes: 'Background for paw embroidery',
+      notes: 'Background for paw design',
     },
     {
       part: 'paw-accent-right',
@@ -147,14 +137,43 @@ function generateFabricColors(analysis: DogAnalysisResult): FabricColorSpec[] {
 }
 
 /**
+ * Apply user color overrides to fabric specs
+ */
+function applyColorOverrides(
+  fabrics: FabricColorSpec[],
+  customizations: LeashBuddyCustomizations,
+): FabricColorSpec[] {
+  return fabrics.map((f) => {
+    let override: string | undefined;
+    if (f.part === 'main-body' || f.part === 'front-flap' || f.part === 'back-panel' || f.part === 'bottom-compartment') {
+      override = customizations.bodyColor;
+    } else if (f.part === 'ear-outer-left' || f.part === 'ear-outer-right') {
+      override = customizations.earColor;
+    } else if (f.part === 'ear-inner-left' || f.part === 'ear-inner-right') {
+      override = customizations.earInnerColor;
+    } else if (f.part === 'binding-edge') {
+      override = customizations.bindingColor;
+    } else if (f.part === 'interior-lining') {
+      override = customizations.liningColor;
+    }
+    if (f.part === 'front-flap' && customizations.flapColor) {
+      override = customizations.flapColor;
+    }
+    if (override) {
+      return { ...f, hex: override, colorName: hexToColorName(override) };
+    }
+    return f;
+  });
+}
+
+/**
  * Generate Bill of Materials
  */
 function generateBOM(
-  size: LeashBuddySize,
+  dims: ProductDimensions,
   fabricColors: FabricColorSpec[],
   embroiderySpecs: import('@/types/product-types').EmbroiderySpec[]
 ): BOMItem[] {
-  const dims = PRODUCT_DIMENSIONS[size];
   const items: BOMItem[] = [];
 
   // Fabrics
@@ -218,7 +237,6 @@ function generateBOM(
     estimatedCostUSD: 0.08,
   });
 
-  // Rubber grommet for bag dispensing
   items.push({
     name: 'Rubber Grommet — Bag Dispensing Hole',
     category: 'hardware',
@@ -249,7 +267,6 @@ function generateBOM(
     });
   }
 
-  // Sewing thread
   items.push({
     name: 'Polyester Sewing Thread — Construction',
     category: 'thread',
@@ -296,20 +313,20 @@ function generateBOM(
  */
 function generateAssemblyNotes(earStyle: import('@/types/product-types').ProductEarStyle): string[] {
   return [
-    '1. Cut all fabric panels according to pattern templates for selected size.',
+    '1. Cut all fabric panels according to pattern templates (fixed standard size: 9.5 x 6.5 x 5.5cm).',
     '2. Apply fusible interfacing to front flap and ear panels.',
     `3. Construct 3D ${earStyle} ears: sew outer and inner layers RST, turn, press, topstitch edges.`,
-    '4. Complete all embroidery BEFORE assembly:',
-    '   a. Embroider face design on front flap panel.',
-    '   b. Embroider paw prints on front body lower section.',
-    '   c. Embroider logo on back panel.',
+    '4. Complete all embroidery/face design BEFORE assembly:',
+    '   a. Construct face on front flap panel (eyes, muzzle piece, nose, markings).',
+    '   b. Attach paw prints on front body lower section.',
+    '   c. Add logo on back panel.',
     '5. Install snap button on front flap (cap on flap, socket on body).',
     '6. Assemble bottom compartment: attach zipper, install rubber grommet for bag dispensing.',
     '7. Join front flap to main body panel, sandwiching ears at top corners.',
     '8. Apply binding tape around all edges.',
     '9. Attach belt loop D-rings to back panel.',
     '10. Attach carabiner strap to top center.',
-    '11. Quality check: test snap closure, zipper function, bag dispensing hole, all embroidery clarity.',
+    '11. Quality check: test snap closure, zipper function, bag dispensing hole, face clarity.',
     '12. Pack in individual poly bag with hang header.',
   ];
 }
@@ -319,22 +336,27 @@ function generateAssemblyNotes(earStyle: import('@/types/product-types').Product
 // ============================================================================
 
 /**
- * Generate a complete LeashBuddy product specification from dog analysis
+ * Generate a complete LeashBuddy product specification from dog analysis.
+ * Uses FIXED dimensions (single standard size) and applies user customizations.
  */
 export function generateLeashBuddySpec(
   analysis: DogAnalysisResult,
-  size: DollSize = 'medium',
-  dogName?: string
+  customizations: LeashBuddyCustomizations,
+  dogName?: string,
 ): LeashBuddyProductSpec {
-  const productSize = mapSize(size);
-  const dimensions = PRODUCT_DIMENSIONS[productSize];
-  const earStyle = mapEarShapeToStyle(analysis.earShape);
+  const dimensions = FIXED_LEASHBUDDY_DIMENSIONS;
+  // Use user-selected ear style, or fall back to AI-detected
+  const earStyle = customizations.earStyle || mapEarShapeToStyle(analysis.earShape);
   const breedName = analysis.detectedBreed.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   // Generate all sub-specs
   const embroiderySpecs = generateAllEmbroiderySpecs(analysis);
-  const fabricColors = generateFabricColors(analysis);
-  const manufacturingBOM = generateBOM(productSize, fabricColors, embroiderySpecs);
+  let fabricColors = generateFabricColors(analysis);
+
+  // Apply user color overrides if any
+  fabricColors = applyColorOverrides(fabricColors, customizations);
+
+  const manufacturingBOM = generateBOM(dimensions, fabricColors, embroiderySpecs);
   const assemblyNotes = generateAssemblyNotes(earStyle);
 
   // Build product name
@@ -347,7 +369,7 @@ export function generateLeashBuddySpec(
     productName,
     breedName,
     dogName,
-    productSize,
+    productSize: 'medium', // Fixed — single standard size
     dimensions,
     earStyle,
     embroiderySpecs,
@@ -355,6 +377,6 @@ export function generateLeashBuddySpec(
     manufacturingBOM,
     assemblyNotes,
     generatedAt: new Date(),
-    specVersion: '1.0.0',
+    specVersion: '1.1.0',
   };
 }

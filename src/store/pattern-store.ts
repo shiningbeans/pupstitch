@@ -291,7 +291,7 @@ export const usePatternStore = create<PatternStore>()(
         try {
           const spec = generateLeashBuddySpec(
             analysis,
-            state.selectedSize || 'medium',
+            state.leashBuddyCustomizations,
             state.dogName.trim() || undefined
           );
 

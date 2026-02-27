@@ -8,7 +8,14 @@ import BreedSelector from '@/components/upload/BreedSelector';
 import ImageUploader from '@/components/upload/ImageUploader';
 import AnalysisProgress from '@/components/upload/AnalysisProgress';
 import { BRAND } from '@/lib/brand';
-import { ProductType } from '@/types/product-types';
+import {
+  ProductType,
+  MATERIAL_OPTIONS,
+  EAR_SIZE_OPTIONS,
+  ProductEarStyle,
+  ProductMaterial,
+  EarSize,
+} from '@/types/product-types';
 
 type DollSize = 'small' | 'medium' | 'large';
 
@@ -44,6 +51,17 @@ const SIZE_OPTIONS: Array<{
   { id: 'large', label: 'Large', height: '12"' },
 ];
 
+const EAR_STYLE_OPTIONS: Array<{
+  id: ProductEarStyle;
+  label: string;
+  description: string;
+}> = [
+  { id: 'floppy', label: 'Floppy', description: 'Drape down from top corners' },
+  { id: 'pointy', label: 'Pointy', description: 'Stand upright at top corners' },
+  { id: 'button', label: 'Button', description: 'Fold neatly, droop slightly' },
+  { id: 'rose', label: 'Rose', description: 'Curve outward at the sides' },
+];
+
 export default function UploadPage() {
   const router = useRouter();
   const {
@@ -55,6 +73,7 @@ export default function UploadPage() {
     selectedSize,
     dogName,
     selectedProductType,
+    leashBuddyCustomizations,
     error,
     toggleBreed,
     setSelectedSize,
@@ -63,6 +82,7 @@ export default function UploadPage() {
     setUploadedImage,
     analyzeImage,
     generateFromAnalysis,
+    updateLeashBuddyCustomizations,
     setError,
   } = usePatternStore();
 
@@ -92,7 +112,9 @@ export default function UploadPage() {
     setUploadedImage(dataUrl);
   };
 
-  const canGenerate = selectedBreeds.length > 0 && selectedSize !== null;
+  // LeashBuddy doesn't need size selection (fixed size), PupStitch does
+  const needsSize = selectedProductType === 'pupstitch' || selectedProductType === 'both';
+  const canGenerate = selectedBreeds.length > 0 && (!needsSize || selectedSize !== null);
 
   const handleGenerate = async () => {
     if (!canGenerate) return;
@@ -110,6 +132,9 @@ export default function UploadPage() {
     setError(null);
     setIsProcessing(false);
   };
+
+  // Whether to show LeashBuddy customization options
+  const showLeashBuddyOptions = selectedProductType === 'leash-buddy' || selectedProductType === 'both';
 
   if (isProcessing && (isAnalyzing || isGenerating) && !error) {
     return (
@@ -161,7 +186,7 @@ export default function UploadPage() {
             Create Your Design
           </h1>
           <p className="text-slate-500">
-            Select breeds, pick a size, and optionally upload a photo
+            Select breeds, customize your product, and optionally upload a photo
           </p>
         </div>
 
@@ -186,6 +211,7 @@ export default function UploadPage() {
         )}
 
         <div className="glass p-6 sm:p-8 space-y-8">
+          {/* Product Type */}
           <section>
             <h2 className="text-base font-bold text-slate-900 mb-1">What would you like to create?</h2>
             <p className="text-sm text-slate-500 mb-4">Choose your product type</p>
@@ -216,6 +242,7 @@ export default function UploadPage() {
 
           <hr className="border-slate-100" />
 
+          {/* Breed */}
           <section>
             <h2 className="text-base font-bold text-slate-900 mb-1">Breed</h2>
             <p className="text-sm text-slate-500 mb-4">Select up to 4 breeds for mixed breeds</p>
@@ -224,8 +251,9 @@ export default function UploadPage() {
 
           <hr className="border-slate-100" />
 
+          {/* Dog Name */}
           <section>
-            <h2 className="text-base font-bold text-slate-900 mb-1">Dog's Name <span className="text-sm font-normal text-slate-400">(optional)</span></h2>
+            <h2 className="text-base font-bold text-slate-900 mb-1">Dog&apos;s Name <span className="text-sm font-normal text-slate-400">(optional)</span></h2>
             <p className="text-sm text-slate-500 mb-4">Give your design a personal touch</p>
             <input
               type="text"
@@ -237,37 +265,119 @@ export default function UploadPage() {
             />
           </section>
 
+          {/* LeashBuddy Customization — only when pouch or both selected */}
+          {showLeashBuddyOptions && (
+            <>
+              <hr className="border-slate-100" />
+
+              <section>
+                <h2 className="text-base font-bold text-slate-900 mb-1">{BRAND.product.pouch} Options</h2>
+                <p className="text-sm text-slate-500 mb-5">Customize material and ear style for your pouch</p>
+
+                {/* Material */}
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Material</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {MATERIAL_OPTIONS.map((mat) => (
+                      <button
+                        key={mat.id}
+                        onClick={() => updateLeashBuddyCustomizations({ material: mat.id as ProductMaterial })}
+                        className={`p-3 rounded-xl transition-all duration-200 border text-left ${
+                          leashBuddyCustomizations.material === mat.id
+                            ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
+                            : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                      >
+                        <p className="font-semibold text-slate-900 text-sm">{mat.label}</p>
+                        <p className="text-xs text-slate-500 mt-0.5 leading-tight">{mat.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ear Style */}
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Ear Style</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {EAR_STYLE_OPTIONS.map((ear) => (
+                      <button
+                        key={ear.id}
+                        onClick={() => updateLeashBuddyCustomizations({ earStyle: ear.id })}
+                        className={`p-3 rounded-xl transition-all duration-200 border text-center ${
+                          leashBuddyCustomizations.earStyle === ear.id
+                            ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
+                            : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                      >
+                        <p className="font-semibold text-slate-900 text-sm">{ear.label}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{ear.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ear Size */}
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Ear Size</h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {EAR_SIZE_OPTIONS.map((size) => (
+                      <button
+                        key={size.id}
+                        onClick={() => updateLeashBuddyCustomizations({ earSize: size.id as EarSize })}
+                        className={`p-3 rounded-xl transition-all duration-200 border text-center ${
+                          leashBuddyCustomizations.earSize === size.id
+                            ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
+                            : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                      >
+                        <p className="font-semibold text-slate-900 text-sm">{size.label}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{size.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </>
+          )}
+
+          {/* Size — only for PupStitch / Both */}
+          {needsSize && (
+            <>
+              <hr className="border-slate-100" />
+
+              <section>
+                <h2 className="text-base font-bold text-slate-900 mb-1">Amigurumi Size</h2>
+                <p className="text-sm text-slate-500 mb-4">Choose the size for your crochet pattern</p>
+                <div className="grid grid-cols-3 gap-3">
+                  {SIZE_OPTIONS.map((size) => (
+                    <button
+                      key={size.id}
+                      onClick={() => setSelectedSize(size.id)}
+                      className={`relative p-4 rounded-xl transition-all duration-200 border text-center ${
+                        selectedSize === size.id
+                          ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
+                          : 'border-slate-200 bg-white hover:border-slate-300'
+                      }`}
+                    >
+                      <p className="font-bold text-slate-900 text-sm">{size.label}</p>
+                      <p className="text-xs text-slate-500">{size.height}</p>
+                      {selectedSize === size.id && (
+                        <div className="absolute top-2 right-2 w-5 h-5 bg-[var(--primary)] text-white rounded-full flex items-center justify-center">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
+
           <hr className="border-slate-100" />
 
-          <section>
-            <h2 className="text-base font-bold text-slate-900 mb-4">Size</h2>
-            <div className="grid grid-cols-3 gap-3">
-              {SIZE_OPTIONS.map((size) => (
-                <button
-                  key={size.id}
-                  onClick={() => setSelectedSize(size.id)}
-                  className={`relative p-4 rounded-xl transition-all duration-200 border text-center ${
-                    selectedSize === size.id
-                      ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
-                >
-                  <p className="font-bold text-slate-900 text-sm">{size.label}</p>
-                  <p className="text-xs text-slate-500">{size.height}</p>
-                  {selectedSize === size.id && (
-                    <div className="absolute top-2 right-2 w-5 h-5 bg-[var(--primary)] text-white rounded-full flex items-center justify-center">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <hr className="border-slate-100" />
-
+          {/* Photo */}
           <section>
             <h2 className="text-base font-bold text-slate-900 mb-1">Photo <span className="text-sm font-normal text-slate-400">(optional)</span></h2>
             <p className="text-sm text-slate-500 mb-4">Upload a photo for accurate color and marking detection</p>
@@ -275,6 +385,7 @@ export default function UploadPage() {
           </section>
         </div>
 
+        {/* Generate Button */}
         <div className="sticky bottom-4 z-10">
           <button
             onClick={handleGenerate}
@@ -288,7 +399,9 @@ export default function UploadPage() {
             {!canGenerate
               ? selectedBreeds.length === 0
                 ? 'Select a breed to continue'
-                : 'Pick a size to continue'
+                : needsSize
+                  ? 'Pick a size to continue'
+                  : 'Select a breed to continue'
               : uploadedImage
                 ? selectedProductType === 'leash-buddy'
                   ? `Analyze Photo & Generate ${BRAND.product.pouch}`
