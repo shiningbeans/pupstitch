@@ -18,25 +18,25 @@ export default function Navigation() {
     <nav
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-100"
+          ? "bg-[#FAF8F5]/90 backdrop-blur-lg shadow-sm border-b border-stone-200/60"
           : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-xl font-bold tracking-tight text-slate-900 hover:text-[var(--primary)] transition-colors">
+          <Link href="/" className="text-xl font-bold tracking-tight text-stone-900 hover:text-brand-coral transition-colors">
             {BRAND.name}
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
-              Home
+            <Link href="/#products" className="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">
+              Shop
             </Link>
-            <Link href="/upload" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
-              Create
+            <Link href="/upload" className="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">
+              Design Yours
             </Link>
-            <Link href="/dashboard" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
-              Dashboard
+            <Link href="/dashboard" className="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">
+              My Creations
             </Link>
             <Link href="/upload" className="btn-small">
               Get Started
@@ -45,10 +45,10 @@ export default function Navigation() {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-stone-100 transition-colors"
             aria-label="Toggle menu"
           >
-            <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -59,15 +59,15 @@ export default function Navigation() {
         </div>
 
         {isOpen && (
-          <div className="md:hidden pb-4 space-y-1">
-            <Link href="/" className="block py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors" onClick={() => setIsOpen(false)}>
-              Home
+          <div className="md:hidden pb-4 space-y-1 border-t border-stone-200/60 pt-3">
+            <Link href="/#products" className="block py-2 text-sm text-stone-600 hover:text-stone-900 transition-colors" onClick={() => setIsOpen(false)}>
+              Shop
             </Link>
-            <Link href="/upload" className="block py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors" onClick={() => setIsOpen(false)}>
-              Create
+            <Link href="/upload" className="block py-2 text-sm text-stone-600 hover:text-stone-900 transition-colors" onClick={() => setIsOpen(false)}>
+              Design Yours
             </Link>
-            <Link href="/dashboard" className="block py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors" onClick={() => setIsOpen(false)}>
-              Dashboard
+            <Link href="/dashboard" className="block py-2 text-sm text-stone-600 hover:text-stone-900 transition-colors" onClick={() => setIsOpen(false)}>
+              My Creations
             </Link>
             <Link href="/upload" className="block mt-3 btn-small text-center" onClick={() => setIsOpen(false)}>
               Get Started

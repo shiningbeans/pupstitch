@@ -47,7 +47,7 @@ export default function DifficultySelector({
             className={`p-5 rounded-xl border transition-all text-center ${
               difficulty === option.value
                 ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                : 'border-slate-200 bg-white hover:border-slate-300'
+                : 'border-stone-200 bg-white hover:border-stone-300'
             }`}
           >
             <div className="flex justify-center gap-1.5 mb-3">
@@ -58,21 +58,21 @@ export default function DifficultySelector({
                     i < option.dots
                       ? difficulty === option.value
                         ? 'bg-[var(--primary)]'
-                        : 'bg-slate-400'
-                      : 'bg-slate-200'
+                        : 'bg-stone-400'
+                      : 'bg-stone-200'
                   }`}
                 />
               ))}
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-1">{option.label}</h3>
-            <p className="text-xs text-slate-500">{option.description}</p>
+            <h3 className="text-base font-bold text-stone-900 mb-1">{option.label}</h3>
+            <p className="text-xs text-stone-500">{option.description}</p>
           </button>
         ))}
       </div>
 
       {difficulty === 'simplified' && (
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-          <p className="text-sm text-slate-600">
+        <div className="p-4 bg-stone-50 rounded-xl border border-stone-200">
+          <p className="text-sm text-stone-600">
             <span className="font-semibold">Perfect for:</span> Beginners who want a quick, simple pattern with basic stitches
             and fewer color changes.
           </p>
@@ -80,8 +80,8 @@ export default function DifficultySelector({
       )}
 
       {difficulty === 'standard' && (
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-          <p className="text-sm text-slate-600">
+        <div className="p-4 bg-stone-50 rounded-xl border border-stone-200">
+          <p className="text-sm text-stone-600">
             <span className="font-semibold">Perfect for:</span> Intermediate crafters who want the full pattern with all the
             details that make your dog unique.
           </p>
@@ -89,8 +89,8 @@ export default function DifficultySelector({
       )}
 
       {difficulty === 'detailed' && (
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-          <p className="text-sm text-slate-600">
+        <div className="p-4 bg-stone-50 rounded-xl border border-stone-200">
+          <p className="text-sm text-stone-600">
             <span className="font-semibold">Perfect for:</span> Advanced crafters who love intricate details, special stitches,
             and texture work.
           </p>

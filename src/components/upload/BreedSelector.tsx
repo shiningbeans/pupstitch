@@ -60,17 +60,17 @@ export default function BreedSelector({
             <button
               key={breed}
               onClick={() => onToggle(breed)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--primary)]/10 border border-[var(--primary)]/20 rounded-full text-sm font-medium text-slate-700 hover:bg-[var(--primary)]/20 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--primary)]/10 border border-[var(--primary)]/20 rounded-full text-sm font-medium text-stone-700 hover:bg-[var(--primary)]/20 transition-colors"
             >
-              {idx === 0 && <span className="text-xs text-slate-400">Primary</span>}
+              {idx === 0 && <span className="text-xs text-stone-400">Primary</span>}
               {breed}
-              <svg className="w-3 h-3 text-slate-400 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 text-stone-400 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           ))}
           {!atMax && (
-            <span className="inline-flex items-center px-3 py-1.5 text-xs text-slate-400">
+            <span className="inline-flex items-center px-3 py-1.5 text-xs text-stone-400">
               {maxBreeds - selectedBreeds.length} more allowed
             </span>
           )}
@@ -82,10 +82,10 @@ export default function BreedSelector({
         placeholder="Search breeds..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white text-slate-900 placeholder-slate-300 focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 text-sm"
+        className="w-full px-4 py-2.5 border border-stone-200 rounded-xl bg-white text-stone-900 placeholder-stone-300 focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 text-sm"
       />
 
-      <div className="border border-slate-200 rounded-xl bg-white overflow-hidden max-h-60 overflow-y-auto">
+      <div className="border border-stone-200 rounded-xl bg-white overflow-hidden max-h-60 overflow-y-auto">
         {filteredBreeds.length > 0 ? (
           filteredBreeds.map((breed) => {
             const isSelected = selectedBreeds.includes(breed);
@@ -97,16 +97,16 @@ export default function BreedSelector({
                 disabled={disabled}
                 className={`w-full text-left px-4 py-2.5 transition-all duration-150 text-sm border-l-2 ${
                   isSelected
-                    ? 'border-l-[var(--primary)] bg-[var(--primary)]/5 font-medium text-slate-900'
+                    ? 'border-l-[var(--primary)] bg-[var(--primary)]/5 font-medium text-stone-900'
                     : disabled
-                      ? 'border-l-transparent text-slate-300 cursor-not-allowed'
-                      : 'border-l-transparent hover:bg-slate-50 text-slate-700'
+                      ? 'border-l-transparent text-stone-300 cursor-not-allowed'
+                      : 'border-l-transparent hover:bg-stone-50 text-stone-700'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span>{breed}</span>
                   {isSelected && (
-                    <span className="text-xs text-slate-400 font-medium">
+                    <span className="text-xs text-stone-400 font-medium">
                       {selectedBreeds.indexOf(breed) === 0 ? 'Primary' : `#${selectedBreeds.indexOf(breed) + 1}`}
                     </span>
                   )}
@@ -115,14 +115,14 @@ export default function BreedSelector({
             );
           })
         ) : (
-          <div className="px-4 py-4 text-center text-slate-400 text-sm">
+          <div className="px-4 py-4 text-center text-stone-400 text-sm">
             No breeds found matching "{searchQuery}"
           </div>
         )}
       </div>
 
       {selectedBreeds.length === 0 && (
-        <p className="text-xs text-slate-400 text-center">
+        <p className="text-xs text-stone-400 text-center">
           Select 1-4 breeds (first is primary for pattern shape)
         </p>
       )}

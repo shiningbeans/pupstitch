@@ -51,14 +51,14 @@ export default function HowItWorks() {
               <div className="glass-hover p-8 h-full">
                 <div className="flex items-center justify-between mb-6">
                   <span className="step-number">{step.number}</span>
-                  <span className="text-slate-300">{step.icon}</span>
+                  <span className="text-stone-300">{step.icon}</span>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
-                <p className="text-slate-500 leading-relaxed">{step.description}</p>
+                <h3 className="text-xl font-bold text-stone-900 mb-3">{step.title}</h3>
+                <p className="text-stone-500 leading-relaxed">{step.description}</p>
               </div>
               {index < steps.length - 1 && (
-                <div className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 z-10">
-                  <svg className="w-8 h-8 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="hidden md:block absolute -right-4 top-1/2 -transtone-y-1/2 z-10">
+                  <svg className="w-8 h-8 text-stone-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>

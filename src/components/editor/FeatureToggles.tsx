@@ -55,7 +55,7 @@ export default function FeatureToggles({ pattern, onToggle }: FeatureTogglesProp
             className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${
               isEnabled
                 ? 'bg-[var(--primary)]/5 border-[var(--primary)]/30'
-                : 'bg-slate-50 border-slate-200 opacity-60'
+                : 'bg-stone-50 border-stone-200 opacity-60'
             } ${!isDetected ? 'opacity-50' : ''}`}
           >
             <div className="flex-1 min-w-0">
@@ -65,19 +65,19 @@ export default function FeatureToggles({ pattern, onToggle }: FeatureTogglesProp
                   checked={isEnabled}
                   onChange={(e) => onToggle(feature.key, e.target.checked)}
                   disabled={!isDetected}
-                  className="w-5 h-5 rounded border-slate-300 text-[var(--primary)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed accent-[var(--primary)]"
+                  className="w-5 h-5 rounded border-stone-300 text-[var(--primary)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed accent-[var(--primary)]"
                 />
-                <span className="ml-3 font-medium text-slate-900">{feature.label}</span>
+                <span className="ml-3 font-medium text-stone-900">{feature.label}</span>
               </label>
-              <p className="text-xs text-slate-500 mt-1 ml-8">{feature.description}</p>
+              <p className="text-xs text-stone-500 mt-1 ml-8">{feature.description}</p>
               {!isDetected && (
-                <p className="text-xs text-slate-400 mt-2 ml-8 italic">Not detected in your dog&apos;s photo</p>
+                <p className="text-xs text-stone-400 mt-2 ml-8 italic">Not detected in your dog&apos;s photo</p>
               )}
             </div>
           </div>
         );
       })}
-      <p className="text-xs text-slate-500 mt-6 p-3 bg-slate-50 rounded-lg border border-slate-100">
+      <p className="text-xs text-stone-500 mt-6 p-3 bg-stone-50 rounded-lg border border-stone-100">
         Features can be toggled on or off. Detected features are enabled by default. You can customize which details appear in your pattern.
       </p>
     </div>

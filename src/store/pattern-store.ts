@@ -50,6 +50,10 @@ export interface PatternStore {
   productPreviewUrl: string | null;       // final chosen preview URL
   leashBuddyCustomizations: LeashBuddyCustomizations;
 
+  // Scenic photos state
+  scenicPhotos: string[];
+  isGeneratingScenicPhotos: boolean;
+
   // Actions
   initStorage: () => Promise<void>;
   setUploadedImages: (dataUrls: string[]) => void;
@@ -76,6 +80,7 @@ export interface PatternStore {
   updateBodyPartColor: (partName: string, hexCode: string) => void;
   clearCurrent: () => void;
   setError: (error: string | null) => void;
+  generateScenicPhotos: () => Promise<void>;
 }
 
 /**
@@ -108,6 +113,10 @@ export const usePatternStore = create<PatternStore>()(
       selectedPreviewIndex: null,
       productPreviewUrl: null,
       leashBuddyCustomizations: { ...DEFAULT_LEASHBUDDY_CUSTOMIZATIONS },
+
+      // Scenic photos
+      scenicPhotos: [],
+      isGeneratingScenicPhotos: false,
 
       /**
        * Initialize storage: migrate from localStorage if needed, then load saved patterns
@@ -315,8 +324,9 @@ export const usePatternStore = create<PatternStore>()(
             await savePattern(updated);
           }
 
-          // Generate product preview in background
+          // Generate product preview + scenic photos in background
           get().generateProductPreview();
+          get().generateScenicPhotos();
         } catch (error) {
           console.error('[Store] LeashBuddy spec generation error:', error);
           set({ isGeneratingProductSpec: false });
@@ -698,11 +708,65 @@ export const usePatternStore = create<PatternStore>()(
           selectedPreviewIndex: null,
           productPreviewUrl: null,
           leashBuddyCustomizations: { ...DEFAULT_LEASHBUDDY_CUSTOMIZATIONS },
+          scenicPhotos: [],
+          isGeneratingScenicPhotos: false,
         });
       },
 
       setError: (error: string | null) => {
         set({ error });
+      },
+
+      generateScenicPhotos: async () => {
+        const state = get();
+        const analysis = state.analysisResult;
+        if (!analysis) {
+          console.warn('[Store] No analysis for scenic photos');
+          return;
+        }
+
+        set({ isGeneratingScenicPhotos: true, scenicPhotos: [] });
+
+        // Build request body from analysis + customizations
+        const customizations = state.leashBuddyCustomizations;
+        const dogPhotos = state.uploadedImages
+          .filter((url) => url.startsWith('data:'))
+          .map((url) => {
+            const [meta, data] = url.split(',');
+            const mimeType = meta.match(/data:(.*?);/)?.[1] || 'image/jpeg';
+            return { data, mimeType };
+          });
+
+        try {
+          const response = await fetch('/api/generate-scenic-photos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              breedName: analysis.detectedBreed,
+              primaryColor: customizations.bodyColor || analysis.colors.primary,
+              secondaryColor: customizations.earColor || analysis.colors.secondary,
+              muzzleColor: customizations.muzzleColor,
+              noseColor: customizations.noseColor,
+              earShape: analysis.earShape,
+              dogPhotos: dogPhotos.slice(0, 1), // just first photo for reference
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const photos = (data.images || []).map(
+              (img: { imageBase64: string; mimeType: string }) =>
+                `data:${img.mimeType};base64,${img.imageBase64}`
+            );
+            set({ scenicPhotos: photos, isGeneratingScenicPhotos: false });
+          } else {
+            console.warn('[Store] Scenic photos failed (non-fatal)');
+            set({ isGeneratingScenicPhotos: false });
+          }
+        } catch (error) {
+          console.warn('[Store] Scenic photos error (non-fatal):', error);
+          set({ isGeneratingScenicPhotos: false });
+        }
       },
     }),
     { name: 'PatternStore' }

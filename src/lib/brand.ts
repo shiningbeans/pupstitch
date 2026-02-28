@@ -25,4 +25,31 @@ export const BRAND = {
     stitch: 'pupstitch' as const,
     both: 'both' as const,
   },
+  catalog: {
+    leashBuddy: {
+      name: 'LeashBuddy',
+      tagline: 'A poop bag holder that looks like your pup',
+      price: 70,
+      currency: 'USD',
+    },
+    bundle: {
+      name: 'The Full Set',
+      tagline: 'LeashBuddy + matching leash & collar',
+      price: 100,
+      currency: 'USD',
+      includes: ['LeashBuddy', 'Matching Leash', 'Matching Collar'],
+    },
+    crochetPdf: {
+      name: 'Crochet Pattern',
+      tagline: 'Make your own amigurumi',
+      price: 2,
+      currency: 'USD',
+      freeWithLeashBuddy: true,
+    },
+    scenicPhotos: {
+      name: 'Scenic Photos',
+      tagline: 'Your dog as a crochet model in beautiful scenes',
+      includedWith: 'all',
+    },
+  },
 };

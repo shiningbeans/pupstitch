@@ -32,7 +32,7 @@ export default function AnalysisProgress({
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="flex justify-center">
-          <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm max-w-sm">
+          <div className="relative rounded-2xl overflow-hidden border border-stone-200 bg-white shadow-sm max-w-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={uploadedImage} alt="Dog photo being analyzed" className="w-full h-72 object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
@@ -41,22 +41,22 @@ export default function AnalysisProgress({
 
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-3">Analyzing Your Dog</h2>
-            <p className="text-slate-500">
+            <h2 className="text-2xl font-bold text-stone-900 mb-3">Analyzing Your Dog</h2>
+            <p className="text-stone-500">
               Identifying unique characteristics and features...
             </p>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="relative w-12 h-12 flex-shrink-0">
-              <div className="absolute inset-0 rounded-full border-2 border-slate-100" />
+              <div className="absolute inset-0 rounded-full border-2 border-stone-100" />
               <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[var(--primary)] border-r-[var(--primary)] animate-spin" />
             </div>
             <div className="flex-1">
-              <div className="mb-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div className="mb-2 h-1.5 bg-stone-100 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] animate-pulse rounded-full" />
               </div>
-              <p className="text-slate-600 font-medium text-sm min-h-5">
+              <p className="text-stone-600 font-medium text-sm min-h-5">
                 {messages[messageIndex]}
               </p>
             </div>
@@ -74,7 +74,7 @@ export default function AnalysisProgress({
                   className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                     step.done
                       ? 'bg-[var(--success)] text-white'
-                      : 'bg-slate-100 text-slate-400'
+                      : 'bg-stone-100 text-stone-400'
                   }`}
                 >
                   {step.done ? (
@@ -85,7 +85,7 @@ export default function AnalysisProgress({
                     idx + 1
                   )}
                 </div>
-                <span className={`text-sm ${step.done ? 'text-slate-700 font-medium' : 'text-slate-400'}`}>
+                <span className={`text-sm ${step.done ? 'text-stone-700 font-medium' : 'text-stone-400'}`}>
                   {step.label}
                 </span>
               </div>

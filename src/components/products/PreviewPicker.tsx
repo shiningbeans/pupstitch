@@ -30,8 +30,8 @@ export default function PreviewPicker({ options, selectedIndex, onSelect }: Prev
   return (
     <div className="p-4 space-y-4">
       <div className="text-center">
-        <p className="text-sm font-semibold text-slate-700">Which design do you prefer?</p>
-        <p className="text-xs text-slate-400 mt-0.5">Pick the one that best represents your dog</p>
+        <p className="text-sm font-semibold text-stone-700">Which design do you prefer?</p>
+        <p className="text-xs text-stone-400 mt-0.5">Pick the one that best represents your dog</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -39,7 +39,7 @@ export default function PreviewPicker({ options, selectedIndex, onSelect }: Prev
           <button
             key={idx}
             onClick={() => onSelect(idx)}
-            className="group relative rounded-xl overflow-hidden border-2 border-slate-200 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md bg-gradient-to-br from-slate-50 to-white"
+            className="group relative rounded-xl overflow-hidden border-2 border-stone-200 hover:border-[var(--primary)] transition-all duration-200 hover:shadow-md bg-gradient-to-br from-stone-50 to-white"
           >
             <div className="aspect-square flex items-center justify-center p-3">
               <img
@@ -53,7 +53,7 @@ export default function PreviewPicker({ options, selectedIndex, onSelect }: Prev
                 Choose This
               </span>
             </div>
-            <div className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-xs font-semibold text-slate-600 rounded-md border border-slate-200">
+            <div className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-xs font-semibold text-stone-600 rounded-md border border-stone-200">
               {idx === 0 ? 'A' : 'B'}
             </div>
           </button>

@@ -50,8 +50,8 @@ export default function SizeSelector({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-base font-semibold text-slate-900 mb-3">Choose your plush size</h3>
-        <p className="text-slate-500 text-sm mb-6">The size affects yarn weight, pattern complexity, and creation time</p>
+        <h3 className="text-base font-semibold text-stone-900 mb-3">Choose your plush size</h3>
+        <p className="text-stone-500 text-sm mb-6">The size affects yarn weight, pattern complexity, and creation time</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -62,11 +62,11 @@ export default function SizeSelector({
             className={`relative p-6 rounded-xl transition-all duration-200 border text-center ${
               selectedSize === size.id
                 ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                : 'border-slate-200 bg-white hover:border-slate-300'
+                : 'border-stone-200 bg-white hover:border-stone-300'
             }`}
           >
             {size.recommended && (
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <div className="absolute -top-3 left-1/2 transform -transtone-x-1/2">
                 <span className="inline-block bg-[var(--primary)] text-white text-xs font-bold px-3 py-1 rounded-full">
                   RECOMMENDED
                 </span>
@@ -74,18 +74,18 @@ export default function SizeSelector({
             )}
 
             <div className="mb-3">
-              <p className="text-2xl font-bold text-slate-900">{size.label}</p>
-              <p className="text-lg text-slate-500 font-semibold">{size.height}</p>
+              <p className="text-2xl font-bold text-stone-900">{size.label}</p>
+              <p className="text-lg text-stone-500 font-semibold">{size.height}</p>
             </div>
 
             <div className="mb-4 space-y-1">
-              <p className="text-sm font-medium text-slate-700">{size.description}</p>
-              <p className="text-xs text-slate-400">{size.details}</p>
+              <p className="text-sm font-medium text-stone-700">{size.description}</p>
+              <p className="text-xs text-stone-400">{size.details}</p>
             </div>
 
-            <div className="pt-4 border-t border-slate-100">
-              <p className="text-xs font-semibold text-slate-400 uppercase">Creation Time</p>
-              <p className="text-sm text-slate-600 font-medium mt-1">{size.time}</p>
+            <div className="pt-4 border-t border-stone-100">
+              <p className="text-xs font-semibold text-stone-400 uppercase">Creation Time</p>
+              <p className="text-sm text-stone-600 font-medium mt-1">{size.time}</p>
             </div>
 
             {selectedSize === size.id && (
@@ -99,8 +99,8 @@ export default function SizeSelector({
         ))}
       </div>
 
-      <div className="p-6 bg-slate-50 rounded-xl border border-slate-200">
-        <p className="text-sm font-semibold text-slate-700 mb-4">Size Comparison</p>
+      <div className="p-6 bg-stone-50 rounded-xl border border-stone-200">
+        <p className="text-sm font-semibold text-stone-700 mb-4">Size Comparison</p>
         <div className="flex items-end justify-around h-24 gap-2">
           {(['small', 'medium', 'large'] as const).map((sizeId) => {
             const sizes = { small: 40, medium: 60, large: 80 };
@@ -109,12 +109,12 @@ export default function SizeSelector({
               <div key={sizeId} className="flex flex-col items-center">
                 <div
                   className={`rounded-full transition-all duration-200 ${
-                    selectedSize === sizeId ? 'bg-[var(--primary)]' : 'bg-slate-200'
+                    selectedSize === sizeId ? 'bg-[var(--primary)]' : 'bg-stone-200'
                   }`}
                   style={{ width: `${sizes[sizeId]}px`, height: `${sizes[sizeId]}px` }}
                 />
-                <p className="text-xs text-slate-500 mt-2 capitalize">{sizeId}</p>
-                <p className="text-xs font-bold text-slate-700">{heights[sizeId]}</p>
+                <p className="text-xs text-stone-500 mt-2 capitalize">{sizeId}</p>
+                <p className="text-xs font-bold text-stone-700">{heights[sizeId]}</p>
               </div>
             );
           })}

@@ -47,6 +47,8 @@ Key visual requirements:
 ${features ? `- Distinctive features: ${features}` : ''}
 ${partDetails ? `- Body part details: ${partDetails}` : ''}
 
+EXPRESSION — CRITICAL: The amigurumi MUST have a SMILING mouth — a clear upward-facing semicircle (happy "U" shape) embroidered in dark thread below the nose. The mouth MUST curve UPWARD to show a happy, smiling expression. NOT a frown, NOT downturned, NOT a straight line, NOT a "w" shape.
+
 Style: Professional product photography on a clean white/light background. The amigurumi should be sitting upright, facing slightly to the side. Soft, warm lighting. The toy should look handcrafted, adorable, and high quality — like something you'd find on Etsy or in a craft shop. Include small safety eyes (black bead eyes) and an embroidered nose.
 
 Do NOT include any text, watermarks, or logos in the image.`;

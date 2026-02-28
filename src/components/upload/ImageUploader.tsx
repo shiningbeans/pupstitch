@@ -83,12 +83,12 @@ export default function ImageUploader({
       {selectedImages.length > 0 && (
         <div className="grid grid-cols-3 gap-3">
           {selectedImages.map((img, idx) => (
-            <div key={idx} className="relative rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm group">
+            <div key={idx} className="relative rounded-xl overflow-hidden border border-stone-200 bg-white shadow-sm group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={img} alt={`Dog photo ${idx + 1}`} className="w-full aspect-square object-cover" />
               <button
                 onClick={() => handleRemove(idx)}
-                className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm hover:bg-white text-slate-600 rounded-full p-1.5 transition-all duration-200 shadow-sm hover:shadow opacity-0 group-hover:opacity-100"
+                className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm hover:bg-white text-stone-600 rounded-full p-1.5 transition-all duration-200 shadow-sm hover:shadow opacity-0 group-hover:opacity-100"
                 aria-label={`Remove photo ${idx + 1}`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,12 +105,12 @@ export default function ImageUploader({
           {canAddMore && (
             <button
               onClick={handleBrowseClick}
-              className="flex flex-col items-center justify-center aspect-square rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-slate-50 transition-all duration-200 cursor-pointer"
+              className="flex flex-col items-center justify-center aspect-square rounded-xl border-2 border-dashed border-stone-200 bg-stone-50/50 hover:border-stone-300 hover:bg-stone-50 transition-all duration-200 cursor-pointer"
             >
-              <svg className="w-6 h-6 text-slate-300 mb-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-stone-300 mb-1" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
-              <span className="text-xs text-slate-400 font-medium">Add Photo</span>
+              <span className="text-xs text-stone-400 font-medium">Add Photo</span>
             </button>
           )}
         </div>
@@ -126,17 +126,17 @@ export default function ImageUploader({
           className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-200 ${
             isDragging
               ? 'border-[var(--primary)] bg-[var(--primary)]/5 scale-[1.02]'
-              : 'border-slate-200 bg-slate-50/50 hover:border-slate-300 hover:bg-slate-50'
+              : 'border-stone-200 bg-stone-50/50 hover:border-stone-300 hover:bg-stone-50'
           }`}
         >
           <div className="flex flex-col items-center gap-3">
-            <svg className="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+            <svg className="w-10 h-10 text-stone-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
             <div>
-              <h3 className="text-base font-semibold text-slate-700 mb-1">Upload Your Dog&apos;s Photos</h3>
-              <p className="text-sm text-slate-400">Drag and drop or click to browse</p>
-              <p className="text-xs text-slate-300 mt-1">JPEG or PNG &middot; Up to {maxPhotos} photos for best results</p>
+              <h3 className="text-base font-semibold text-stone-700 mb-1">Upload Your Dog&apos;s Photos</h3>
+              <p className="text-sm text-stone-400">Drag and drop or click to browse</p>
+              <p className="text-xs text-stone-300 mt-1">JPEG or PNG &middot; Up to {maxPhotos} photos for best results</p>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function ImageUploader({
 
       {/* Hint text */}
       {selectedImages.length > 0 && selectedImages.length < maxPhotos && (
-        <p className="text-xs text-slate-400 text-center">
+        <p className="text-xs text-stone-400 text-center">
           Multiple angles help the AI capture your dog&apos;s colors and markings more accurately
         </p>
       )}

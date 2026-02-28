@@ -155,14 +155,14 @@ export default function UploadPage() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
                 <div className="space-y-2 text-center">
-                  <p className="text-lg font-semibold text-slate-900">
+                  <p className="text-lg font-semibold text-stone-900">
                     {selectedProductType === 'leash-buddy'
                       ? `Generating Your ${BRAND.product.pouch}`
                       : selectedProductType === 'both'
                         ? 'Generating Your Products'
                         : 'Generating Your Pattern'}
                   </p>
-                  <p className="text-slate-500 text-sm">
+                  <p className="text-stone-500 text-sm">
                     {selectedProductType === 'leash-buddy'
                       ? `Creating manufacturing specs for your ${selectedBreeds.join(' / ')}...`
                       : selectedProductType === 'both'
@@ -171,7 +171,7 @@ export default function UploadPage() {
                   </p>
                 </div>
                 <div className="w-full max-w-xs">
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] animate-pulse rounded-full" />
                   </div>
                 </div>
@@ -187,10 +187,10 @@ export default function UploadPage() {
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-bold text-stone-900 mb-2 tracking-tight">
             Create Your Design
           </h1>
-          <p className="text-slate-500">
+          <p className="text-stone-500">
             Select breeds, customize your product, and optionally upload a photo
           </p>
         </div>
@@ -218,8 +218,8 @@ export default function UploadPage() {
         <div className="glass p-6 sm:p-8 space-y-8">
           {/* Product Type */}
           <section>
-            <h2 className="text-base font-bold text-slate-900 mb-1">What would you like to create?</h2>
-            <p className="text-sm text-slate-500 mb-4">Choose your product type</p>
+            <h2 className="text-base font-bold text-stone-900 mb-1">What would you like to create?</h2>
+            <p className="text-sm text-stone-500 mb-4">Choose your product type</p>
             <div className="grid grid-cols-3 gap-3">
               {PRODUCT_TYPE_OPTIONS.map((opt) => (
                 <button
@@ -228,11 +228,11 @@ export default function UploadPage() {
                   className={`relative p-4 rounded-xl transition-all duration-200 border text-center ${
                     selectedProductType === opt.id
                       ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
+                      : 'border-stone-200 bg-white hover:border-stone-300'
                   }`}
                 >
-                  <p className="font-bold text-slate-900 text-sm">{opt.label}</p>
-                  <p className="text-xs text-slate-500 mt-1">{opt.description}</p>
+                  <p className="font-bold text-stone-900 text-sm">{opt.label}</p>
+                  <p className="text-xs text-stone-500 mt-1">{opt.description}</p>
                   {selectedProductType === opt.id && (
                     <div className="absolute top-2 right-2 w-5 h-5 bg-[var(--primary)] text-white rounded-full flex items-center justify-center">
                       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -245,43 +245,43 @@ export default function UploadPage() {
             </div>
           </section>
 
-          <hr className="border-slate-100" />
+          <hr className="border-stone-100" />
 
           {/* Breed */}
           <section>
-            <h2 className="text-base font-bold text-slate-900 mb-1">Breed</h2>
-            <p className="text-sm text-slate-500 mb-4">Select up to 4 breeds for mixed breeds</p>
+            <h2 className="text-base font-bold text-stone-900 mb-1">Breed</h2>
+            <p className="text-sm text-stone-500 mb-4">Select up to 4 breeds for mixed breeds</p>
             <BreedSelector selectedBreeds={selectedBreeds} onToggle={toggleBreed} />
           </section>
 
-          <hr className="border-slate-100" />
+          <hr className="border-stone-100" />
 
           {/* Dog Name */}
           <section>
-            <h2 className="text-base font-bold text-slate-900 mb-1">Dog&apos;s Name <span className="text-sm font-normal text-slate-400">(optional)</span></h2>
-            <p className="text-sm text-slate-500 mb-4">Give your design a personal touch</p>
+            <h2 className="text-base font-bold text-stone-900 mb-1">Dog&apos;s Name <span className="text-sm font-normal text-stone-400">(optional)</span></h2>
+            <p className="text-sm text-stone-500 mb-4">Give your design a personal touch</p>
             <input
               type="text"
               value={dogName}
               onChange={(e) => setDogName(e.target.value)}
               placeholder="e.g., Buddy, Luna, Max..."
               maxLength={30}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition-all text-base"
+              className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder-stone-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition-all text-base"
             />
           </section>
 
           {/* LeashBuddy Customization — only when pouch or both selected */}
           {showLeashBuddyOptions && (
             <>
-              <hr className="border-slate-100" />
+              <hr className="border-stone-100" />
 
               <section>
-                <h2 className="text-base font-bold text-slate-900 mb-1">{BRAND.product.pouch} Options</h2>
-                <p className="text-sm text-slate-500 mb-5">Customize material and ear style for your pouch</p>
+                <h2 className="text-base font-bold text-stone-900 mb-1">{BRAND.product.pouch} Options</h2>
+                <p className="text-sm text-stone-500 mb-5">Customize material and ear style for your pouch</p>
 
                 {/* Material */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Material</h3>
+                  <h3 className="text-sm font-semibold text-stone-700 mb-3">Material</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {MATERIAL_OPTIONS.map((mat) => (
                       <button
@@ -290,11 +290,11 @@ export default function UploadPage() {
                         className={`p-3 rounded-xl transition-all duration-200 border text-left ${
                           leashBuddyCustomizations.material === mat.id
                             ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                            : 'border-slate-200 bg-white hover:border-slate-300'
+                            : 'border-stone-200 bg-white hover:border-stone-300'
                         }`}
                       >
-                        <p className="font-semibold text-slate-900 text-sm">{mat.label}</p>
-                        <p className="text-xs text-slate-500 mt-0.5 leading-tight">{mat.description}</p>
+                        <p className="font-semibold text-stone-900 text-sm">{mat.label}</p>
+                        <p className="text-xs text-stone-500 mt-0.5 leading-tight">{mat.description}</p>
                       </button>
                     ))}
                   </div>
@@ -302,7 +302,7 @@ export default function UploadPage() {
 
                 {/* Ear Style */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Ear Style</h3>
+                  <h3 className="text-sm font-semibold text-stone-700 mb-3">Ear Style</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {EAR_STYLE_OPTIONS.map((ear) => (
                       <button
@@ -311,11 +311,11 @@ export default function UploadPage() {
                         className={`p-3 rounded-xl transition-all duration-200 border text-center ${
                           leashBuddyCustomizations.earStyle === ear.id
                             ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                            : 'border-slate-200 bg-white hover:border-slate-300'
+                            : 'border-stone-200 bg-white hover:border-stone-300'
                         }`}
                       >
-                        <p className="font-semibold text-slate-900 text-sm">{ear.label}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{ear.description}</p>
+                        <p className="font-semibold text-stone-900 text-sm">{ear.label}</p>
+                        <p className="text-xs text-stone-500 mt-0.5">{ear.description}</p>
                       </button>
                     ))}
                   </div>
@@ -323,7 +323,7 @@ export default function UploadPage() {
 
                 {/* Ear Size */}
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Ear Size</h3>
+                  <h3 className="text-sm font-semibold text-stone-700 mb-3">Ear Size</h3>
                   <div className="grid grid-cols-3 gap-2">
                     {EAR_SIZE_OPTIONS.map((size) => (
                       <button
@@ -332,11 +332,11 @@ export default function UploadPage() {
                         className={`p-3 rounded-xl transition-all duration-200 border text-center ${
                           leashBuddyCustomizations.earSize === size.id
                             ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                            : 'border-slate-200 bg-white hover:border-slate-300'
+                            : 'border-stone-200 bg-white hover:border-stone-300'
                         }`}
                       >
-                        <p className="font-semibold text-slate-900 text-sm">{size.label}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{size.description}</p>
+                        <p className="font-semibold text-stone-900 text-sm">{size.label}</p>
+                        <p className="text-xs text-stone-500 mt-0.5">{size.description}</p>
                       </button>
                     ))}
                   </div>
@@ -344,8 +344,8 @@ export default function UploadPage() {
 
                 {/* Dog Color Map */}
                 <div className="mt-6">
-                  <h3 className="text-sm font-semibold text-slate-700 mb-1">Color Map</h3>
-                  <p className="text-xs text-slate-400 mb-3">Click any region to adjust colors for the product</p>
+                  <h3 className="text-sm font-semibold text-stone-700 mb-1">Color Map</h3>
+                  <p className="text-xs text-stone-400 mb-3">Click any region to adjust colors for the product</p>
                   <DogColorModel
                     analysisResult={analysisResult}
                     customizations={leashBuddyCustomizations}
@@ -359,11 +359,11 @@ export default function UploadPage() {
           {/* Size — only for PupStitch / Both */}
           {needsSize && (
             <>
-              <hr className="border-slate-100" />
+              <hr className="border-stone-100" />
 
               <section>
-                <h2 className="text-base font-bold text-slate-900 mb-1">Amigurumi Size</h2>
-                <p className="text-sm text-slate-500 mb-4">Choose the size for your crochet pattern</p>
+                <h2 className="text-base font-bold text-stone-900 mb-1">Amigurumi Size</h2>
+                <p className="text-sm text-stone-500 mb-4">Choose the size for your crochet pattern</p>
                 <div className="grid grid-cols-3 gap-3">
                   {SIZE_OPTIONS.map((size) => (
                     <button
@@ -372,11 +372,11 @@ export default function UploadPage() {
                       className={`relative p-4 rounded-xl transition-all duration-200 border text-center ${
                         selectedSize === size.id
                           ? 'border-[var(--primary)] bg-[var(--primary)]/5 shadow-sm'
-                          : 'border-slate-200 bg-white hover:border-slate-300'
+                          : 'border-stone-200 bg-white hover:border-stone-300'
                       }`}
                     >
-                      <p className="font-bold text-slate-900 text-sm">{size.label}</p>
-                      <p className="text-xs text-slate-500">{size.height}</p>
+                      <p className="font-bold text-stone-900 text-sm">{size.label}</p>
+                      <p className="text-xs text-stone-500">{size.height}</p>
                       {selectedSize === size.id && (
                         <div className="absolute top-2 right-2 w-5 h-5 bg-[var(--primary)] text-white rounded-full flex items-center justify-center">
                           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -391,12 +391,12 @@ export default function UploadPage() {
             </>
           )}
 
-          <hr className="border-slate-100" />
+          <hr className="border-stone-100" />
 
           {/* Photo */}
           <section>
-            <h2 className="text-base font-bold text-slate-900 mb-1">Photo <span className="text-sm font-normal text-slate-400">(optional)</span></h2>
-            <p className="text-sm text-slate-500 mb-4">Upload a photo for accurate color and marking detection</p>
+            <h2 className="text-base font-bold text-stone-900 mb-1">Photo <span className="text-sm font-normal text-stone-400">(optional)</span></h2>
+            <p className="text-sm text-stone-500 mb-4">Upload a photo for accurate color and marking detection</p>
             <ImageUploader onImagesSelected={handleImagesSelected} selectedImages={uploadedImages} />
           </section>
         </div>
@@ -408,8 +408,8 @@ export default function UploadPage() {
             disabled={!canGenerate || isProcessing}
             className={`w-full py-4 rounded-full text-base font-bold shadow-lg transition-all duration-200 ${
               canGenerate && !isProcessing
-                ? 'bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] hover:shadow-xl hover:-translate-y-0.5'
-                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                ? 'bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] hover:shadow-xl hover:-transtone-y-0.5'
+                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
           >
             {!canGenerate
