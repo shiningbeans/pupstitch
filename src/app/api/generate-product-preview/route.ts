@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Allow up to 60 seconds for image generation on Vercel
-export const maxDuration = 60;
+// Allow up to 120 seconds for image generation on Vercel
+export const maxDuration = 120;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -42,18 +42,18 @@ interface PreviewRequestData {
   dimensions: { heightCm: number; widthCm: number; depthCm: number };
   embroideryDescription?: string;
   dogName?: string;
-  dogPhoto?: string;       // single base64 image data (no prefix) — backward compat
+  dogPhoto?: string;
   dogPhotoMimeType?: string;
-  dogPhotos?: Array<{ data: string; mimeType: string }>;  // multiple photos
-  count?: number;          // number of preview variants to generate (1 or 2)
-  regionColors?: Record<string, string[]>;  // multi-color per region
+  dogPhotos?: Array<{ data: string; mimeType: string }>;
+  count?: number;
+  regionColors?: Record<string, string[]>;
 }
 
 /**
- * Build the detailed product preview prompt
+ * Build the detailed product preview prompt — v2
+ * KEY CHANGE: The face IS the flap. Not a face on a flap. The flap itself IS the dog face.
  */
 function buildProductPreviewPrompt(data: PreviewRequestData, photoCount: number): string {
-  // Map ear style to description
   const earStyleDesc = data.earStyle === 'pointy'
     ? 'pointed fabric ears that stand upright, sewn to the top-left and top-right corners of the pouch'
     : data.earStyle === 'rose'
@@ -67,160 +67,172 @@ function buildProductPreviewPrompt(data: PreviewRequestData, photoCount: number)
 
   const hasPhotos = photoCount > 0;
   const photoContext = hasPhotos
-    ? `\n\nREFERENCE PHOTO${photoCount > 1 ? 'S' : ''}: I've attached ${photoCount} photo${photoCount > 1 ? 's' : ''} of the actual ${data.breedName} dog. Use ${photoCount > 1 ? 'these photos' : 'this photo'} to understand the dog's FACIAL STRUCTURE, MARKING PATTERNS, and BREED FEATURES. The specific colors to use for each part of the product are listed below — these were chosen by the user and should be followed exactly.`
+    ? `\n\nREFERENCE PHOTO${photoCount > 1 ? 'S' : ''}: I've attached ${photoCount} photo${photoCount > 1 ? 's' : ''} of the actual ${data.breedName}. Use ${photoCount > 1 ? 'these' : 'this'} ONLY for facial structure and marking placement — NOT for colors. Colors are specified below.`
     : '';
 
-  const colorInstructions = `\n\nCOLOR SPECIFICATION (USER-SELECTED — USE THESE EXACTLY):
-The user has chosen the exact colors for each part of the product. Apply these colors faithfully:
-- BODY FABRIC (main pouch): ${data.primaryColor} — this represents the dog's dominant coat color. The entire pouch body must be this color.
-- BREED MARKINGS / EARS OUTER: ${data.secondaryColor} — use for any secondary markings, ear outer fabric, and breed-specific patches.
-${data.earInnerColor ? `- EAR INNER LINING: ${data.earInnerColor}` : ''}
-- MUZZLE APPLIQUE: ${data.muzzleColor || 'light beige or cream'} — the flat fabric piece for the snout area.
-- NOSE: ${data.noseColor || 'black'} — the small embroidered nose shape.
-- ACCENT (paw prints): ${data.accentColor || 'a slightly darker tone than the body'}
-${data.regionColors && Object.keys(data.regionColors).length > 0 ? `\nMULTI-COLOR MARKINGS: Some regions have multiple colors to represent patterns, spots, or patches:\n${Object.entries(data.regionColors).map(([region, colors]) => `- ${region.toUpperCase()}: has additional colors: ${colors.join(', ')} — blend these as natural breed markings/patches alongside the primary color`).join('\n')}` : ''}
-Do NOT override these colors based on photo analysis — they are intentional choices. Do NOT default the body to white or cream unless the user-selected body color IS white or cream.${hasPhotos ? `\nUse the reference photo${photoCount > 1 ? 's' : ''} ONLY for facial structure, marking PLACEMENT, and breed-specific features — NOT for color selection.` : ''}`;
+  const colorBlock = `
+COLOR SPECIFICATION (follow exactly):
+- BODY/FLAP FABRIC: ${data.primaryColor}
+- EARS OUTER / MARKINGS: ${data.secondaryColor}
+${data.earInnerColor ? `- EAR INNER: ${data.earInnerColor}` : ''}
+- MUZZLE APPLIQUE: ${data.muzzleColor || 'light beige or cream'}
+- NOSE: ${data.noseColor || 'black'}
+- ACCENT (paw prints): ${data.accentColor || 'slightly darker than body'}
+${data.regionColors && Object.keys(data.regionColors).length > 0 ? Object.entries(data.regionColors).map(([region, colors]) => `- ${region.toUpperCase()} extra colors: ${colors.join(', ')}`).join('\n') : ''}
+Do NOT override these colors. Do NOT default body to white.`;
 
-  return `Generate a photorealistic product photograph of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy", designed to look like a cute ${data.breedName}.${photoContext}${colorInstructions}
+  return `Generate a photorealistic product photo of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy".${photoContext}
+${colorBlock}
 
-CORE CONCEPT:
-This is a compact rectangular fabric pouch — NOT a plush toy, NOT a stuffed animal. The front face flap has a FLAT EMBROIDERED face design of a cute ${data.breedName}. The entire face design is FLAT — machine embroidery thread and flat fabric applique pieces sewn flush to the surface. Nothing on the face is raised or 3D. The pouch also has double-layer fabric ears at the top corners and embroidered paw prints on the lower front body.
+=== WHAT THIS PRODUCT IS ===
+A compact rectangular fabric pouch (about the size of a deck of cards) that clips to a dog leash. It dispenses poop bags from the bottom and has a treat compartment on top. The front is designed to look like a cute ${data.breedName} face using FLAT machine embroidery and fabric applique — NOT a stuffed animal, NOT a plush toy.
 
-EMBROIDERY STYLE — CRITICAL:
-The face embroidery must look like a clean, flat, VECTOR-ILLUSTRATION style design — the kind produced by a modern computerized embroidery machine. Think: cute kawaii graphic design rendered in thread, NOT a 3D sculpture or stuffed animal face. Every element is FLAT and flush with the fabric surface. The style is bold, clean lines with solid filled areas of color — like a simplified cartoon/icon.
+=== CRITICAL STRUCTURE (read carefully) ===
 
-EXACT DIMENSIONS (per engineering drawing):
-- Total height (body only, no tab/clip): ${data.dimensions.heightCm}cm
-- Width: ${data.dimensions.widthCm}cm
-- Depth: ${data.dimensions.depthCm}cm
-- Face flap area: approximately 5cm tall (the upper section)
-- Lower body section: approximately 4.5cm tall (below the flap)
-- Fabric tab above body: 3.5cm (connects to spring hook/carabiner)
-- For scale: roughly the size of a deck of playing cards or a small smartphone
+The pouch has exactly TWO sections stacked vertically:
 
-FRONT VIEW — TOP TO BOTTOM:
+TOP HALF = THE FACE (this is also the flap/lid):
+- The ENTIRE top half of the front IS the dog's face
+- This top section hinges open (it IS the flap) — but in this photo it is CLOSED, sitting flush
+- There is NO separate blank flap sitting on top of the face
+- There is NO face underneath a flap
+- THE FLAP IS THE FACE. THE FACE IS THE FLAP. They are one and the same piece.
+- A small silver snap button at the bottom edge of this face-flap secures it closed
 
-1. SPRING HOOK + FABRIC TAB (top):
-   A 3.5cm fabric loop tab sewn at the top center of the pouch. A silver/dark spring-gate carabiner clip hangs from this tab. The tab is the same ${materialDesc} as the body.
+BOTTOM HALF = THE BODY:
+- Plain fabric in the body color with two small embroidered paw prints
+- This is the poop bag compartment
+- A rubber grommet hole at the very bottom center where bags pull through
 
-2. DOUBLE-LAYER EARS (top corners):
-   ${earStyleDesc}. The ears are ${earSizeDesc}. Each ear is double-layered: outer fabric in the user-selected secondary/ear color, inner fabric in the user-selected ear inner color (see COLOR SPECIFICATION). They are sewn into the top-left and top-right seams of the pouch body and extend outward to the SIDES, breaking the rectangular silhouette. The ears must be small enough that they do NOT interfere with the face flap opening — they sit at the side corners, out of the way of the top hinge.
+=== FACE DESIGN (embroidered on the flap surface) ===
 
-3. FACE FLAP / OPENING FLAP (upper ~5cm of front):
-   The top section is a flap that opens downward, secured by a small silver snap button at its bottom center. When CLOSED (as shown in this photo), the flap sits flush with the lower body — the seam between flap and body is barely visible. The flap has a FLAT EMBROIDERED FACE covering its surface — a cute ${data.breedName} face in the following FLAT, GRAPHIC style:
+The face is flat machine embroidery in a cute kawaii/vector style — like a dog face emoji rendered in thread:
 
-   - EYES: Two solid BLACK FILLED CIRCLES (approximately 6-8mm) made of dense satin-stitch embroidery thread — completely FLAT against the fabric. Each eye has a TINY white highlight dot (1-2mm) in the upper-right area, also embroidered. The eyes look like two little black buttons drawn in a cute cartoon style. They are NOT 3D, NOT plastic, NOT raised, NOT glossy, NOT safety eyes — they are FLAT embroidered circles flush with the fabric surface.
-   - MUZZLE/SNOUT: A flat fabric applique piece in the user-selected muzzle color (see COLOR SPECIFICATION), cut in a wide rounded U-shape or bean shape, sewn flat onto the lower portion of the flap. The muzzle is completely flush with the surface. It takes up roughly the bottom third of the face area.
-   - NOSE: A small solid embroidered shape in the user-selected nose color (see COLOR SPECIFICATION), rounded triangle or inverted heart, centered at the top of the muzzle, between and slightly below the eyes. Flat satin-stitch fill.
-   - MOUTH: A tiny cute embroidered SMILE below the nose — a clear UPWARD-FACING SEMICIRCLE (happy "U" shape) stitched in dark thread. The mouth MUST curve UPWARD to show a happy, smiling expression. NOT a "w", NOT a frown, NOT downturned, NOT a straight line. May include small whisker dots (3 tiny embroidered dots on each side of the muzzle).
-   - BREED MARKINGS: For breeds with distinctive markings (eye patches, two-tone face, color splits), these are rendered as FLAT colored fabric applique pieces or dense flat embroidery fill in the user-selected secondary color (see COLOR SPECIFICATION). For example: beagle gets a brown patch over one eye area; husky gets a symmetrical face mask pattern; dalmatian gets flat black spots. These markings are clean-edged, graphic, and proportional to the flap size.
+- EYES: Two solid black embroidered circles (~7mm) with tiny white highlight dots. Flat satin stitch, NOT plastic, NOT 3D, NOT safety eyes.
+- MUZZLE: A flat ${data.muzzleColor || 'cream'} fabric applique in a rounded U-shape on the lower portion. Completely flush with surface.
+- NOSE: Small solid ${data.noseColor || 'black'} embroidered triangle/heart shape centered above the muzzle.
+- MOUTH: A tiny embroidered SMILE — upward-curving "U" shape below the nose. Must curve UP (happy expression).
+- BREED MARKINGS: ${data.breedName}-appropriate flat color patches in ${data.secondaryColor} (e.g., eye patches for beagles, face mask for huskies).
 
-   IMPORTANT: The entire face design should look like a flat graphic illustration printed/stitched onto fabric. Imagine a cute dog face emoji or app icon rendered as machine embroidery — clean, bold, minimal, flat.
+Style: clean, bold, minimal — like a cute app icon or emoji made with embroidery thread. Everything is FLAT against the fabric.
 
-4. SNAP BUTTON (at flap bottom edge):
-   A small silver metal snap button at the bottom-center of the face flap, securing it to the body below. This is the main closure for the upper compartment.
+=== COMPLETE FRONT VIEW (top to bottom) ===
 
-5. LOWER BODY (below flap, ~4.5cm):
-   The lower front section has TWO SMALL EMBROIDERED PAW PRINTS side by side — cute paw pad designs stitched flat in the user-selected accent color (see COLOR SPECIFICATION). Each paw print is a rounded arch/dome shape with small toe pad circles inside, all flat embroidery. This section covers the MAIN COMPARTMENT which has space for treats and extra items.
+1. FABRIC TAB + CLIP (very top): A 3.5cm fabric loop with a silver spring-gate carabiner clip.
 
-6. SMALL FABRIC PAW TABS (bottom):
-   At the very bottom of the pouch, two VERY SMALL, SUBTLE flat fabric tabs (each roughly 1-1.5cm) extend slightly below the body edge — shaped like tiny simplified paw silhouettes in dark charcoal grey felt. These are small and understated, just peeking out from the bottom edge. They should NOT be large, chunky, or dangling — they are minimal decorative accents only.
+2. EARS (top corners): ${earStyleDesc}. Size: ${earSizeDesc}. Double-layer: outer in ${data.secondaryColor}, inner in ${data.earInnerColor || 'lighter shade'}. Sewn into top corner seams, extending to the sides.
 
-7. RUBBER GROMMET (bottom center):
-   A round rubber grommet hole at the very bottom center of the back/underside where dark poop bags can be pulled through from the lower compartment.
+3. FACE-FLAP (upper ~5cm): THE DOG FACE. Eyes, muzzle, nose, mouth, and breed markings are embroidered/appliqued directly on this surface. The face fills this entire section. Silver snap button at bottom edge. When closed (as shown), it sits perfectly flush with the body below — barely visible seam.
 
-TWO SEPARATE COMPARTMENTS:
-The pouch has TWO distinct internal compartments separated by a horizontal seam/binding:
-- UPPER COMPARTMENT: Accessed via the face flap with snap button. Holds treats, keys, or small items.
-- LOWER COMPARTMENT: Holds a poop bag roll. This compartment's zipper access is on the BACK only. Bags feed out through the rubber grommet at the bottom.
+4. BODY (lower ~4.5cm): Plain ${data.primaryColor} ${materialDesc} with two small embroidered paw prints in ${data.accentColor || 'darker tone'}. This section holds the poop bag roll.
 
-ZIPPER PLACEMENT — CRITICAL:
-- The zipper is on the BACK of the pouch, running horizontally across the lower compartment area, wrapping slightly around to the sides.
-- The zipper is NEVER visible from the front view. There is NO zipper on the front at all.
-- The zipper provides access to load/replace the poop bag roll in the lower compartment.
+5. TINY PAW TABS (very bottom): Two very small (~1cm) charcoal grey felt paw-shaped tabs peeking below the bottom edge. Subtle and minimal.
 
-BACK PANEL:
-- Clean flat back in the user-selected body color, ${materialDesc}
-- A small embroidered dog silhouette logo (subtle, tonal, flat)
-- Two vertical fabric belt-loop slots for threading onto a belt or bag strap
-- The horizontal zipper for the lower bag compartment (wraps from back to sides)
+6. RUBBER GROMMET (bottom center): A round rubber-rimmed hole where poop bags feed out from inside.
 
-BINDING/EDGE DETAIL:
-- All raw edges of the pouch are finished with SUBTLE TONAL binding/piping — a neat narrow trim that runs around the perimeter of the body, the flap edges, and compartment seams.
-- The binding color should be a SLIGHTLY DARKER shade of the main body color, or a neutral grey/taupe. It should BLEND with the body, not contrast against it.
-- NEVER use a bright or saturated color (red, blue, green, orange, pink, etc.) for the binding/piping. It should be nearly invisible — just a clean finished edge.
+=== BACK VIEW (not shown but affects silhouette) ===
+- Clean flat back in ${data.primaryColor}
+- HORIZONTAL ZIPPER across the lower section for loading poop bag rolls — wraps slightly to sides
+- The zipper is ONLY on the back. NO zipper visible from the front.
+- Two fabric belt loops for threading onto a strap
+- Small tonal embroidered dog silhouette logo
 
-MATERIALS AND COLORS (refer to COLOR SPECIFICATION above for exact user-selected colors):
-- Main body material: ${materialDesc} — color as specified above
-${data.flapColor ? `- Face flap base: ${data.flapColor}` : '- Face flap base: Same as main body'}
-- Muzzle/snout applique: flat fabric, color as specified above
-- Breed marking appliques/embroidery: secondary color as specified above, flat
-- Eyes: FLAT black embroidered circles with tiny white highlight dot — NOT plastic, NOT 3D, NOT safety eyes
-- Nose: flat embroidered shape, color as specified above
-- Ears outer: secondary color as specified above
-${data.earInnerColor ? '- Ears inner: color as specified above' : ''}
-- Edge binding/piping: a subtle tone-on-tone shade slightly darker than the body (NOT a contrasting color — should nearly blend in)
-- Hardware: Dark/brushed silver carabiner (spring hook), silver snap button, dark zipper pull
-- Zipper: Dark tone (#5 nylon coil) — on the BACK only
-- Small paw tabs at bottom: dark charcoal grey felt, very small and subtle
-${data.liningColor ? `- Interior lining: ${data.liningColor}` : ''}
+=== MATERIALS ===
+- Main fabric: ${materialDesc} in ${data.primaryColor}
+${data.flapColor ? `- Face flap: ${data.flapColor}` : '- Face flap: same as body'}
+- Hardware: brushed silver (carabiner, snap button)
+- Zipper: dark #5 nylon coil (BACK ONLY)
+- Edge binding: subtle tonal trim, slightly darker than body — NOT bright, NOT contrasting
+${data.liningColor ? `- Interior: ${data.liningColor}` : ''}
 
-PHOTOGRAPHY STYLE:
-- Clean, professional product photography on a PURE WHITE background
-- Studio lighting: soft diffused key light from upper-left, subtle fill light
-- Camera angle: 3/4 front view showing the full face and one side edge
-- Sharp focus, slight background depth-of-field blur
-- Style: premium e-commerce / Kickstarter product shot — the kind you'd see on a high-end pet accessories brand
-- The product should look PREMIUM, COMPACT, WELL-CRAFTED, and GIFTABLE
-${data.dogName ? `- Custom product made for a dog named "${data.dogName}"` : ''}
+=== PHOTOGRAPHY ===
+- Pure white background, professional studio lighting
+- 3/4 front view showing face and one side edge
+- Sharp focus, premium e-commerce style (Kickstarter / high-end pet brand aesthetic)
+- The product looks premium, compact, well-crafted, and giftable
+${data.dogName ? `- This is a custom LeashBuddy made for "${data.dogName}"` : ''}
 
-CRITICAL CONSTRAINTS:
-- ALL face embroidery is FLAT — flush with the fabric. NO raised elements, NO 3D elements, NO plastic eyes, NO safety eyes, NO bulging anything
-- Eyes are FLAT solid black embroidered circles with a tiny white highlight dot — like a cute cartoon/emoji eye style
-- The muzzle is a FLAT lighter-colored fabric applique piece sewn onto the flap
-- The nose is a FLAT black embroidered shape
-- The mouth is a simple FLAT embroidered line
-- The entire face looks like a FLAT GRAPHIC ILLUSTRATION — clean vector-art style rendered in embroidery thread
-- Do NOT render the face as screen printing, a sewn-on circular patch/badge, or a medallion
-- The face should look like a CUTE CARTOON DOG FACE — bold, graphic, kawaii/vector-illustration style
-- NO text, watermarks, or branding visible anywhere
-- NO human hands in the image
-- Ears extend from the top corners — they break the rectangular silhouette
-- Bottom paw tabs are VERY SMALL and SUBTLE — not chunky, not dangling, not prominent
-- TWO compartments: upper (snap flap) and lower (back zipper)
-- The product must look manufacturable and real — not fantastical
-- Do NOT make it look like a plush toy or stuffed animal — it is a FUNCTIONAL POUCH with cute dog character
-- NO ZIPPER on the front — the zipper is ONLY on the BACK, running horizontally
-- Show the binding/piping trim around edges — but it must be TONAL (same family as body color), NEVER bright or contrasting
-- BODY COLOR: Use the exact user-selected body color from the COLOR SPECIFICATION section above. Do NOT default to white or cream.
-- Ears extend to the SIDES from the top corners — small and practical, not oversized
-- COLOR PALETTE RULE: The ONLY colors on this product should be: the user-selected colors (body, ears, markings, muzzle, nose), black (eyes, hardware), dark grey/charcoal (small paw tabs, zipper), and silver (hardware). Do NOT introduce any other colors like red, blue, green, orange, pink, or any bright/saturated hue anywhere on the product.`;
+=== SIZE ===
+- Height: ${data.dimensions.heightCm}cm, Width: ${data.dimensions.widthCm}cm, Depth: ${data.dimensions.depthCm}cm
+- About the size of a deck of cards or small smartphone
+
+=== DO NOT ===
+- Do NOT put a blank/plain flap on top of the face — the face IS the flap
+- Do NOT make it look like a stuffed animal or plush toy
+- Do NOT use plastic/3D/safety eyes — eyes are flat embroidered circles
+- Do NOT show any zipper on the front
+- Do NOT add text, watermarks, or human hands
+- Do NOT use bright colors for edge binding (must be tonal/subtle)
+- Do NOT introduce colors not in the color specification (no random red/blue/green/pink)
+- Do NOT make ears oversized — they are small practical fabric pieces`;
 }
 
 /**
- * Generate one image using the model fallback chain.
- * Returns a single { imageBase64, mimeType } or null.
+ * Generate one image using a single model (no fallback chain for speed).
  */
 async function generateOneImage(
   contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>,
-  prompt: string,
   apiKey: string,
-  photoCount: number,
 ): Promise<{ imageBase64: string; mimeType: string } | null> {
-  const IMAGE_MODELS = [
-    'gemini-2.0-flash-exp-image-generation',
-    'gemini-2.5-flash-image',
-  ];
+  // Use the fastest reliable model only — no fallback chain
+  const model = 'gemini-2.0-flash-exp-image-generation';
+  console.log(`[ProductPreview] Generating with ${model}`);
 
-  for (const model of IMAGE_MODELS) {
-    console.log(`[ProductPreview] Trying model: ${model}${photoCount > 0 ? ` (with ${photoCount} dog photo reference${photoCount > 1 ? 's' : ''})` : ''}`);
-    const result = await tryGeminiImageGen(contentParts, model, apiKey);
-    if (result) return result;
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90_000); // 90s hard timeout
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{ parts: contentParts }],
+          generationConfig: {
+            responseModalities: ['TEXT', 'IMAGE'],
+          },
+        }),
+      }
+    );
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[ProductPreview] ${model} error (${response.status}):`, errorText.slice(0, 300));
+
+      // If primary model fails, try one fallback
+      console.log('[ProductPreview] Trying gemini-2.5-flash-image fallback');
+      return await tryGeminiImageGen(contentParts, 'gemini-2.5-flash-image', apiKey);
+    }
+
+    const data = await response.json();
+    const parts = data.candidates?.[0]?.content?.parts || [];
+
+    for (const part of parts) {
+      if (part.inlineData?.mimeType?.startsWith('image/')) {
+        console.log(`[ProductPreview] Image generated successfully`);
+        return {
+          imageBase64: part.inlineData.data,
+          mimeType: part.inlineData.mimeType,
+        };
+      }
+    }
+
+    console.warn(`[ProductPreview] ${model} responded but no image — trying fallback`);
+    return await tryGeminiImageGen(contentParts, 'gemini-2.5-flash-image', apiKey);
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error('[ProductPreview] Generation timed out after 90s');
+    } else {
+      console.error(`[ProductPreview] ${model} exception:`, error);
+    }
+    // One fallback attempt
+    console.log('[ProductPreview] Trying gemini-2.5-flash-image fallback after error');
+    return await tryGeminiImageGen(contentParts, 'gemini-2.5-flash-image', apiKey);
   }
-
-  // Fallback: Imagen 4 Fast (text-only)
-  console.log('[ProductPreview] Trying Imagen 4 Fast fallback (text-only)');
-  return await tryImagen(prompt, apiKey);
 }
 
 export async function POST(request: NextRequest) {
@@ -258,30 +270,22 @@ export async function POST(request: NextRequest) {
     body.dimensions = body.dimensions || { heightCm: 9.5, widthCm: 6.5, depthCm: 5.5 };
     body.breedName = body.breedName.replace(/-/g, ' ');
 
-    // Build content parts — all dog photos first, then text prompt
+    // Build content parts — photos first, then text prompt
     const contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [];
     let photoCount = 0;
 
-    // Multi-photo support: dogPhotos array takes priority
     if (dogPhotos && dogPhotos.length > 0) {
       for (const photo of dogPhotos) {
         if (photo.data && photo.mimeType) {
           contentParts.push({
-            inlineData: {
-              mimeType: photo.mimeType,
-              data: photo.data,
-            },
+            inlineData: { mimeType: photo.mimeType, data: photo.data },
           });
           photoCount++;
         }
       }
     } else if (dogPhoto && dogPhotoMimeType) {
-      // Backward compat: single photo
       contentParts.push({
-        inlineData: {
-          mimeType: dogPhotoMimeType,
-          data: dogPhoto,
-        },
+        inlineData: { mimeType: dogPhotoMimeType, data: dogPhoto },
       });
       photoCount = 1;
     }
@@ -289,38 +293,16 @@ export async function POST(request: NextRequest) {
     const prompt = buildProductPreviewPrompt(body, photoCount);
     contentParts.push({ text: prompt });
 
-    const requestedCount = Math.min(Math.max(body.count || 1, 1), 2);
+    // Always generate 1 image for speed (user can regenerate if they want another)
+    console.log(`[ProductPreview] Generating 1 preview (${photoCount} reference photos)`);
+    const result = await generateOneImage(contentParts, GEMINI_API_KEY);
 
-    if (requestedCount === 2) {
-      // Fire two generations in parallel
-      console.log(`[ProductPreview] Generating 2 preview options in parallel (${photoCount} reference photos)`);
-      const [resultA, resultB] = await Promise.all([
-        generateOneImage(contentParts, prompt, GEMINI_API_KEY, photoCount),
-        generateOneImage(contentParts, prompt, GEMINI_API_KEY, photoCount),
-      ]);
-
-      const images: Array<{ imageBase64: string; mimeType: string }> = [];
-      if (resultA) images.push(resultA);
-      if (resultB) images.push(resultB);
-
-      if (images.length === 0) {
-        return NextResponse.json(
-          { error: 'Product preview generation not available. All models failed.' },
-          { status: 503 }
-        );
-      }
-
-      return NextResponse.json({ images });
-    }
-
-    // Single image (default / backward compatible)
-    const result = await generateOneImage(contentParts, prompt, GEMINI_API_KEY, photoCount);
     if (result) {
       return NextResponse.json(result);
     }
 
     return NextResponse.json(
-      { error: 'Product preview generation not available. All models failed.' },
+      { error: 'Image generation failed. Please try again.' },
       { status: 503 }
     );
   } catch (error) {
@@ -333,8 +315,7 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Try generating an image using a Gemini model with generateContent + IMAGE modality
- * Now supports multimodal input (text + multiple image references)
+ * Try generating an image using a specific Gemini model (used as fallback)
  */
 async function tryGeminiImageGen(
   contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>,
@@ -342,17 +323,17 @@ async function tryGeminiImageGen(
   apiKey: string
 ): Promise<{ imageBase64: string; mimeType: string } | null> {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90_000);
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
-          contents: [
-            {
-              parts: contentParts,
-            },
-          ],
+          contents: [{ parts: contentParts }],
           generationConfig: {
             responseModalities: ['TEXT', 'IMAGE'],
           },
@@ -360,9 +341,11 @@ async function tryGeminiImageGen(
       }
     );
 
+    clearTimeout(timeout);
+
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`[ProductPreview] ${model} error (${response.status}):`, errorText.slice(0, 200));
+      console.error(`[ProductPreview] ${model} error (${response.status}):`, errorText.slice(0, 300));
       return null;
     }
 
@@ -382,55 +365,11 @@ async function tryGeminiImageGen(
     console.warn(`[ProductPreview] ${model} responded but no image in output`);
     return null;
   } catch (error) {
-    console.error(`[ProductPreview] ${model} exception:`, error);
-    return null;
-  }
-}
-
-/**
- * Fallback: Try using Imagen 4 Fast for image generation (text-only)
- */
-async function tryImagen(
-  prompt: string,
-  apiKey: string
-): Promise<{ imageBase64: string; mimeType: string } | null> {
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-fast-generate-001:generateImages?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          instances: [{ prompt }],
-          parameters: {
-            sampleCount: 1,
-            aspectRatio: '1:1',
-            personGeneration: 'dont_allow',
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[ProductPreview] Imagen 4 error (${response.status}):`, errorText.slice(0, 200));
-      return null;
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error(`[ProductPreview] ${model} timed out`);
+    } else {
+      console.error(`[ProductPreview] ${model} exception:`, error);
     }
-
-    const data = await response.json();
-    const imageData = data.predictions?.[0]?.bytesBase64Encoded;
-
-    if (imageData) {
-      console.log('[ProductPreview] Imagen 4 Fast generated image successfully');
-      return {
-        imageBase64: imageData,
-        mimeType: 'image/png',
-      };
-    }
-
-    return null;
-  } catch (error) {
-    console.error('[ProductPreview] Imagen 4 exception:', error);
     return null;
   }
 }
