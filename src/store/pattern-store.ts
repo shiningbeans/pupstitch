@@ -180,6 +180,7 @@ export const usePatternStore = create<PatternStore>()(
 
       generateFromAnalysis: async (customizations?: Partial<PatternCustomizations>) => {
         const state = get();
+        const productType = state.selectedProductType;
 
         // If no analysis result, create a default one from the selected breeds
         let analysis = state.analysisResult;
@@ -196,6 +197,74 @@ export const usePatternStore = create<PatternStore>()(
         set({ isGenerating: true, error: null });
 
         try {
+          // ── LEASH-BUDDY ONLY: skip crochet pattern, go straight to product spec ──
+          if (productType === 'leash-buddy') {
+            // We still need a minimal pattern record so the editor page has an ID to route to
+            const breedId = state.selectedBreeds.length > 0
+              ? getPresetBreedId(state.selectedBreeds[0])
+              : analysis.detectedBreed;
+            const dogName = get().dogName;
+            const displayBreed = breedId.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            const minimalPattern: CustomPattern = {
+              id: `lb-${Date.now()}`,
+              userId: 'current-user',
+              breedId,
+              name: dogName.trim()
+                ? `${dogName.trim()}'s ${displayBreed} LeashBuddy`
+                : `${displayBreed} LeashBuddy`,
+              dogName: dogName.trim() || undefined,
+              dogPhotoUrl: state.uploadedImages[0] || '',
+              analysisResult: analysis,
+              customizations: {
+                colorAssignments: [],
+                toggledFeatures: {},
+                proportionAdjustments: {},
+                difficultyLevel: 'standard',
+                sizeMultiplier: 1.0,
+              },
+              generatedPattern: {
+                title: `${displayBreed} LeashBuddy`,
+                description: 'LeashBuddy product spec',
+                sections: [],
+                abbreviations: {},
+                assemblyInstructions: [],
+                skillLevel: 'beginner',
+                estimatedTotalTime: 0,
+                generatedAt: new Date(),
+              },
+              materials: {
+                yarns: [],
+                hookSize: '',
+                notions: [],
+                stuffingAmount: 0,
+                totalYardageNeeded: 0,
+              },
+              exportFormats: [],
+              productType: 'leash-buddy',
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            };
+
+            if (state.uploadedImages.length > 0) {
+              minimalPattern.dogPhotoUrl = state.uploadedImages[0];
+            }
+
+            await savePattern(minimalPattern);
+            set({
+              currentPattern: minimalPattern,
+              isGenerating: false,
+              lastGeneratedPatternId: minimalPattern.id,
+            });
+
+            const updatedSaved = await loadAllPatterns();
+            set({ savedPatterns: updatedSaved });
+
+            // Generate LeashBuddy spec + preview
+            get().generateLeashBuddyFromAnalysis();
+            return;
+          }
+
+          // ── PUPSTITCH or BOTH: generate crochet pattern as before ──
           let breedId = analysis.detectedBreed;
           if (state.selectedBreeds.length > 0) {
             breedId = getPresetBreedId(state.selectedBreeds[0]);
@@ -276,9 +345,8 @@ export const usePatternStore = create<PatternStore>()(
               });
           }
 
-          // Dual-product: also generate LeashBuddy spec if product type includes it
-          const productType = get().selectedProductType;
-          if (productType === 'leash-buddy' || productType === 'both') {
+          // Dual-product: also generate LeashBuddy spec if product type is 'both'
+          if (productType === 'both') {
             get().generateLeashBuddyFromAnalysis();
           }
         } catch (error) {

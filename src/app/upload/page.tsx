@@ -63,6 +63,14 @@ const EAR_STYLE_OPTIONS: Array<{
   { id: 'rose', label: 'Rose', description: 'Curve outward at the sides' },
 ];
 
+// ─── Wizard Steps ──────────────────────────────────────────────────
+// Step 1: Name, breed, photo upload (auto-analyzes in background)
+// Step 2: Material, ear style, ear size, product type (shown while photo analyzes)
+// Step 3: Review detected colors (appears after analysis completes)
+// Step 4: Generate
+
+type WizardStep = 1 | 2 | 3;
+
 export default function UploadPage() {
   const router = useRouter();
   const {
@@ -92,7 +100,8 @@ export default function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [colorsConfirmed, setColorsConfirmed] = useState(false);
   const [hasAutoAnalyzed, setHasAutoAnalyzed] = useState(false);
-  const colorSectionRef = useRef<HTMLDivElement>(null);
+  const [step, setStep] = useState<WizardStep>(1);
+  const topRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const init = async () => { await initStorage(); };
@@ -106,7 +115,7 @@ export default function UploadPage() {
     }
   }, [currentPattern, isGenerating, router]);
 
-  // Auto-analyze when photo is uploaded (not waiting for Generate click)
+  // Auto-analyze when photo is uploaded
   useEffect(() => {
     if (selectedFiles.length > 0 && !isAnalyzing && !analysisResult && !hasAutoAnalyzed) {
       setHasAutoAnalyzed(true);
@@ -114,53 +123,50 @@ export default function UploadPage() {
     }
   }, [selectedFiles, isAnalyzing, analysisResult, hasAutoAnalyzed, analyzeImage]);
 
-  // Scroll to color section when analysis completes
+  // When analysis completes and user is on step 2, auto-advance to step 3
   useEffect(() => {
-    if (analysisResult && !colorsConfirmed && colorSectionRef.current) {
-      setTimeout(() => {
-        colorSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
+    if (analysisResult && step === 2 && !colorsConfirmed) {
+      setStep(3);
+      topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [analysisResult, colorsConfirmed]);
+  }, [analysisResult, step, colorsConfirmed]);
 
   const handleImagesSelected = (files: File[], dataUrls: string[]) => {
     if (files.length > 0) {
       setSelectedFiles((prev) => [...prev, ...files]);
     }
     setUploadedImages(dataUrls);
-    // Reset analysis state for new photos
     setColorsConfirmed(false);
     setHasAutoAnalyzed(false);
   };
 
   const needsSize = selectedProductType === 'pupstitch' || selectedProductType === 'both';
-  const canGenerate = selectedBreeds.length > 0 && (!needsSize || selectedSize !== null);
   const showLeashBuddyOptions = selectedProductType === 'leash-buddy' || selectedProductType === 'both';
-
-  // Colors are either confirmed by user or there's no photo (so no auto-detection needed)
   const colorsReady = colorsConfirmed || uploadedImages.length === 0 || !analysisResult;
+
+  const canProceedStep1 = selectedBreeds.length > 0;
+  const canProceedStep2 = !needsSize || selectedSize !== null;
+  const canGenerate = canProceedStep1 && canProceedStep2 && colorsReady;
+
+  const goToStep = (s: WizardStep) => {
+    setStep(s);
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const handleGenerate = async () => {
     if (!canGenerate) return;
     setError(null);
-
-    // If photo was uploaded but not analyzed yet, analyze first then generate
     if (selectedFiles.length > 0 && !analysisResult) {
       await analyzeImage(selectedFiles[0]);
     }
-
     await generateFromAnalysis();
-  };
-
-  const handleRetry = () => {
-    setError(null);
   };
 
   // Show generating state
   if (isGenerating && !error) {
     return (
       <div className="min-h-screen py-12 px-4">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-lg mx-auto">
           <div className="glass p-6 sm:p-8">
             <div className="flex flex-col items-center gap-6 py-12">
               <svg className="w-12 h-12 text-brand-coral animate-spin" fill="none" viewBox="0 0 24 24">
@@ -172,7 +178,7 @@ export default function UploadPage() {
                   Creating Your {BRAND.catalog.leashBuddy.name}
                 </p>
                 <p className="text-stone-500 text-sm">
-                  Building specs and generating preview for your {selectedBreeds.join(' / ')}...
+                  Building specs and generating preview...
                 </p>
               </div>
               <div className="w-full max-w-xs">
@@ -188,15 +194,42 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div className="min-h-screen py-8 px-4" ref={topRef}>
+      <div className="max-w-lg mx-auto space-y-6">
+        {/* Header */}
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl font-editorial font-bold text-stone-900 mb-2 tracking-tight">
             Design Your {BRAND.catalog.leashBuddy.name}
           </h1>
-          <p className="text-stone-500">
-            Upload a photo of your dog and we'll match the colors automatically
-          </p>
+          {/* Step indicator */}
+          <div className="flex items-center justify-center gap-2 mt-3">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className="flex items-center gap-2">
+                <button
+                  onClick={() => s < step ? goToStep(s as WizardStep) : undefined}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                    s === step
+                      ? 'bg-brand-coral text-white scale-110'
+                      : s < step
+                        ? 'bg-brand-coral/20 text-brand-coral cursor-pointer hover:bg-brand-coral/30'
+                        : 'bg-stone-100 text-stone-400'
+                  }`}
+                >
+                  {s < step ? (
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : s}
+                </button>
+                {s < 3 && (
+                  <div className={`w-8 h-0.5 ${s < step ? 'bg-brand-coral/30' : 'bg-stone-200'}`} />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="text-xs text-stone-400 mt-2">
+            {step === 1 ? 'Your dog' : step === 2 ? 'Product options' : 'Confirm colors'}
+          </div>
         </div>
 
         {error && (
@@ -209,47 +242,284 @@ export default function UploadPage() {
                 <p className="font-semibold text-red-800 text-sm">Something went wrong</p>
                 <p className="text-red-700 text-sm">{error}</p>
               </div>
-              <button onClick={handleRetry} className="text-red-400 hover:text-red-600 text-lg font-bold leading-none">&times;</button>
+              <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 text-lg font-bold leading-none">&times;</button>
             </div>
           </div>
         )}
 
-        <div className="glass p-6 sm:p-8 space-y-8">
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* STEP 1: Name, breed, photo upload                              */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {step === 1 && (
+          <div className="glass p-6 sm:p-8 space-y-6">
+            {/* Dog name */}
+            <section>
+              <label className="text-sm font-semibold text-stone-700 mb-2 block">
+                Dog's Name <span className="text-stone-400 font-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                value={dogName}
+                onChange={(e) => setDogName(e.target.value)}
+                placeholder="e.g., Buddy, Luna, Max..."
+                maxLength={30}
+                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder-stone-300 focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-all text-base"
+              />
+            </section>
 
-          {/* ─── Step 1: Photo Upload (top priority) ─── */}
-          <section>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-full bg-brand-coral text-white flex items-center justify-center text-sm font-bold">1</div>
-              <div>
-                <h2 className="text-base font-bold text-stone-900">Upload a Photo of Your Dog</h2>
-                <p className="text-sm text-stone-500">We'll detect colors and markings automatically</p>
+            {/* Breed selector */}
+            <section>
+              <h2 className="text-sm font-semibold text-stone-700 mb-2">Breed</h2>
+              <p className="text-xs text-stone-400 mb-3">Select up to 4 breeds for mixed breeds</p>
+              <BreedSelector selectedBreeds={selectedBreeds} onToggle={toggleBreed} />
+            </section>
+
+            {/* Photo upload */}
+            <section>
+              <h2 className="text-sm font-semibold text-stone-700 mb-2">Upload a Photo</h2>
+              <p className="text-xs text-stone-400 mb-3">We'll detect colors and markings automatically</p>
+              <ImageUploader onImagesSelected={handleImagesSelected} selectedImages={uploadedImages} />
+              {isAnalyzing && uploadedImages.length > 0 && (
+                <div className="mt-4">
+                  <AnalysisProgress uploadedImage={uploadedImages[0]} />
+                </div>
+              )}
+            </section>
+
+            {/* Next button */}
+            <button
+              onClick={() => canProceedStep1 && goToStep(2)}
+              disabled={!canProceedStep1}
+              className={`w-full py-3.5 rounded-xl font-semibold transition-all ${
+                canProceedStep1
+                  ? 'bg-brand-coral text-white hover:bg-brand-coral-dark'
+                  : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+              }`}
+            >
+              {!canProceedStep1 ? 'Select a breed to continue' : 'Next — Product Options'}
+            </button>
+          </div>
+        )}
+
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* STEP 2: Product type, material, ear style, ear size            */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {step === 2 && (
+          <div className="glass p-6 sm:p-8 space-y-6">
+            {/* Back button */}
+            <button
+              onClick={() => goToStep(1)}
+              className="flex items-center gap-1 text-sm text-stone-500 hover:text-brand-coral transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back
+            </button>
+
+            {/* Product type */}
+            <section>
+              <h2 className="text-sm font-semibold text-stone-700 mb-3">Product Type</h2>
+              <div className="grid grid-cols-3 gap-3">
+                {PRODUCT_TYPE_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => setProductType(opt.id)}
+                    className={`relative p-3 rounded-xl transition-all border text-center ${
+                      selectedProductType === opt.id
+                        ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
+                        : 'border-stone-200 bg-white hover:border-stone-300'
+                    }`}
+                  >
+                    <p className="font-bold text-stone-900 text-sm">{opt.label}</p>
+                    <p className="text-xs text-stone-500 mt-1">{opt.description}</p>
+                    {selectedProductType === opt.id && (
+                      <div className="absolute top-2 right-2 w-4 h-4 bg-brand-coral text-white rounded-full flex items-center justify-center">
+                        <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                ))}
               </div>
-            </div>
-            <ImageUploader onImagesSelected={handleImagesSelected} selectedImages={uploadedImages} />
+            </section>
 
-            {/* Analysis in progress */}
-            {isAnalyzing && uploadedImages.length > 0 && (
-              <div className="mt-4">
-                <AnalysisProgress uploadedImage={uploadedImages[0]} />
+            {/* LeashBuddy options */}
+            {showLeashBuddyOptions && (
+              <section className="space-y-5">
+                <div>
+                  <h3 className="text-sm font-semibold text-stone-700 mb-2">Material</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {MATERIAL_OPTIONS.map((mat) => (
+                      <button
+                        key={mat.id}
+                        onClick={() => updateLeashBuddyCustomizations({ material: mat.id as ProductMaterial })}
+                        className={`p-3 rounded-xl transition-all border text-left ${
+                          leashBuddyCustomizations.material === mat.id
+                            ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
+                            : 'border-stone-200 bg-white hover:border-stone-300'
+                        }`}
+                      >
+                        <p className="font-semibold text-stone-900 text-sm">{mat.label}</p>
+                        <p className="text-xs text-stone-500 mt-0.5 leading-tight">{mat.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-semibold text-stone-700 mb-2">Ear Style</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {EAR_STYLE_OPTIONS.map((ear) => (
+                      <button
+                        key={ear.id}
+                        onClick={() => updateLeashBuddyCustomizations({ earStyle: ear.id })}
+                        className={`p-3 rounded-xl transition-all border text-center ${
+                          leashBuddyCustomizations.earStyle === ear.id
+                            ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
+                            : 'border-stone-200 bg-white hover:border-stone-300'
+                        }`}
+                      >
+                        <p className="font-semibold text-stone-900 text-sm">{ear.label}</p>
+                        <p className="text-xs text-stone-500 mt-0.5">{ear.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-semibold text-stone-700 mb-2">Ear Size</h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {EAR_SIZE_OPTIONS.map((size) => (
+                      <button
+                        key={size.id}
+                        onClick={() => updateLeashBuddyCustomizations({ earSize: size.id as EarSize })}
+                        className={`p-3 rounded-xl transition-all border text-center ${
+                          leashBuddyCustomizations.earSize === size.id
+                            ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
+                            : 'border-stone-200 bg-white hover:border-stone-300'
+                        }`}
+                      >
+                        <p className="font-semibold text-stone-900 text-sm">{size.label}</p>
+                        <p className="text-xs text-stone-500 mt-0.5">{size.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* Size — only for PupStitch / Both */}
+            {needsSize && (
+              <section>
+                <h3 className="text-sm font-semibold text-stone-700 mb-2">Amigurumi Size</h3>
+                <div className="grid grid-cols-3 gap-3">
+                  {SIZE_OPTIONS.map((size) => (
+                    <button
+                      key={size.id}
+                      onClick={() => setSelectedSize(size.id)}
+                      className={`relative p-4 rounded-xl transition-all border text-center ${
+                        selectedSize === size.id
+                          ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
+                          : 'border-stone-200 bg-white hover:border-stone-300'
+                      }`}
+                    >
+                      <p className="font-bold text-stone-900 text-sm">{size.label}</p>
+                      <p className="text-xs text-stone-500">{size.height}</p>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Analyzing indicator if photo is still processing */}
+            {isAnalyzing && (
+              <div className="flex items-center gap-3 p-4 bg-brand-coral-soft/50 rounded-xl">
+                <svg className="w-5 h-5 text-brand-coral animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-stone-700">Analyzing your photo...</p>
+                  <p className="text-xs text-stone-500">Colors will be ready to review next</p>
+                </div>
               </div>
             )}
-          </section>
 
-          {/* ─── Color Detection Results + Editor ─── */}
-          {analysisResult && !isAnalyzing && (
-            <>
-              <hr className="border-stone-100" />
-              <section ref={colorSectionRef}>
-                <div className="flex items-center gap-3 mb-1">
-                  <div className="w-7 h-7 rounded-full bg-brand-coral text-white flex items-center justify-center text-sm font-bold">2</div>
-                  <h2 className="text-base font-bold text-stone-900">Review Detected Colors</h2>
+            {/* Next button */}
+            <button
+              onClick={() => {
+                if (!canProceedStep2) return;
+                // If analysis is done, go to step 3. If not, also go but it'll show analyzing state
+                if (analysisResult) {
+                  goToStep(3);
+                } else if (uploadedImages.length > 0) {
+                  // Photo uploaded but still analyzing — go to step 3 which will show analyzing
+                  goToStep(3);
+                } else {
+                  // No photo — skip color review, go straight to generate
+                  handleGenerate();
+                }
+              }}
+              disabled={!canProceedStep2}
+              className={`w-full py-3.5 rounded-xl font-semibold transition-all ${
+                canProceedStep2
+                  ? 'bg-brand-coral text-white hover:bg-brand-coral-dark'
+                  : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+              }`}
+            >
+              {!canProceedStep2
+                ? 'Pick a size to continue'
+                : analysisResult
+                  ? 'Next — Review Colors'
+                  : uploadedImages.length > 0
+                    ? 'Next — Review Colors'
+                    : `Generate My ${BRAND.catalog.leashBuddy.name}`
+              }
+            </button>
+          </div>
+        )}
+
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* STEP 3: Review detected colors + generate                      */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {step === 3 && (
+          <div className="glass p-6 sm:p-8 space-y-6">
+            {/* Back button */}
+            <button
+              onClick={() => goToStep(2)}
+              className="flex items-center gap-1 text-sm text-stone-500 hover:text-brand-coral transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back
+            </button>
+
+            {/* Still analyzing? */}
+            {isAnalyzing && (
+              <div className="flex flex-col items-center gap-4 py-8">
+                <svg className="w-10 h-10 text-brand-coral animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                <p className="text-sm text-stone-600">Still analyzing your photo — hang tight...</p>
+              </div>
+            )}
+
+            {/* Color review */}
+            {analysisResult && !isAnalyzing && (
+              <>
+                <div>
+                  <h2 className="text-base font-bold text-stone-900 mb-1">Review Detected Colors</h2>
+                  <p className="text-sm text-stone-500">
+                    We detected these colors from your photo. Adjust anything that doesn't look right.
+                  </p>
                 </div>
-                <p className="text-sm text-stone-500 mb-4 ml-10">
-                  We detected these colors from your photo. Adjust anything that doesn't look right.
-                </p>
 
                 {/* Detected color summary */}
-                <div className="bg-brand-coral-soft/50 rounded-xl p-4 mb-4">
+                <div className="bg-brand-coral-soft/50 rounded-xl p-4">
                   <div className="flex flex-wrap gap-3 items-center">
                     {analysisResult.colors.primary && (
                       <div className="flex items-center gap-2">
@@ -269,17 +539,6 @@ export default function UploadPage() {
                         <span className="text-xs text-stone-600">Tertiary</span>
                       </div>
                     )}
-                    {analysisResult.colors.accent && (
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: analysisResult.colors.accent }} />
-                        <span className="text-xs text-stone-600">Accent</span>
-                      </div>
-                    )}
-                    {analysisResult.bodyPartAnalysis && analysisResult.bodyPartAnalysis.length > 0 && (
-                      <span className="text-xs text-stone-400 ml-auto">
-                        {analysisResult.bodyPartAnalysis.length} body parts detected
-                      </span>
-                    )}
                   </div>
                 </div>
 
@@ -289,221 +548,42 @@ export default function UploadPage() {
                   onColorChange={updateLeashBuddyCustomizations}
                 />
 
-                {/* Confirm colors button */}
+                {/* Generate button */}
                 {!colorsConfirmed ? (
                   <button
-                    onClick={() => setColorsConfirmed(true)}
-                    className="w-full mt-4 py-3 rounded-xl bg-brand-coral text-white font-semibold hover:bg-brand-coral-dark transition-colors"
+                    onClick={() => {
+                      setColorsConfirmed(true);
+                      handleGenerate();
+                    }}
+                    className="w-full py-3.5 rounded-xl bg-brand-coral text-white font-semibold hover:bg-brand-coral-dark transition-colors"
                   >
-                    Colors Look Good — Continue
+                    Colors Look Good — Generate My {BRAND.catalog.leashBuddy.name}
                   </button>
                 ) : (
-                  <div className="mt-4 flex items-center gap-2 text-sm text-green-600">
+                  <div className="flex items-center gap-2 text-sm text-green-600">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    Colors confirmed
-                    <button
-                      onClick={() => setColorsConfirmed(false)}
-                      className="ml-auto text-xs text-stone-400 hover:text-stone-600 underline"
-                    >
-                      Edit colors
-                    </button>
+                    Generating...
                   </div>
                 )}
-              </section>
-            </>
-          )}
+              </>
+            )}
 
-          <hr className="border-stone-100" />
-
-          {/* ─── Step 3: Breed + Name ─── */}
-          <section>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-full bg-brand-coral text-white flex items-center justify-center text-sm font-bold">
-                {analysisResult ? '3' : '2'}
-              </div>
-              <div>
-                <h2 className="text-base font-bold text-stone-900">Breed & Name</h2>
-                <p className="text-sm text-stone-500">Select up to 4 breeds for mixed breeds</p>
-              </div>
-            </div>
-            <BreedSelector selectedBreeds={selectedBreeds} onToggle={toggleBreed} />
-
-            <div className="mt-4">
-              <label className="text-sm font-medium text-stone-700 mb-2 block">
-                Dog's Name <span className="text-stone-400 font-normal">(optional)</span>
-              </label>
-              <input
-                type="text"
-                value={dogName}
-                onChange={(e) => setDogName(e.target.value)}
-                placeholder="e.g., Buddy, Luna, Max..."
-                maxLength={30}
-                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder-stone-300 focus:border-brand-coral focus:ring-2 focus:ring-brand-coral/20 outline-none transition-all text-base"
-              />
-            </div>
-          </section>
-
-          <hr className="border-stone-100" />
-
-          {/* ─── Product Type ─── */}
-          <section>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-full bg-brand-coral text-white flex items-center justify-center text-sm font-bold">
-                {analysisResult ? '4' : '3'}
-              </div>
-              <div>
-                <h2 className="text-base font-bold text-stone-900">Product Type</h2>
-                <p className="text-sm text-stone-500">What would you like to create?</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {PRODUCT_TYPE_OPTIONS.map((opt) => (
+            {/* No photo — just generate directly */}
+            {!analysisResult && !isAnalyzing && (
+              <div className="text-center py-6 space-y-4">
+                <p className="text-sm text-stone-500">No photo uploaded — we'll use default breed colors.</p>
                 <button
-                  key={opt.id}
-                  onClick={() => setProductType(opt.id)}
-                  className={`relative p-4 rounded-xl transition-all duration-200 border text-center ${
-                    selectedProductType === opt.id
-                      ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
-                      : 'border-stone-200 bg-white hover:border-stone-300'
-                  }`}
+                  onClick={handleGenerate}
+                  className="w-full py-3.5 rounded-xl bg-brand-coral text-white font-semibold hover:bg-brand-coral-dark transition-colors"
                 >
-                  <p className="font-bold text-stone-900 text-sm">{opt.label}</p>
-                  <p className="text-xs text-stone-500 mt-1">{opt.description}</p>
-                  {selectedProductType === opt.id && (
-                    <div className="absolute top-2 right-2 w-5 h-5 bg-brand-coral text-white rounded-full flex items-center justify-center">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  )}
+                  Generate My {BRAND.catalog.leashBuddy.name}
                 </button>
-              ))}
-            </div>
-          </section>
-
-          {/* ─── LeashBuddy Options (material, ear style, ear size) ─── */}
-          {showLeashBuddyOptions && (
-            <>
-              <hr className="border-stone-100" />
-              <section>
-                <h3 className="text-sm font-semibold text-stone-700 mb-3">Material</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {MATERIAL_OPTIONS.map((mat) => (
-                    <button
-                      key={mat.id}
-                      onClick={() => updateLeashBuddyCustomizations({ material: mat.id as ProductMaterial })}
-                      className={`p-3 rounded-xl transition-all duration-200 border text-left ${
-                        leashBuddyCustomizations.material === mat.id
-                          ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
-                          : 'border-stone-200 bg-white hover:border-stone-300'
-                      }`}
-                    >
-                      <p className="font-semibold text-stone-900 text-sm">{mat.label}</p>
-                      <p className="text-xs text-stone-500 mt-0.5 leading-tight">{mat.description}</p>
-                    </button>
-                  ))}
-                </div>
-
-                <h3 className="text-sm font-semibold text-stone-700 mb-3 mt-6">Ear Style</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {EAR_STYLE_OPTIONS.map((ear) => (
-                    <button
-                      key={ear.id}
-                      onClick={() => updateLeashBuddyCustomizations({ earStyle: ear.id })}
-                      className={`p-3 rounded-xl transition-all duration-200 border text-center ${
-                        leashBuddyCustomizations.earStyle === ear.id
-                          ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
-                          : 'border-stone-200 bg-white hover:border-stone-300'
-                      }`}
-                    >
-                      <p className="font-semibold text-stone-900 text-sm">{ear.label}</p>
-                      <p className="text-xs text-stone-500 mt-0.5">{ear.description}</p>
-                    </button>
-                  ))}
-                </div>
-
-                <h3 className="text-sm font-semibold text-stone-700 mb-3 mt-6">Ear Size</h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {EAR_SIZE_OPTIONS.map((size) => (
-                    <button
-                      key={size.id}
-                      onClick={() => updateLeashBuddyCustomizations({ earSize: size.id as EarSize })}
-                      className={`p-3 rounded-xl transition-all duration-200 border text-center ${
-                        leashBuddyCustomizations.earSize === size.id
-                          ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
-                          : 'border-stone-200 bg-white hover:border-stone-300'
-                      }`}
-                    >
-                      <p className="font-semibold text-stone-900 text-sm">{size.label}</p>
-                      <p className="text-xs text-stone-500 mt-0.5">{size.description}</p>
-                    </button>
-                  ))}
-                </div>
-              </section>
-            </>
-          )}
-
-          {/* Size — only for PupStitch / Both */}
-          {needsSize && (
-            <>
-              <hr className="border-stone-100" />
-              <section>
-                <h2 className="text-base font-bold text-stone-900 mb-1">Amigurumi Size</h2>
-                <p className="text-sm text-stone-500 mb-4">Choose the size for your crochet pattern</p>
-                <div className="grid grid-cols-3 gap-3">
-                  {SIZE_OPTIONS.map((size) => (
-                    <button
-                      key={size.id}
-                      onClick={() => setSelectedSize(size.id)}
-                      className={`relative p-4 rounded-xl transition-all duration-200 border text-center ${
-                        selectedSize === size.id
-                          ? 'border-brand-coral bg-brand-coral-soft shadow-sm'
-                          : 'border-stone-200 bg-white hover:border-stone-300'
-                      }`}
-                    >
-                      <p className="font-bold text-stone-900 text-sm">{size.label}</p>
-                      <p className="text-xs text-stone-500">{size.height}</p>
-                      {selectedSize === size.id && (
-                        <div className="absolute top-2 right-2 w-5 h-5 bg-brand-coral text-white rounded-full flex items-center justify-center">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </section>
-            </>
-          )}
-        </div>
-
-        {/* Generate Button */}
-        <div className="sticky bottom-4 z-10">
-          <button
-            onClick={handleGenerate}
-            disabled={!canGenerate || isGenerating || (uploadedImages.length > 0 && !!analysisResult && !colorsReady)}
-            className={`w-full py-4 rounded-full text-base font-bold shadow-lg transition-all duration-200 ${
-              canGenerate && colorsReady && !isGenerating
-                ? 'bg-brand-coral text-white hover:bg-brand-coral-dark hover:shadow-xl hover:-translate-y-0.5'
-                : 'bg-stone-200 text-stone-400 cursor-not-allowed'
-            }`}
-          >
-            {!canGenerate
-              ? selectedBreeds.length === 0
-                ? 'Select a breed to continue'
-                : needsSize
-                  ? 'Pick a size to continue'
-                  : 'Select a breed to continue'
-              : !colorsReady
-                ? 'Confirm your colors above first'
-                : isGenerating
-                  ? 'Generating...'
-                  : `Generate My ${BRAND.catalog.leashBuddy.name}`}
-          </button>
-        </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

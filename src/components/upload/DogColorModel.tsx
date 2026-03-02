@@ -27,9 +27,9 @@ const REGIONS: RegionDef[] = [
   },
   {
     id: 'face',
-    label: 'Face',
-    productPart: 'Front flap',
-    storeKey: 'bodyColor',
+    label: 'Face (Flap)',
+    productPart: 'Front flap — independent from body',
+    storeKey: 'flapColor',
     defaultColor: '#C4956A',
     analysisKey: 'head',
     analysisColorKey: 'primary',
@@ -207,7 +207,7 @@ export default function DogColorModel({
 
   // Current colors
   const bodyColor = getRegionColor(REGIONS[0]);
-  const faceColor = bodyColor;
+  const faceColor = getRegionColor(REGIONS[1]);
   const bellyColor = getRegionColor(REGIONS[2]);
   const muzzleColor = getRegionColor(REGIONS[3]);
   const noseColor = getRegionColor(REGIONS[4]);
@@ -248,36 +248,36 @@ export default function DogColorModel({
 
       <div
         className="relative mx-auto"
-        style={{ perspective: '800px', maxWidth: '300px' }}
+        style={{ perspective: '800px', maxWidth: '340px' }}
       >
         <div style={{ transform: 'rotateX(2deg)', transformStyle: 'preserve-3d' }}>
           <svg
             ref={svgRef}
-            viewBox="0 0 300 440"
+            viewBox="0 0 360 300"
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-auto drop-shadow-lg"
           >
             <defs>
               <filter id="dcm-shadow" x="-10%" y="-10%" width="130%" height="130%">
                 <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
-                <feOffset dx="0" dy="4" result="shadow" />
+                <feOffset dx="2" dy="4" result="shadow" />
                 <feComponentTransfer><feFuncA type="linear" slope="0.2" /></feComponentTransfer>
                 <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
               </filter>
               <filter id="dcm-inset" x="-5%" y="-5%" width="110%" height="110%">
                 <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-                <feOffset dx="0" dy="2" />
+                <feOffset dx="1" dy="2" />
                 <feComposite operator="out" in2="SourceAlpha" />
                 <feComponentTransfer><feFuncA type="linear" slope="0.12" /></feComponentTransfer>
                 <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode /></feMerge>
               </filter>
               <radialGradient id="dcm-highlight" cx="35%" cy="30%" r="70%">
-                <stop offset="0%" stopColor="white" stopOpacity="0.2" />
+                <stop offset="0%" stopColor="white" stopOpacity="0.18" />
                 <stop offset="100%" stopColor="white" stopOpacity="0" />
               </radialGradient>
 
               {/* Per-region gradients */}
-              <radialGradient id="grad-body" cx="45%" cy="35%" r="60%">
+              <radialGradient id="grad-body" cx="40%" cy="35%" r="65%">
                 <stop offset="0%" stopColor={lighten(bodyColor, 25)} />
                 <stop offset="100%" stopColor={darken(bodyColor, 15)} />
               </radialGradient>
@@ -293,19 +293,11 @@ export default function DogColorModel({
                 <stop offset="0%" stopColor={lighten(muzzleColor, 20)} />
                 <stop offset="100%" stopColor={darken(muzzleColor, 15)} />
               </radialGradient>
-              <radialGradient id="grad-ear-l" cx="55%" cy="35%" r="60%">
+              <radialGradient id="grad-ear" cx="50%" cy="35%" r="60%">
                 <stop offset="0%" stopColor={lighten(earColor, 20)} />
                 <stop offset="100%" stopColor={darken(earColor, 25)} />
               </radialGradient>
-              <radialGradient id="grad-ear-r" cx="45%" cy="35%" r="60%">
-                <stop offset="0%" stopColor={lighten(earColor, 20)} />
-                <stop offset="100%" stopColor={darken(earColor, 25)} />
-              </radialGradient>
-              <radialGradient id="grad-ear-inner-l" cx="50%" cy="40%" r="55%">
-                <stop offset="0%" stopColor={lighten(earInnerColor, 15)} />
-                <stop offset="100%" stopColor={darken(earInnerColor, 10)} />
-              </radialGradient>
-              <radialGradient id="grad-ear-inner-r" cx="50%" cy="40%" r="55%">
+              <radialGradient id="grad-ear-inner" cx="50%" cy="40%" r="55%">
                 <stop offset="0%" stopColor={lighten(earInnerColor, 15)} />
                 <stop offset="100%" stopColor={darken(earInnerColor, 10)} />
               </radialGradient>
@@ -349,18 +341,32 @@ export default function DogColorModel({
               )}
             </defs>
 
-            {/* === BACK LEGS (behind body) === */}
-            <g className="cursor-pointer" onClick={() => openColorPicker('legs')}>
+            {/* === TAIL (behind body) === */}
+            <g pointerEvents="none">
               <path
-                d="M 95 340 Q 85 370, 80 400 Q 78 415, 90 420 L 110 420 Q 118 415, 115 400 Q 112 380, 108 340"
-                fill={getFill('legs', legColors, 'grad-leg')}
-                stroke={darken(legColor, 30)}
+                d="M 52 145 Q 20 120, 15 80 Q 12 55, 25 65 Q 35 75, 50 110 Q 55 125, 55 145"
+                fill={darken(bodyColor, 10)}
+                stroke={darken(bodyColor, 35)}
+                strokeWidth="1"
+                opacity="0.85"
+                filter="url(#dcm-shadow)"
+              />
+            </g>
+
+            {/* === FAR-SIDE LEGS (behind body, slightly offset) === */}
+            <g className="cursor-pointer" onClick={() => openColorPicker('legs')}>
+              {/* Far back leg */}
+              <path
+                d="M 82 210 Q 78 235, 75 255 Q 73 268, 80 272 L 96 272 Q 102 268, 100 255 Q 97 235, 94 210"
+                fill={darken(legColor, 15)}
+                stroke={darken(legColor, 35)}
                 strokeWidth="0.8"
               />
+              {/* Far front leg */}
               <path
-                d="M 192 340 Q 188 370, 185 400 Q 183 415, 190 420 L 210 420 Q 218 415, 220 400 Q 218 380, 205 340"
-                fill={getFill('legs', legColors, 'grad-leg')}
-                stroke={darken(legColor, 30)}
+                d="M 212 210 Q 208 235, 205 255 Q 203 268, 210 272 L 226 272 Q 232 268, 230 255 Q 227 235, 224 210"
+                fill={darken(legColor, 15)}
+                stroke={darken(legColor, 35)}
                 strokeWidth="0.8"
               />
             </g>
@@ -368,19 +374,19 @@ export default function DogColorModel({
             {/* === BODY / TORSO === */}
             <g className="cursor-pointer" onClick={() => openColorPicker('body')}>
               <ellipse
-                cx="150" cy="310" rx="85" ry="65"
+                cx="165" cy="185" rx="110" ry="55"
                 fill={getFill('body', bodyColors, 'grad-body')}
                 stroke={darken(bodyColor, 30)}
                 strokeWidth="1"
                 filter="url(#dcm-shadow)"
               />
-              <ellipse cx="150" cy="310" rx="83" ry="63" fill="url(#dcm-highlight)" pointerEvents="none" />
+              <ellipse cx="165" cy="185" rx="108" ry="53" fill="url(#dcm-highlight)" pointerEvents="none" />
             </g>
 
             {/* === BELLY / CHEST patch === */}
             <g className="cursor-pointer" onClick={() => openColorPicker('belly')}>
               <ellipse
-                cx="150" cy="315" rx="45" ry="40"
+                cx="180" cy="205" rx="55" ry="22"
                 fill={getFill('belly', bellyColors, 'grad-belly')}
                 stroke={darken(bellyColor, 20)}
                 strokeWidth="0.6"
@@ -388,46 +394,48 @@ export default function DogColorModel({
               />
             </g>
 
-            {/* === FRONT LEGS === */}
+            {/* === NEAR-SIDE LEGS (in front of body) === */}
             <g className="cursor-pointer" onClick={() => openColorPicker('legs')}>
+              {/* Near back leg */}
               <path
-                d="M 105 355 Q 100 380, 95 405 Q 93 418, 100 422 L 118 422 Q 125 418, 123 405 Q 120 380, 118 355"
+                d="M 90 215 Q 86 240, 83 258 Q 81 272, 88 276 L 105 276 Q 112 272, 110 258 Q 107 240, 103 215"
                 fill={getFill('legs', legColors, 'grad-leg')}
                 stroke={darken(legColor, 30)}
                 strokeWidth="0.8"
                 filter="url(#dcm-shadow)"
               />
+              {/* Near front leg */}
               <path
-                d="M 182 355 Q 180 380, 177 405 Q 175 418, 182 422 L 200 422 Q 207 418, 205 405 Q 202 380, 195 355"
+                d="M 220 215 Q 216 240, 213 258 Q 211 272, 218 276 L 235 276 Q 242 272, 240 258 Q 237 240, 233 215"
                 fill={getFill('legs', legColors, 'grad-leg')}
                 stroke={darken(legColor, 30)}
                 strokeWidth="0.8"
                 filter="url(#dcm-shadow)"
               />
-              {/* Paw toes */}
+              {/* Paw toes — near side only */}
               <g pointerEvents="none" opacity="0.3">
-                <circle cx="104" cy="420" r="3" fill={darken(legColor, 20)} />
-                <circle cx="110" cy="421" r="3" fill={darken(legColor, 20)} />
-                <circle cx="116" cy="420" r="3" fill={darken(legColor, 20)} />
-                <circle cx="187" cy="420" r="3" fill={darken(legColor, 20)} />
-                <circle cx="193" cy="421" r="3" fill={darken(legColor, 20)} />
-                <circle cx="199" cy="420" r="3" fill={darken(legColor, 20)} />
+                <circle cx="93" cy="274" r="2.5" fill={darken(legColor, 20)} />
+                <circle cx="99" cy="275" r="2.5" fill={darken(legColor, 20)} />
+                <circle cx="105" cy="274" r="2.5" fill={darken(legColor, 20)} />
+                <circle cx="223" cy="274" r="2.5" fill={darken(legColor, 20)} />
+                <circle cx="229" cy="275" r="2.5" fill={darken(legColor, 20)} />
+                <circle cx="235" cy="274" r="2.5" fill={darken(legColor, 20)} />
               </g>
             </g>
 
-            {/* === LEFT EAR (outer + inner) === */}
+            {/* === EAR (outer + inner) — one visible in side profile === */}
             <g className="cursor-pointer" onClick={() => openColorPicker('ear-left')}
-               style={{ transition: 'transform 200ms ease', transformOrigin: '85px 90px' }}>
+               style={{ transition: 'transform 200ms ease' }}>
               <path
-                d="M 85 100 Q 30 60, 20 130 Q 15 170, 55 180 Q 75 175, 85 155"
-                fill={getFill('ear-left', earColors, 'grad-ear-l')}
+                d="M 268 95 Q 250 40, 285 25 Q 315 15, 320 55 Q 322 80, 298 105 Q 285 115, 270 110"
+                fill={getFill('ear-left', earColors, 'grad-ear')}
                 stroke={darken(earColor, 40)}
                 strokeWidth="1.2"
                 filter="url(#dcm-shadow)"
               />
               <path
-                d="M 78 110 Q 42 82, 34 135 Q 30 160, 58 168 Q 72 163, 78 148"
-                fill="url(#grad-ear-inner-l)"
+                d="M 274 88 Q 262 50, 290 38 Q 310 30, 312 60 Q 314 78, 296 98 Q 286 105, 276 100"
+                fill="url(#grad-ear-inner)"
                 stroke="transparent"
                 strokeWidth="0"
                 className="cursor-pointer"
@@ -435,42 +443,22 @@ export default function DogColorModel({
               />
             </g>
 
-            {/* === RIGHT EAR (outer + inner) === */}
-            <g className="cursor-pointer" onClick={() => openColorPicker('ear-left')}
-               style={{ transition: 'transform 200ms ease', transformOrigin: '215px 90px' }}>
-              <path
-                d="M 215 100 Q 270 60, 280 130 Q 285 170, 245 180 Q 225 175, 215 155"
-                fill={getFill('ear-left', earColors, 'grad-ear-r')}
-                stroke={darken(earColor, 40)}
-                strokeWidth="1.2"
-                filter="url(#dcm-shadow)"
-              />
-              <path
-                d="M 222 110 Q 258 82, 266 135 Q 270 160, 242 168 Q 228 163, 222 148"
-                fill="url(#grad-ear-inner-r)"
-                stroke="transparent"
-                strokeWidth="0"
-                className="cursor-pointer"
-                onClick={(e) => { e.stopPropagation(); openColorPicker('ear-inner'); }}
-              />
-            </g>
-
-            {/* === FACE / HEAD === */}
+            {/* === FACE / HEAD (side profile — large circle overlapping body) === */}
             <g className="cursor-pointer" onClick={() => openColorPicker('face')}>
-              <ellipse
-                cx="150" cy="180" rx="95" ry="105"
+              <circle
+                cx="275" cy="130" r="75"
                 fill="url(#grad-face)"
                 stroke={darken(faceColor, 40)}
                 strokeWidth="1.2"
                 filter="url(#dcm-shadow)"
               />
-              <ellipse cx="150" cy="180" rx="93" ry="103" fill="url(#dcm-highlight)" pointerEvents="none" />
+              <circle cx="275" cy="130" r="73" fill="url(#dcm-highlight)" pointerEvents="none" />
             </g>
 
-            {/* === MUZZLE === */}
+            {/* === MUZZLE (protruding forward from face) === */}
             <g className="cursor-pointer" onClick={() => openColorPicker('muzzle')}>
-              <ellipse
-                cx="150" cy="225" rx="50" ry="42"
+              <path
+                d="M 305 135 Q 340 128, 350 148 Q 355 165, 335 172 Q 310 178, 290 170 Q 280 162, 285 150 Q 290 138, 305 135 Z"
                 fill="url(#grad-muzzle)"
                 stroke={darken(muzzleColor, 30)}
                 strokeWidth="1"
@@ -478,29 +466,27 @@ export default function DogColorModel({
               />
             </g>
 
-            {/* === EYES (decorative) === */}
+            {/* === EYE (one visible in side profile) === */}
             <g pointerEvents="none">
-              <ellipse cx="118" cy="168" rx="12" ry="13" fill="#1a1a1a" />
-              <ellipse cx="114" cy="164" rx="4" ry="4.5" fill="white" opacity="0.8" />
-              <ellipse cx="182" cy="168" rx="12" ry="13" fill="#1a1a1a" />
-              <ellipse cx="178" cy="164" rx="4" ry="4.5" fill="white" opacity="0.8" />
+              <ellipse cx="295" cy="118" rx="10" ry="12" fill="#1a1a1a" />
+              <ellipse cx="292" cy="114" rx="3.5" ry="4" fill="white" opacity="0.8" />
             </g>
 
-            {/* === NOSE === */}
+            {/* === NOSE (tip of muzzle) === */}
             <g className="cursor-pointer" onClick={() => openColorPicker('nose')}>
-              <path
-                d="M 150 206 Q 138 204, 134 214 Q 132 221, 140 224 Q 145 226, 150 223 Q 155 226, 160 224 Q 168 221, 166 214 Q 162 204, 150 206 Z"
+              <ellipse
+                cx="348" cy="145" rx="10" ry="9"
                 fill="url(#grad-nose)"
                 stroke={darken(noseColor, 30)}
                 strokeWidth="0.8"
               />
-              <ellipse cx="148" cy="211" rx="5" ry="3" fill="white" opacity="0.15" />
+              <ellipse cx="346" cy="143" rx="4" ry="3" fill="white" opacity="0.15" />
             </g>
 
-            {/* === MOUTH (smiling upward semicircle) === */}
+            {/* === MOUTH (side profile — small curve below muzzle) === */}
             <g pointerEvents="none">
               <path
-                d="M 138 232 Q 150 246, 162 232"
+                d="M 340 160 Q 330 170, 310 172"
                 fill="none"
                 stroke="#4a3728"
                 strokeWidth="1.5"
@@ -509,24 +495,10 @@ export default function DogColorModel({
             </g>
 
             {/* Whisker dots */}
-            <g pointerEvents="none" opacity="0.4">
-              <circle cx="115" cy="228" r="1.5" fill="#4a3728" />
-              <circle cx="108" cy="222" r="1.5" fill="#4a3728" />
-              <circle cx="110" cy="235" r="1.5" fill="#4a3728" />
-              <circle cx="185" cy="228" r="1.5" fill="#4a3728" />
-              <circle cx="192" cy="222" r="1.5" fill="#4a3728" />
-              <circle cx="190" cy="235" r="1.5" fill="#4a3728" />
-            </g>
-
-            {/* === TAIL (behind body, decorative) === */}
-            <g pointerEvents="none">
-              <path
-                d="M 230 280 Q 260 260, 270 230 Q 275 215, 265 220 Q 255 230, 235 270"
-                fill={darken(bodyColor, 10)}
-                stroke={darken(bodyColor, 35)}
-                strokeWidth="0.8"
-                opacity="0.8"
-              />
+            <g pointerEvents="none" opacity="0.35">
+              <circle cx="340" cy="155" r="1.3" fill="#4a3728" />
+              <circle cx="345" cy="162" r="1.3" fill="#4a3728" />
+              <circle cx="338" cy="168" r="1.3" fill="#4a3728" />
             </g>
           </svg>
         </div>
