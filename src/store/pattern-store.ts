@@ -324,9 +324,8 @@ export const usePatternStore = create<PatternStore>()(
             await savePattern(updated);
           }
 
-          // Generate product preview + scenic photos in background
+          // Generate product preview in background (scenic photos are lazy — generated on demand)
           get().generateProductPreview();
-          get().generateScenicPhotos();
         } catch (error) {
           console.error('[Store] LeashBuddy spec generation error:', error);
           set({ isGeneratingProductSpec: false });

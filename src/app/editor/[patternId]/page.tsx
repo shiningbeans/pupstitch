@@ -25,6 +25,7 @@ export default function EditorPage() {
   const selectProductPreview = usePatternStore((s) => s.selectProductPreview);
   const scenicPhotos = usePatternStore((s) => s.scenicPhotos);
   const isGeneratingScenicPhotos = usePatternStore((s) => s.isGeneratingScenicPhotos);
+  const generateScenicPhotos = usePatternStore((s) => s.generateScenicPhotos);
 
   const [isDownloading, setIsDownloading] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -351,49 +352,60 @@ export default function EditorPage() {
         </div>
 
         {/* Scenic Photos Gallery */}
-        {(scenicPhotos.length > 0 || isGeneratingScenicPhotos) && (
-          <div className="bg-white border-y border-stone-200/60 print:hidden">
-            <div className="max-w-6xl mx-auto px-4 py-12">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-editorial font-bold text-stone-900">
-                  {dogName || 'Your Pup'} in the Wild
-                </h2>
-                <p className="text-stone-500 mt-2 text-sm">
-                  Your custom crochet amigurumi, styled in beautiful scenes
-                </p>
-              </div>
-
-              {isGeneratingScenicPhotos && scenicPhotos.length === 0 ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="text-center">
-                    <svg className="w-8 h-8 text-brand-coral animate-spin mx-auto mb-3" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <p className="text-stone-500 text-sm">Creating scenic photos...</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {scenicPhotos.map((photo, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setLightboxImage(photo)}
-                      className="group relative overflow-hidden rounded-xl border border-stone-200/60 bg-stone-50 aspect-[4/3]"
-                    >
-                      <img
-                        src={photo}
-                        alt={`${dogName || breedDisplay} scenic photo ${idx + 1}`}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </button>
-                  ))}
-                </div>
-              )}
+        <div className="bg-white border-y border-stone-200/60 print:hidden">
+          <div className="max-w-6xl mx-auto px-4 py-12">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-editorial font-bold text-stone-900">
+                {dogName || 'Your Pup'} in the Wild
+              </h2>
+              <p className="text-stone-500 mt-2 text-sm">
+                See your custom crochet amigurumi styled in beautiful scenes
+              </p>
             </div>
+
+            {scenicPhotos.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {scenicPhotos.map((photo, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setLightboxImage(photo)}
+                    className="group relative overflow-hidden rounded-xl border border-stone-200/60 bg-stone-50 aspect-[4/3]"
+                  >
+                    <img
+                      src={photo}
+                      alt={`${dogName || breedDisplay} scenic photo ${idx + 1}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </button>
+                ))}
+              </div>
+            ) : isGeneratingScenicPhotos ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <svg className="w-8 h-8 text-brand-coral animate-spin mx-auto mb-3" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <p className="text-stone-500 text-sm">Creating 3 scenic photos... this takes about 30 seconds</p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center">
+                <button
+                  onClick={() => generateScenicPhotos()}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-coral-soft text-brand-coral font-semibold hover:bg-brand-coral hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Generate Scenic Photos
+                </button>
+                <p className="text-xs text-stone-400 mt-2">3 AI-generated scenes featuring your crochet amigurumi</p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Tabs: Product view / Crochet Pattern */}
         {hasLeashBuddy && (
