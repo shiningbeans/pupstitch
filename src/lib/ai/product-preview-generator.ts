@@ -60,6 +60,7 @@ function buildRequestBody(
     dimensions: spec.dimensions,
     embroideryDescription,
     dogName: spec.dogName,
+    regionColors: customizations?.regionColors,
   };
 
   // Send photos: use dogPhotos array for multiple, fallback to single dogPhoto for compat

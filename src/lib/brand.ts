@@ -3,7 +3,7 @@
  * Change the name here and it updates everywhere.
  */
 export const BRAND = {
-  name: 'LIKKIT',
+  name: 'LeashBuddy',
   tagline: 'Custom gear that looks like your dog.',
   description:
     'Upload a photo of your dog and get AI-generated custom accessories — product specs, 3D previews, and crochet patterns.',

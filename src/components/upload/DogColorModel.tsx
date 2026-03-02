@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import type { DogAnalysisResult } from '@/types';
 import type { LeashBuddyCustomizations } from '@/types/product-types';
 
@@ -112,10 +112,9 @@ export default function DogColorModel({
   customizations,
   onColorChange,
 }: DogColorModelProps) {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [pickerPos, setPickerPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
-  const pickerRef = useRef<HTMLDivElement>(null);
+  // Hidden color inputs for each region — one per region + one per extra color slot
+  const colorInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const getRegionColor = useCallback(
     (region: RegionDef): string => {
@@ -140,47 +139,75 @@ export default function DogColorModel({
     [analysisResult, customizations]
   );
 
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (
-        pickerRef.current &&
-        !pickerRef.current.contains(e.target as Node) &&
-        svgRef.current &&
-        !svgRef.current.contains(e.target as Node)
-      ) {
-        setSelectedRegion(null);
-      }
+  // Get all colors for a region (primary + extras from regionColors)
+  const getRegionColors = useCallback(
+    (region: RegionDef): string[] => {
+      const primary = getRegionColor(region);
+      const extras = customizations.regionColors?.[region.id] || [];
+      return [primary, ...extras];
+    },
+    [getRegionColor, customizations.regionColors]
+  );
+
+  // Click on SVG region or legend → immediately open native color picker
+  const openColorPicker = (regionId: string, colorIndex: number = 0) => {
+    const key = `${regionId}-${colorIndex}`;
+    const input = colorInputRefs.current[key];
+    if (input) {
+      input.click();
     }
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
-
-  const handleRegionClick = (regionId: string, event: React.MouseEvent) => {
-    const svgEl = svgRef.current;
-    if (!svgEl) return;
-    const rect = svgEl.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    setPickerPos({ x, y });
-    setSelectedRegion(regionId === selectedRegion ? null : regionId);
   };
 
-  const handleColorInput = (regionId: string, color: string) => {
+  const handleColorChange = (regionId: string, colorIndex: number, newColor: string) => {
     const region = REGIONS.find((r) => r.id === regionId);
     if (!region) return;
-    onColorChange({ [region.storeKey]: color });
+
+    if (colorIndex === 0) {
+      // Primary color — update the store key directly
+      onColorChange({ [region.storeKey]: newColor });
+    } else {
+      // Extra color — update regionColors
+      const current = { ...(customizations.regionColors || {}) };
+      const extras = [...(current[regionId] || [])];
+      extras[colorIndex - 1] = newColor;
+      current[regionId] = extras;
+      onColorChange({ regionColors: current });
+    }
   };
 
-  const handleReset = (regionId: string) => {
+  const addExtraColor = (regionId: string) => {
     const region = REGIONS.find((r) => r.id === regionId);
     if (!region) return;
-    onColorChange({ [region.storeKey]: undefined });
-    setSelectedRegion(null);
+    const primary = getRegionColor(region);
+    const current = { ...(customizations.regionColors || {}) };
+    const extras = [...(current[regionId] || [])];
+    if (extras.length >= 3) return; // max 4 colors total
+    extras.push(darken(primary, 40)); // start with a darker variant
+    current[regionId] = extras;
+    onColorChange({ regionColors: current });
+  };
+
+  const removeExtraColor = (regionId: string, extraIndex: number) => {
+    const current = { ...(customizations.regionColors || {}) };
+    const extras = [...(current[regionId] || [])];
+    extras.splice(extraIndex, 1);
+    if (extras.length === 0) {
+      delete current[regionId];
+    } else {
+      current[regionId] = extras;
+    }
+    onColorChange({ regionColors: current });
+  };
+
+  // Build SVG fill — stripe pattern for multi-color regions
+  const buildFillId = (regionId: string, colors: string[]): string => {
+    if (colors.length <= 1) return '';
+    return `pattern-${regionId}`;
   };
 
   // Current colors
   const bodyColor = getRegionColor(REGIONS[0]);
-  const faceColor = bodyColor; // linked
+  const faceColor = bodyColor;
   const bellyColor = getRegionColor(REGIONS[2]);
   const muzzleColor = getRegionColor(REGIONS[3]);
   const noseColor = getRegionColor(REGIONS[4]);
@@ -188,10 +215,37 @@ export default function DogColorModel({
   const earInnerColor = getRegionColor(REGIONS[6]);
   const legColor = getRegionColor(REGIONS[7]);
 
-  const selectedRegionDef = REGIONS.find((r) => r.id === selectedRegion);
+  // Multi-color arrays per region
+  const bodyColors = getRegionColors(REGIONS[0]);
+  const bellyColors = getRegionColors(REGIONS[2]);
+  const earColors = getRegionColors(REGIONS[5]);
+  const legColors = getRegionColors(REGIONS[7]);
+
+  // Determine if a region is multi-color and what fill to use
+  const getFill = (regionId: string, colors: string[], gradientId: string): string => {
+    const patternId = buildFillId(regionId, colors);
+    return patternId ? `url(#${patternId})` : `url(#${gradientId})`;
+  };
 
   return (
     <div className="relative">
+      {/* Hidden color inputs — one per region per color slot */}
+      <div className="sr-only" aria-hidden="true">
+        {REGIONS.map((region) => {
+          const colors = getRegionColors(region);
+          return colors.map((color, idx) => (
+            <input
+              key={`${region.id}-${idx}`}
+              ref={(el) => { colorInputRefs.current[`${region.id}-${idx}`] = el; }}
+              type="color"
+              value={color}
+              onChange={(e) => handleColorChange(region.id, idx, e.target.value)}
+              tabIndex={-1}
+            />
+          ));
+        })}
+      </div>
+
       <div
         className="relative mx-auto"
         style={{ perspective: '800px', maxWidth: '300px' }}
@@ -263,81 +317,98 @@ export default function DogColorModel({
                 <stop offset="0%" stopColor={lighten(legColor, 20)} />
                 <stop offset="100%" stopColor={darken(legColor, 20)} />
               </radialGradient>
+
+              {/* Multi-color stripe patterns */}
+              {bodyColors.length > 1 && (
+                <pattern id="pattern-body" width={bodyColors.length * 12} height="1" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  {bodyColors.map((c, i) => (
+                    <rect key={i} x={i * 12} y="0" width="12" height="1" fill={c} />
+                  ))}
+                </pattern>
+              )}
+              {bellyColors.length > 1 && (
+                <pattern id="pattern-belly" width={bellyColors.length * 10} height="1" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+                  {bellyColors.map((c, i) => (
+                    <rect key={i} x={i * 10} y="0" width="10" height="1" fill={c} />
+                  ))}
+                </pattern>
+              )}
+              {earColors.length > 1 && (
+                <pattern id="pattern-ear-left" width={earColors.length * 8} height="1" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+                  {earColors.map((c, i) => (
+                    <rect key={i} x={i * 8} y="0" width="8" height="1" fill={c} />
+                  ))}
+                </pattern>
+              )}
+              {legColors.length > 1 && (
+                <pattern id="pattern-legs" width={legColors.length * 8} height="1" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
+                  {legColors.map((c, i) => (
+                    <rect key={i} x={i * 8} y="0" width="8" height="1" fill={c} />
+                  ))}
+                </pattern>
+              )}
             </defs>
 
             {/* === BACK LEGS (behind body) === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('legs', e)}>
-              {/* Back left leg */}
+            <g className="cursor-pointer" onClick={() => openColorPicker('legs')}>
               <path
                 d="M 95 340 Q 85 370, 80 400 Q 78 415, 90 420 L 110 420 Q 118 415, 115 400 Q 112 380, 108 340"
-                fill="url(#grad-leg)"
-                stroke={selectedRegion === 'legs' ? '#E8533F' : darken(legColor, 30)}
-                strokeWidth={selectedRegion === 'legs' ? 2 : 0.8}
-                strokeDasharray={selectedRegion === 'legs' ? '5 3' : 'none'}
+                fill={getFill('legs', legColors, 'grad-leg')}
+                stroke={darken(legColor, 30)}
+                strokeWidth="0.8"
               />
-              {/* Back right leg */}
               <path
                 d="M 192 340 Q 188 370, 185 400 Q 183 415, 190 420 L 210 420 Q 218 415, 220 400 Q 218 380, 205 340"
-                fill="url(#grad-leg)"
-                stroke={selectedRegion === 'legs' ? '#E8533F' : darken(legColor, 30)}
-                strokeWidth={selectedRegion === 'legs' ? 2 : 0.8}
-                strokeDasharray={selectedRegion === 'legs' ? '5 3' : 'none'}
+                fill={getFill('legs', legColors, 'grad-leg')}
+                stroke={darken(legColor, 30)}
+                strokeWidth="0.8"
               />
             </g>
 
             {/* === BODY / TORSO === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('body', e)}>
+            <g className="cursor-pointer" onClick={() => openColorPicker('body')}>
               <ellipse
                 cx="150" cy="310" rx="85" ry="65"
-                fill="url(#grad-body)"
-                stroke={selectedRegion === 'body' ? '#E8533F' : darken(bodyColor, 30)}
-                strokeWidth={selectedRegion === 'body' ? 2.5 : 1}
-                strokeDasharray={selectedRegion === 'body' ? '6 3' : 'none'}
+                fill={getFill('body', bodyColors, 'grad-body')}
+                stroke={darken(bodyColor, 30)}
+                strokeWidth="1"
                 filter="url(#dcm-shadow)"
               />
               <ellipse cx="150" cy="310" rx="83" ry="63" fill="url(#dcm-highlight)" pointerEvents="none" />
             </g>
 
             {/* === BELLY / CHEST patch === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('belly', e)}>
+            <g className="cursor-pointer" onClick={() => openColorPicker('belly')}>
               <ellipse
                 cx="150" cy="315" rx="45" ry="40"
-                fill="url(#grad-belly)"
-                stroke={selectedRegion === 'belly' ? '#E8533F' : darken(bellyColor, 20)}
-                strokeWidth={selectedRegion === 'belly' ? 2 : 0.6}
-                strokeDasharray={selectedRegion === 'belly' ? '5 3' : 'none'}
+                fill={getFill('belly', bellyColors, 'grad-belly')}
+                stroke={darken(bellyColor, 20)}
+                strokeWidth="0.6"
                 filter="url(#dcm-inset)"
               />
             </g>
 
             {/* === FRONT LEGS === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('legs', e)}>
-              {/* Front left leg */}
+            <g className="cursor-pointer" onClick={() => openColorPicker('legs')}>
               <path
                 d="M 105 355 Q 100 380, 95 405 Q 93 418, 100 422 L 118 422 Q 125 418, 123 405 Q 120 380, 118 355"
-                fill="url(#grad-leg)"
-                stroke={selectedRegion === 'legs' ? '#E8533F' : darken(legColor, 30)}
-                strokeWidth={selectedRegion === 'legs' ? 2 : 0.8}
-                strokeDasharray={selectedRegion === 'legs' ? '5 3' : 'none'}
+                fill={getFill('legs', legColors, 'grad-leg')}
+                stroke={darken(legColor, 30)}
+                strokeWidth="0.8"
                 filter="url(#dcm-shadow)"
               />
-              {/* Front right leg */}
               <path
                 d="M 182 355 Q 180 380, 177 405 Q 175 418, 182 422 L 200 422 Q 207 418, 205 405 Q 202 380, 195 355"
-                fill="url(#grad-leg)"
-                stroke={selectedRegion === 'legs' ? '#E8533F' : darken(legColor, 30)}
-                strokeWidth={selectedRegion === 'legs' ? 2 : 0.8}
-                strokeDasharray={selectedRegion === 'legs' ? '5 3' : 'none'}
+                fill={getFill('legs', legColors, 'grad-leg')}
+                stroke={darken(legColor, 30)}
+                strokeWidth="0.8"
                 filter="url(#dcm-shadow)"
               />
-              {/* Paw toes - front left */}
+              {/* Paw toes */}
               <g pointerEvents="none" opacity="0.3">
                 <circle cx="104" cy="420" r="3" fill={darken(legColor, 20)} />
                 <circle cx="110" cy="421" r="3" fill={darken(legColor, 20)} />
                 <circle cx="116" cy="420" r="3" fill={darken(legColor, 20)} />
-              </g>
-              {/* Paw toes - front right */}
-              <g pointerEvents="none" opacity="0.3">
                 <circle cx="187" cy="420" r="3" fill={darken(legColor, 20)} />
                 <circle cx="193" cy="421" r="3" fill={darken(legColor, 20)} />
                 <circle cx="199" cy="420" r="3" fill={darken(legColor, 20)} />
@@ -345,70 +416,64 @@ export default function DogColorModel({
             </g>
 
             {/* === LEFT EAR (outer + inner) === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('ear-left', e)}
+            <g className="cursor-pointer" onClick={() => openColorPicker('ear-left')}
                style={{ transition: 'transform 200ms ease', transformOrigin: '85px 90px' }}>
               <path
                 d="M 85 100 Q 30 60, 20 130 Q 15 170, 55 180 Q 75 175, 85 155"
-                fill="url(#grad-ear-l)"
-                stroke={selectedRegion === 'ear-left' ? '#E8533F' : darken(earColor, 40)}
-                strokeWidth={selectedRegion === 'ear-left' ? 2.5 : 1.2}
-                strokeDasharray={selectedRegion === 'ear-left' ? '6 3' : 'none'}
+                fill={getFill('ear-left', earColors, 'grad-ear-l')}
+                stroke={darken(earColor, 40)}
+                strokeWidth="1.2"
                 filter="url(#dcm-shadow)"
               />
               <path
                 d="M 78 110 Q 42 82, 34 135 Q 30 160, 58 168 Q 72 163, 78 148"
                 fill="url(#grad-ear-inner-l)"
-                stroke={selectedRegion === 'ear-inner' ? '#E8533F' : 'transparent'}
-                strokeWidth={selectedRegion === 'ear-inner' ? 2 : 0}
-                strokeDasharray={selectedRegion === 'ear-inner' ? '5 3' : 'none'}
+                stroke="transparent"
+                strokeWidth="0"
                 className="cursor-pointer"
-                onClick={(e) => { e.stopPropagation(); handleRegionClick('ear-inner', e); }}
+                onClick={(e) => { e.stopPropagation(); openColorPicker('ear-inner'); }}
               />
             </g>
 
             {/* === RIGHT EAR (outer + inner) === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('ear-left', e)}
+            <g className="cursor-pointer" onClick={() => openColorPicker('ear-left')}
                style={{ transition: 'transform 200ms ease', transformOrigin: '215px 90px' }}>
               <path
                 d="M 215 100 Q 270 60, 280 130 Q 285 170, 245 180 Q 225 175, 215 155"
-                fill="url(#grad-ear-r)"
-                stroke={selectedRegion === 'ear-left' ? '#E8533F' : darken(earColor, 40)}
-                strokeWidth={selectedRegion === 'ear-left' ? 2.5 : 1.2}
-                strokeDasharray={selectedRegion === 'ear-left' ? '6 3' : 'none'}
+                fill={getFill('ear-left', earColors, 'grad-ear-r')}
+                stroke={darken(earColor, 40)}
+                strokeWidth="1.2"
                 filter="url(#dcm-shadow)"
               />
               <path
                 d="M 222 110 Q 258 82, 266 135 Q 270 160, 242 168 Q 228 163, 222 148"
                 fill="url(#grad-ear-inner-r)"
-                stroke={selectedRegion === 'ear-inner' ? '#E8533F' : 'transparent'}
-                strokeWidth={selectedRegion === 'ear-inner' ? 2 : 0}
-                strokeDasharray={selectedRegion === 'ear-inner' ? '5 3' : 'none'}
+                stroke="transparent"
+                strokeWidth="0"
                 className="cursor-pointer"
-                onClick={(e) => { e.stopPropagation(); handleRegionClick('ear-inner', e); }}
+                onClick={(e) => { e.stopPropagation(); openColorPicker('ear-inner'); }}
               />
             </g>
 
             {/* === FACE / HEAD === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('face', e)}>
+            <g className="cursor-pointer" onClick={() => openColorPicker('face')}>
               <ellipse
                 cx="150" cy="180" rx="95" ry="105"
                 fill="url(#grad-face)"
-                stroke={selectedRegion === 'face' ? '#E8533F' : darken(faceColor, 40)}
-                strokeWidth={selectedRegion === 'face' ? 2.5 : 1.2}
-                strokeDasharray={selectedRegion === 'face' ? '6 3' : 'none'}
+                stroke={darken(faceColor, 40)}
+                strokeWidth="1.2"
                 filter="url(#dcm-shadow)"
               />
               <ellipse cx="150" cy="180" rx="93" ry="103" fill="url(#dcm-highlight)" pointerEvents="none" />
             </g>
 
             {/* === MUZZLE === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('muzzle', e)}>
+            <g className="cursor-pointer" onClick={() => openColorPicker('muzzle')}>
               <ellipse
                 cx="150" cy="225" rx="50" ry="42"
                 fill="url(#grad-muzzle)"
-                stroke={selectedRegion === 'muzzle' ? '#E8533F' : darken(muzzleColor, 30)}
-                strokeWidth={selectedRegion === 'muzzle' ? 2.5 : 1}
-                strokeDasharray={selectedRegion === 'muzzle' ? '5 3' : 'none'}
+                stroke={darken(muzzleColor, 30)}
+                strokeWidth="1"
                 filter="url(#dcm-inset)"
               />
             </g>
@@ -422,13 +487,12 @@ export default function DogColorModel({
             </g>
 
             {/* === NOSE === */}
-            <g className="cursor-pointer" onClick={(e) => handleRegionClick('nose', e)}>
+            <g className="cursor-pointer" onClick={() => openColorPicker('nose')}>
               <path
                 d="M 150 206 Q 138 204, 134 214 Q 132 221, 140 224 Q 145 226, 150 223 Q 155 226, 160 224 Q 168 221, 166 214 Q 162 204, 150 206 Z"
                 fill="url(#grad-nose)"
-                stroke={selectedRegion === 'nose' ? '#E8533F' : darken(noseColor, 30)}
-                strokeWidth={selectedRegion === 'nose' ? 2 : 0.8}
-                strokeDasharray={selectedRegion === 'nose' ? '4 2' : 'none'}
+                stroke={darken(noseColor, 30)}
+                strokeWidth="0.8"
               />
               <ellipse cx="148" cy="211" rx="5" ry="3" fill="white" opacity="0.15" />
             </g>
@@ -466,79 +530,78 @@ export default function DogColorModel({
             </g>
           </svg>
         </div>
-
-        {/* Color picker popover */}
-        {selectedRegion && selectedRegionDef && (
-          <div
-            ref={pickerRef}
-            className="absolute z-50 bg-white rounded-xl shadow-xl border border-stone-200 p-3 min-w-[180px]"
-            style={{
-              left: Math.min(pickerPos.x, 160),
-              top: Math.min(pickerPos.y + 10, 360),
-            }}
-          >
-            <div className="text-xs font-semibold text-stone-700 mb-1">
-              {selectedRegionDef.label}
-            </div>
-            <div className="text-[10px] text-stone-400 mb-2">
-              {selectedRegionDef.productPart}
-            </div>
-
-            <div className="flex items-center gap-2 mb-2">
-              <input
-                type="color"
-                value={getRegionColor(selectedRegionDef)}
-                onChange={(e) => handleColorInput(selectedRegion, e.target.value)}
-                className="w-10 h-10 rounded-lg cursor-pointer border border-stone-200 p-0.5"
-              />
-              <div className="flex-1">
-                <div className="text-xs font-mono text-stone-600">
-                  {getRegionColor(selectedRegionDef).toUpperCase()}
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => handleReset(selectedRegion)}
-              className="w-full text-[10px] text-stone-400 hover:text-stone-600 transition-colors py-1"
-            >
-              Reset to detected
-            </button>
-          </div>
-        )}
       </div>
 
-      {/* Legend grid */}
-      <div className="mt-4 grid grid-cols-4 gap-1.5 max-w-sm mx-auto">
+      {/* Legend — each row is a region with color swatches */}
+      <div className="mt-4 space-y-1.5 max-w-sm mx-auto">
         {REGIONS.map((region) => {
-          const color = getRegionColor(region);
-          const isActive = selectedRegion === region.id;
+          const colors = getRegionColors(region);
+          const extras = customizations.regionColors?.[region.id] || [];
+          const canAddMore = extras.length < 3;
           return (
-            <button
+            <div
               key={region.id}
-              onClick={() => {
-                setPickerPos({ x: 100, y: 200 });
-                setSelectedRegion(isActive ? null : region.id);
-              }}
-              className={`flex items-center gap-1.5 p-1.5 rounded-lg text-left transition-all duration-150 ${
-                isActive
-                  ? 'bg-orange-50 border border-orange-200 shadow-sm'
-                  : 'bg-white/60 border border-stone-100 hover:border-stone-200 hover:bg-white/80'
-              }`}
+              className="flex items-center gap-2 p-1.5 rounded-lg bg-white/60 border border-stone-100 hover:border-stone-200 transition-colors"
             >
-              <div
-                className="w-4 h-4 rounded-md border border-stone-200/80 flex-shrink-0"
-                style={{ backgroundColor: color }}
-              />
-              <div className="min-w-0">
-                <div className="text-[9px] font-medium text-stone-700 truncate leading-tight">
+              {/* Region label */}
+              <div className="flex-1 min-w-0">
+                <div className="text-[11px] font-medium text-stone-700 truncate leading-tight">
                   {region.label}
                 </div>
+                <div className="text-[9px] text-stone-400 truncate">
+                  {region.productPart}
+                </div>
               </div>
-            </button>
+
+              {/* Color swatches — each clickable to open native picker */}
+              <div className="flex items-center gap-1">
+                {colors.map((color, idx) => (
+                  <div key={idx} className="relative group">
+                    <button
+                      onClick={() => openColorPicker(region.id, idx)}
+                      className="w-7 h-7 rounded-md border-2 border-stone-200/80 hover:border-brand-coral transition-colors cursor-pointer shadow-sm"
+                      style={{ backgroundColor: color }}
+                      title={`${idx === 0 ? 'Primary' : `Color ${idx + 1}`}: ${color} — click to change`}
+                    />
+                    {/* Remove button for extra colors */}
+                    {idx > 0 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeExtraColor(region.id, idx - 1);
+                        }}
+                        className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-stone-400 hover:bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Remove this color"
+                      >
+                        <svg className="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                {/* Add color button */}
+                {canAddMore && (
+                  <button
+                    onClick={() => addExtraColor(region.id)}
+                    className="w-7 h-7 rounded-md border-2 border-dashed border-stone-200 hover:border-brand-coral text-stone-300 hover:text-brand-coral flex items-center justify-center transition-colors"
+                    title="Add another color"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
           );
         })}
       </div>
+
+      <p className="text-center text-[10px] text-stone-400 mt-3">
+        Click any part of the dog or a color swatch to change it. Use + to add markings.
+      </p>
     </div>
   );
 }

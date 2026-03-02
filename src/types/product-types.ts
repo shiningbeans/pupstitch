@@ -178,6 +178,8 @@ export interface LeashBuddyCustomizations {
   liningColor?: string;
   includeNameEmbroidery: boolean;
   notes?: string;
+  // Multi-color per region: e.g. { body: ['#FF0000', '#000000'], ears: ['#8B4513'] }
+  regionColors?: Record<string, string[]>;
 }
 
 export const DEFAULT_LEASHBUDDY_CUSTOMIZATIONS: LeashBuddyCustomizations = {

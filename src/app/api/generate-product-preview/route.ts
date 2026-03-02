@@ -46,6 +46,7 @@ interface PreviewRequestData {
   dogPhotoMimeType?: string;
   dogPhotos?: Array<{ data: string; mimeType: string }>;  // multiple photos
   count?: number;          // number of preview variants to generate (1 or 2)
+  regionColors?: Record<string, string[]>;  // multi-color per region
 }
 
 /**
@@ -77,6 +78,7 @@ ${data.earInnerColor ? `- EAR INNER LINING: ${data.earInnerColor}` : ''}
 - MUZZLE APPLIQUE: ${data.muzzleColor || 'light beige or cream'} — the flat fabric piece for the snout area.
 - NOSE: ${data.noseColor || 'black'} — the small embroidered nose shape.
 - ACCENT (paw prints): ${data.accentColor || 'a slightly darker tone than the body'}
+${data.regionColors && Object.keys(data.regionColors).length > 0 ? `\nMULTI-COLOR MARKINGS: Some regions have multiple colors to represent patterns, spots, or patches:\n${Object.entries(data.regionColors).map(([region, colors]) => `- ${region.toUpperCase()}: has additional colors: ${colors.join(', ')} — blend these as natural breed markings/patches alongside the primary color`).join('\n')}` : ''}
 Do NOT override these colors based on photo analysis — they are intentional choices. Do NOT default the body to white or cream unless the user-selected body color IS white or cream.${hasPhotos ? `\nUse the reference photo${photoCount > 1 ? 's' : ''} ONLY for facial structure, marking PLACEMENT, and breed-specific features — NOT for color selection.` : ''}`;
 
   return `Generate a photorealistic product photograph of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy", designed to look like a cute ${data.breedName}.${photoContext}${colorInstructions}
