@@ -50,121 +50,65 @@ interface PreviewRequestData {
 }
 
 /**
- * Build the detailed product preview prompt — v2
- * KEY CHANGE: The face IS the flap. Not a face on a flap. The flap itself IS the dog face.
+ * Build the product preview prompt — v3
+ * Strategy: SHORT prompt, critical rules FIRST, 3/4 back-angle to show zipper + grommet
  */
 function buildProductPreviewPrompt(data: PreviewRequestData, photoCount: number): string {
-  const earStyleDesc = data.earStyle === 'pointy'
-    ? 'pointed fabric ears that stand upright, sewn to the top-left and top-right corners of the pouch'
-    : data.earStyle === 'rose'
-    ? 'folded rose-shaped fabric ears that curve outward at the sides near the top'
-    : data.earStyle === 'button'
-    ? 'folded button ears that sit neatly at the top corners, drooping slightly'
-    : 'floppy fabric ears that drape outward and downward from the top corners of the pouch';
+  const earStyleDesc = data.earStyle === 'pointy' ? 'pointed upright'
+    : data.earStyle === 'rose' ? 'folded rose-shaped'
+    : data.earStyle === 'button' ? 'folded button'
+    : 'floppy drooping';
 
   const earSizeDesc = EAR_SIZE_DESCRIPTIONS[data.earSize] || EAR_SIZE_DESCRIPTIONS['medium'];
   const materialDesc = MATERIAL_DESCRIPTIONS[data.material] || MATERIAL_DESCRIPTIONS['canvas'];
 
   const hasPhotos = photoCount > 0;
-  const photoContext = hasPhotos
-    ? `\n\nREFERENCE PHOTO${photoCount > 1 ? 'S' : ''}: I've attached ${photoCount} photo${photoCount > 1 ? 's' : ''} of the actual ${data.breedName}. Use ${photoCount > 1 ? 'these' : 'this'} ONLY for facial structure and marking placement — NOT for colors. Colors are specified below.`
+  const photoRef = hasPhotos
+    ? `The attached photo${photoCount > 1 ? 's show' : ' shows'} the real ${data.breedName}. Use ONLY for face structure and marking placement — NOT for colors.`
     : '';
 
-  const colorBlock = `
-COLOR SPECIFICATION (follow exactly):
-- BODY/FLAP FABRIC: ${data.primaryColor}
-- EARS OUTER / MARKINGS: ${data.secondaryColor}
-${data.earInnerColor ? `- EAR INNER: ${data.earInnerColor}` : ''}
-- MUZZLE APPLIQUE: ${data.muzzleColor || 'light beige or cream'}
-- NOSE: ${data.noseColor || 'black'}
-- ACCENT (paw prints): ${data.accentColor || 'slightly darker than body'}
-${data.regionColors && Object.keys(data.regionColors).length > 0 ? Object.entries(data.regionColors).map(([region, colors]) => `- ${region.toUpperCase()} extra colors: ${colors.join(', ')}`).join('\n') : ''}
-Do NOT override these colors. Do NOT default body to white.`;
+  const regionColorLines = data.regionColors && Object.keys(data.regionColors).length > 0
+    ? '\n' + Object.entries(data.regionColors).map(([region, colors]) => `${region}: also has ${colors.join(', ')}`).join('\n')
+    : '';
 
-  return `Generate a photorealistic product photo of a small dog-themed POOP BAG DISPENSER POUCH called "LeashBuddy".${photoContext}
-${colorBlock}
+  return `Photorealistic product photo of a small fabric dog poop bag dispenser pouch shaped like a cute ${data.breedName} face.
+${photoRef}
 
-=== WHAT THIS PRODUCT IS ===
-A compact rectangular fabric pouch (about the size of a deck of cards) that clips to a dog leash. It dispenses poop bags from the bottom and has a treat compartment on top. The front is designed to look like a cute ${data.breedName} face using FLAT machine embroidery and fabric applique — NOT a stuffed animal, NOT a plush toy.
+MANDATORY RULES (violating any = failure):
+1. THE TOP FLAP *IS* THE DOG FACE — eyes, nose, mouth are embroidered directly on the flap. There is NO separate plain flap over the face. The flap and face are ONE piece.
+2. A dark horizontal ZIPPER must be visible on the back/side of the lower section (for loading poop bag rolls).
+3. A round RUBBER GROMMET HOLE at the bottom center where poop bags pull out.
+4. ONLY use these exact colors — NO other colors anywhere on the product:
+   Body: ${data.primaryColor}
+   Ears/markings: ${data.secondaryColor}${data.earInnerColor ? `\n   Ear inner: ${data.earInnerColor}` : ''}
+   Muzzle patch: ${data.muzzleColor || 'cream'}
+   Nose: ${data.noseColor || 'black'}
+   Paw prints: ${data.accentColor || 'darker shade of body'}
+   Eyes: black embroidery with white dot
+   Hardware: brushed silver only
+   Edge binding: same shade as body (tonal, NOT contrasting)${regionColorLines}
+   NOTHING ELSE. No red, blue, green, orange, pink, or any accent color not listed above.
+5. Face embroidery is FLAT (flush with fabric) — like a cute emoji/vector icon in thread. NOT 3D, NOT plastic eyes, NOT a stuffed animal.
 
-=== CRITICAL STRUCTURE (read carefully) ===
+PRODUCT DESCRIPTION:
+A compact rectangular ${materialDesc} pouch, ${data.dimensions.heightCm}cm tall × ${data.dimensions.widthCm}cm wide × ${data.dimensions.depthCm}cm deep (size of a deck of cards). It clips to a dog leash via a silver carabiner on a fabric tab at the top.
 
-The pouch has exactly TWO sections stacked vertically:
+STRUCTURE (top to bottom):
+- Silver carabiner clip on a short fabric tab
+- Two small ${earStyleDesc} fabric ears at top corners (${earSizeDesc}), outer: ${data.secondaryColor}${data.earInnerColor ? `, inner: ${data.earInnerColor}` : ''}
+- TOP HALF (the flap) = cute ${data.breedName} FACE in flat embroidery: two black circle eyes with white highlights, ${data.muzzleColor || 'cream'} muzzle applique, ${data.noseColor || 'black'} nose, tiny smile mouth, breed-appropriate markings in ${data.secondaryColor}. Secured by silver snap button at bottom edge.
+- BOTTOM HALF = plain ${data.primaryColor} body with two small embroidered paw prints in ${data.accentColor || 'darker tone'}. Contains poop bag roll.
+- Two tiny charcoal felt paw tabs at very bottom edge
+- RUBBER GROMMET HOLE at bottom center (round, for dispensing bags)
 
-TOP HALF = THE FACE (this is also the flap/lid):
-- The ENTIRE top half of the front IS the dog's face
-- This top section hinges open (it IS the flap) — but in this photo it is CLOSED, sitting flush
-- There is NO separate blank flap sitting on top of the face
-- There is NO face underneath a flap
-- THE FLAP IS THE FACE. THE FACE IS THE FLAP. They are one and the same piece.
-- A small silver snap button at the bottom edge of this face-flap secures it closed
+BACK:
+- Dark horizontal zipper across lower half (wraps slightly to sides)
+- Two fabric belt loops
+- Small tonal dog silhouette logo
 
-BOTTOM HALF = THE BODY:
-- Plain fabric in the body color with two small embroidered paw prints
-- This is the poop bag compartment
-- A rubber grommet hole at the very bottom center where bags pull through
+CAMERA: 3/4 angle from the BACK-SIDE so we can see BOTH the cute face at an angle AND the back zipper + bottom grommet. Pure white background, professional studio lighting, sharp focus, premium e-commerce aesthetic.${data.dogName ? `\nCustom product for a dog named "${data.dogName}".` : ''}
 
-=== FACE DESIGN (embroidered on the flap surface) ===
-
-The face is flat machine embroidery in a cute kawaii/vector style — like a dog face emoji rendered in thread:
-
-- EYES: Two solid black embroidered circles (~7mm) with tiny white highlight dots. Flat satin stitch, NOT plastic, NOT 3D, NOT safety eyes.
-- MUZZLE: A flat ${data.muzzleColor || 'cream'} fabric applique in a rounded U-shape on the lower portion. Completely flush with surface.
-- NOSE: Small solid ${data.noseColor || 'black'} embroidered triangle/heart shape centered above the muzzle.
-- MOUTH: A tiny embroidered SMILE — upward-curving "U" shape below the nose. Must curve UP (happy expression).
-- BREED MARKINGS: ${data.breedName}-appropriate flat color patches in ${data.secondaryColor} (e.g., eye patches for beagles, face mask for huskies).
-
-Style: clean, bold, minimal — like a cute app icon or emoji made with embroidery thread. Everything is FLAT against the fabric.
-
-=== COMPLETE FRONT VIEW (top to bottom) ===
-
-1. FABRIC TAB + CLIP (very top): A 3.5cm fabric loop with a silver spring-gate carabiner clip.
-
-2. EARS (top corners): ${earStyleDesc}. Size: ${earSizeDesc}. Double-layer: outer in ${data.secondaryColor}, inner in ${data.earInnerColor || 'lighter shade'}. Sewn into top corner seams, extending to the sides.
-
-3. FACE-FLAP (upper ~5cm): THE DOG FACE. Eyes, muzzle, nose, mouth, and breed markings are embroidered/appliqued directly on this surface. The face fills this entire section. Silver snap button at bottom edge. When closed (as shown), it sits perfectly flush with the body below — barely visible seam.
-
-4. BODY (lower ~4.5cm): Plain ${data.primaryColor} ${materialDesc} with two small embroidered paw prints in ${data.accentColor || 'darker tone'}. This section holds the poop bag roll.
-
-5. TINY PAW TABS (very bottom): Two very small (~1cm) charcoal grey felt paw-shaped tabs peeking below the bottom edge. Subtle and minimal.
-
-6. RUBBER GROMMET (bottom center): A round rubber-rimmed hole where poop bags feed out from inside.
-
-=== BACK VIEW (not shown but affects silhouette) ===
-- Clean flat back in ${data.primaryColor}
-- HORIZONTAL ZIPPER across the lower section for loading poop bag rolls — wraps slightly to sides
-- The zipper is ONLY on the back. NO zipper visible from the front.
-- Two fabric belt loops for threading onto a strap
-- Small tonal embroidered dog silhouette logo
-
-=== MATERIALS ===
-- Main fabric: ${materialDesc} in ${data.primaryColor}
-${data.flapColor ? `- Face flap: ${data.flapColor}` : '- Face flap: same as body'}
-- Hardware: brushed silver (carabiner, snap button)
-- Zipper: dark #5 nylon coil (BACK ONLY)
-- Edge binding: subtle tonal trim, slightly darker than body — NOT bright, NOT contrasting
-${data.liningColor ? `- Interior: ${data.liningColor}` : ''}
-
-=== PHOTOGRAPHY ===
-- Pure white background, professional studio lighting
-- 3/4 front view showing face and one side edge
-- Sharp focus, premium e-commerce style (Kickstarter / high-end pet brand aesthetic)
-- The product looks premium, compact, well-crafted, and giftable
-${data.dogName ? `- This is a custom LeashBuddy made for "${data.dogName}"` : ''}
-
-=== SIZE ===
-- Height: ${data.dimensions.heightCm}cm, Width: ${data.dimensions.widthCm}cm, Depth: ${data.dimensions.depthCm}cm
-- About the size of a deck of cards or small smartphone
-
-=== DO NOT ===
-- Do NOT put a blank/plain flap on top of the face — the face IS the flap
-- Do NOT make it look like a stuffed animal or plush toy
-- Do NOT use plastic/3D/safety eyes — eyes are flat embroidered circles
-- Do NOT show any zipper on the front
-- Do NOT add text, watermarks, or human hands
-- Do NOT use bright colors for edge binding (must be tonal/subtle)
-- Do NOT introduce colors not in the color specification (no random red/blue/green/pink)
-- Do NOT make ears oversized — they are small practical fabric pieces`;
+DO NOT: add any colors not listed above, make it look like a plush toy, use 3D/plastic eyes, add text or watermarks, show human hands, make ears oversized.`;
 }
 
 /**
