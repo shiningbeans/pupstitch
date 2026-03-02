@@ -25,6 +25,170 @@ const EAR_SIZE_DESCRIPTIONS: Record<string, string> = {
   'large': 'moderately sized, extending about 1.5-2cm beyond the body edge',
 };
 
+/**
+ * Generate an annotated SVG reference diagram showing the correct product layout.
+ * This is sent to Gemini as a visual blueprint so it knows WHERE each element goes.
+ * Returns base64-encoded SVG.
+ */
+function buildReferenceDiagram(data: {
+  primaryColor: string;
+  secondaryColor: string;
+  muzzleColor?: string;
+  noseColor?: string;
+  accentColor?: string;
+  earStyle: string;
+}): string {
+  const body = data.primaryColor || '#D4A574';
+  const ears = data.secondaryColor || '#C4956A';
+  const muzzle = data.muzzleColor || '#F5E6D3';
+  const nose = data.noseColor || '#000000';
+  const accent = data.accentColor || '#8B7355';
+
+  // Ear paths based on style
+  let leftEar = '';
+  let rightEar = '';
+  if (data.earStyle === 'pointy') {
+    leftEar = `<polygon points="60,75 40,40 80,75" fill="${ears}" stroke="#666" stroke-width="1"/>`;
+    rightEar = `<polygon points="180,75 200,40 160,75" fill="${ears}" stroke="#666" stroke-width="1"/>`;
+  } else if (data.earStyle === 'button') {
+    leftEar = `<ellipse cx="50" cy="80" rx="20" ry="15" fill="${ears}" stroke="#666" stroke-width="1" transform="rotate(-15 50 80)"/>`;
+    rightEar = `<ellipse cx="190" cy="80" rx="20" ry="15" fill="${ears}" stroke="#666" stroke-width="1" transform="rotate(15 190 80)"/>`;
+  } else if (data.earStyle === 'rose') {
+    leftEar = `<path d="M60,75 Q30,65 40,85 Q50,95 65,85" fill="${ears}" stroke="#666" stroke-width="1"/>`;
+    rightEar = `<path d="M180,75 Q210,65 200,85 Q190,95 175,85" fill="${ears}" stroke="#666" stroke-width="1"/>`;
+  } else {
+    // floppy
+    leftEar = `<path d="M65,75 Q30,80 35,110 Q40,120 55,105" fill="${ears}" stroke="#666" stroke-width="1"/>`;
+    rightEar = `<path d="M175,75 Q210,80 205,110 Q200,120 185,105" fill="${ears}" stroke="#666" stroke-width="1"/>`;
+  }
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <style>
+    text { font-family: Arial, sans-serif; }
+    .label { font-size: 11px; fill: #333; font-weight: bold; }
+    .arrow { stroke: #E8533F; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+    .region-label { font-size: 9px; fill: #E8533F; font-weight: bold; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#E8533F"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="200" y="20" text-anchor="middle" class="label" style="font-size:14px;">LEASHBUDDY PRODUCT LAYOUT — REFERENCE DIAGRAM</text>
+  <text x="200" y="35" text-anchor="middle" style="font-size:10px;fill:#666;">The face IS the flap. They are ONE piece.</text>
+
+  <!-- Carabiner tab -->
+  <rect x="108" y="45" width="24" height="25" rx="3" fill="#888" stroke="#666" stroke-width="1"/>
+  <ellipse cx="120" cy="50" rx="10" ry="8" fill="none" stroke="#999" stroke-width="2"/>
+  <text x="260" y="58" class="region-label">← CARABINER + TAB</text>
+  <line x1="145" y1="57" x2="255" y2="57" class="arrow"/>
+
+  <!-- Ears -->
+  ${leftEar}
+  ${rightEar}
+
+  <!-- POUCH BODY - main rectangle -->
+  <rect x="60" y="70" width="120" height="170" rx="5" fill="${body}" stroke="#666" stroke-width="2"/>
+
+  <!-- ===== FACE-FLAP ZONE (top half) ===== -->
+  <!-- Dashed line separating face-flap from body -->
+  <line x1="60" y1="155" x2="180" y2="155" stroke="#666" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Big label: FACE = FLAP -->
+  <rect x="62" y="72" width="116" height="81" rx="4" fill="none" stroke="#E8533F" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="120" y="87" text-anchor="middle" class="region-label" style="font-size:10px;">★ FACE = FLAP (one piece) ★</text>
+
+  <!-- Eyes -->
+  <circle cx="98" cy="108" r="7" fill="black"/>
+  <circle cx="100" cy="106" r="1.5" fill="white"/>
+  <circle cx="142" cy="108" r="7" fill="black"/>
+  <circle cx="144" cy="106" r="1.5" fill="white"/>
+
+  <!-- Muzzle -->
+  <ellipse cx="120" cy="133" rx="22" ry="16" fill="${muzzle}" stroke="#ccc" stroke-width="0.5"/>
+
+  <!-- Nose -->
+  <path d="M115,126 L120,120 L125,126 Q120,130 115,126Z" fill="${nose}"/>
+
+  <!-- Mouth (smile) -->
+  <path d="M112,133 Q120,141 128,133" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Snap button at flap edge -->
+  <circle cx="120" cy="153" r="3" fill="silver" stroke="#999" stroke-width="1"/>
+
+  <!-- Label: snap button -->
+  <text x="260" y="155" class="region-label">← SNAP BUTTON (flap closure)</text>
+  <line x1="130" y1="153" x2="255" y2="153" class="arrow"/>
+
+  <!-- ===== LOWER BODY (paw prints) ===== -->
+  <!-- Paw prints -->
+  <circle cx="100" cy="185" r="5" fill="${accent}" opacity="0.6"/>
+  <circle cx="95" cy="178" r="2" fill="${accent}" opacity="0.6"/>
+  <circle cx="100" cy="176" r="2" fill="${accent}" opacity="0.6"/>
+  <circle cx="105" cy="178" r="2" fill="${accent}" opacity="0.6"/>
+  <circle cx="140" cy="185" r="5" fill="${accent}" opacity="0.6"/>
+  <circle cx="135" cy="178" r="2" fill="${accent}" opacity="0.6"/>
+  <circle cx="140" cy="176" r="2" fill="${accent}" opacity="0.6"/>
+  <circle cx="145" cy="178" r="2" fill="${accent}" opacity="0.6"/>
+  <text x="260" y="185" class="region-label">← PAW PRINTS (embroidered)</text>
+  <line x1="155" y1="183" x2="255" y2="183" class="arrow"/>
+
+  <!-- Label: lower body -->
+  <text x="120" y="215" text-anchor="middle" class="region-label">LOWER BODY (bag compartment)</text>
+
+  <!-- Paw tabs at bottom -->
+  <ellipse cx="90" cy="242" rx="8" ry="5" fill="#444"/>
+  <ellipse cx="150" cy="242" rx="8" ry="5" fill="#444"/>
+  <text x="260" y="243" class="region-label">← TINY PAW TABS</text>
+  <line x1="165" y1="242" x2="255" y2="242" class="arrow"/>
+
+  <!-- Grommet at bottom center -->
+  <circle cx="120" cy="238" r="5" fill="#333" stroke="#555" stroke-width="2"/>
+  <circle cx="120" cy="238" r="2.5" fill="#111"/>
+  <text x="260" y="265" class="region-label">← RUBBER GROMMET (bag dispensing hole)</text>
+  <line x1="130" y1="240" x2="255" y2="262" class="arrow"/>
+
+  <!-- ===== BACK/SIDE VIEW ===== -->
+  <text x="120" y="295" text-anchor="middle" class="label" style="font-size:13px;">BACK / SIDE VIEW</text>
+
+  <!-- Back panel -->
+  <rect x="60" y="305" width="120" height="170" rx="5" fill="${body}" stroke="#666" stroke-width="2"/>
+
+  <!-- Horizontal zipper across lower half of back -->
+  <line x1="62" y1="400" x2="178" y2="400" stroke="#333" stroke-width="3"/>
+  <rect x="165" y="395" width="12" height="10" rx="2" fill="#555" stroke="#333" stroke-width="1"/>
+  <text x="260" y="402" class="region-label">← HORIZONTAL ZIPPER (back only!)</text>
+  <line x1="180" y1="400" x2="255" y2="400" class="arrow"/>
+  <text x="120" y="418" text-anchor="middle" style="font-size:8px;fill:#666;">Zipper wraps slightly to sides — visible in 3/4 view</text>
+
+  <!-- Belt loops on back -->
+  <rect x="85" y="330" width="8" height="30" rx="2" fill="none" stroke="#999" stroke-width="1.5"/>
+  <rect x="147" y="330" width="8" height="30" rx="2" fill="none" stroke="#999" stroke-width="1.5"/>
+  <text x="260" y="345" class="region-label">← BELT LOOPS</text>
+  <line x1="160" y1="345" x2="255" y2="345" class="arrow"/>
+
+  <!-- Grommet on back bottom -->
+  <circle cx="120" cy="473" r="5" fill="#333" stroke="#555" stroke-width="2"/>
+  <circle cx="120" cy="473" r="2.5" fill="#111"/>
+  <text x="260" y="475" class="region-label">← GROMMET (bottom center)</text>
+  <line x1="130" y1="473" x2="255" y2="473" class="arrow"/>
+
+  <!-- Key callouts box -->
+  <rect x="5" y="300" width="48" height="90" rx="3" fill="#FFF3F0" stroke="#E8533F" stroke-width="1"/>
+  <text x="29" y="315" text-anchor="middle" style="font-size:8px;fill:#E8533F;font-weight:bold;">KEY RULES:</text>
+  <text x="29" y="328" text-anchor="middle" style="font-size:7px;fill:#333;">Face = Flap</text>
+  <text x="29" y="340" text-anchor="middle" style="font-size:7px;fill:#333;">No plain flap</text>
+  <text x="29" y="352" text-anchor="middle" style="font-size:7px;fill:#333;">Zipper: BACK</text>
+  <text x="29" y="364" text-anchor="middle" style="font-size:7px;fill:#333;">Grommet: BTM</text>
+  <text x="29" y="376" text-anchor="middle" style="font-size:7px;fill:#333;">Colors: exact</text>
+</svg>`;
+
+  // Convert SVG to base64
+  return Buffer.from(svg).toString('base64');
+}
+
 interface PreviewRequestData {
   breedName: string;
   earStyle: string;
@@ -331,8 +495,23 @@ export async function POST(request: NextRequest) {
       photoCount = 1;
     }
 
+    // Add reference diagram showing correct layout (face ON flap, zipper on back, grommet at bottom)
+    const diagramBase64 = buildReferenceDiagram({
+      primaryColor: body.primaryColor,
+      secondaryColor: body.secondaryColor,
+      muzzleColor: body.muzzleColor,
+      noseColor: body.noseColor,
+      accentColor: body.accentColor,
+      earStyle: body.earStyle,
+    });
+    contentParts.push({
+      inlineData: { mimeType: 'image/svg+xml', data: diagramBase64 },
+    });
+
     const prompt = buildProductPreviewPrompt(body, photoCount);
-    contentParts.push({ text: prompt });
+    // Prepend diagram reference to the prompt
+    const diagramNote = `\n\nREFERENCE DIAGRAM: I've also attached an annotated layout diagram showing the correct product structure. The diagram clearly shows:\n- The FACE (eyes, nose, mouth) is ON the top flap — they are the same panel\n- The zipper runs HORIZONTALLY across the BACK\n- The rubber grommet hole is at the BOTTOM CENTER\nFollow this layout exactly. The diagram uses the user's chosen colors.\n`;
+    contentParts.push({ text: diagramNote + prompt });
 
     // Always generate 1 image for speed (user can regenerate if they want another)
     console.log(`[ProductPreview] Generating 1 preview (${photoCount} reference photos)`);
