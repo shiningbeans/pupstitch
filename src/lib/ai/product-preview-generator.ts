@@ -88,11 +88,17 @@ export async function generateProductPreviewImage(
   try {
     const body = buildRequestBody(spec, analysis, dogPhotos, customizations);
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 55_000); // 55s client timeout (Vercel free = 60s)
+
     const response = await fetch('/api/generate-product-preview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -108,7 +114,11 @@ export async function generateProductPreviewImage(
 
     return null;
   } catch (error) {
-    console.warn('Product preview generation error:', error);
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.warn('Product preview generation timed out after 55s');
+    } else {
+      console.warn('Product preview generation error:', error);
+    }
     return null;
   }
 }
@@ -126,11 +136,17 @@ export async function generateProductPreviewOptions(
   try {
     const body = buildRequestBody(spec, analysis, dogPhotos, customizations, 2);
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 55_000); // 55s client timeout
+
     const response = await fetch('/api/generate-product-preview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -154,7 +170,11 @@ export async function generateProductPreviewOptions(
 
     return [];
   } catch (error) {
-    console.warn('Product preview options generation error:', error);
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.warn('Product preview options timed out after 55s');
+    } else {
+      console.warn('Product preview options generation error:', error);
+    }
     return [];
   }
 }

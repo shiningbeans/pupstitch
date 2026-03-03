@@ -12,7 +12,9 @@ interface LeashBuddySpecPanelProps {
   isGeneratingPreview: boolean;
   previewOptions: string[];
   selectedPreviewIndex: number | null;
+  previewError: string | null;
   onSelectPreview: (index: number) => void;
+  onRetryPreview: () => void;
 }
 
 export default function LeashBuddySpecPanel({
@@ -21,7 +23,9 @@ export default function LeashBuddySpecPanel({
   isGeneratingPreview,
   previewOptions,
   selectedPreviewIndex,
+  previewError,
   onSelectPreview,
+  onRetryPreview,
 }: LeashBuddySpecPanelProps) {
   return (
     <div className="space-y-6">
@@ -31,7 +35,9 @@ export default function LeashBuddySpecPanel({
         isGenerating={isGeneratingPreview}
         previewOptions={previewOptions}
         selectedPreviewIndex={selectedPreviewIndex}
+        previewError={previewError}
         onSelectPreview={onSelectPreview}
+        onRetry={onRetryPreview}
       />
       <div className="glass-solid p-4 sm:p-6 border border-stone-200/50"><FabricSwatches fabrics={spec.fabricColors} /></div>
       <div className="glass-solid p-4 sm:p-6 border border-stone-200/50"><EmbroiderySpecDisplay specs={spec.embroiderySpecs} /></div>

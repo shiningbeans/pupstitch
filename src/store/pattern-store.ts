@@ -45,6 +45,7 @@ export interface PatternStore {
   leashBuddySpec: LeashBuddyProductSpec | null;
   isGeneratingProductSpec: boolean;
   isGeneratingProductPreview: boolean;
+  productPreviewError: string | null;     // error message from preview generation
   productPreviewOptions: string[];        // 0-2 preview data URLs to choose from
   selectedPreviewIndex: number | null;    // which option the user picked
   productPreviewUrl: string | null;       // final chosen preview URL
@@ -109,6 +110,7 @@ export const usePatternStore = create<PatternStore>()(
       leashBuddySpec: null,
       isGeneratingProductSpec: false,
       isGeneratingProductPreview: false,
+      productPreviewError: null,
       productPreviewOptions: [],
       selectedPreviewIndex: null,
       productPreviewUrl: null,
@@ -424,6 +426,7 @@ export const usePatternStore = create<PatternStore>()(
 
         set({
           isGeneratingProductPreview: true,
+          productPreviewError: null,
           productPreviewOptions: [],
           selectedPreviewIndex: null,
           productPreviewUrl: null,
@@ -443,13 +446,20 @@ export const usePatternStore = create<PatternStore>()(
             set({
               productPreviewOptions: options,
               isGeneratingProductPreview: false,
+              productPreviewError: null,
             });
           } else {
-            set({ isGeneratingProductPreview: false });
+            set({
+              isGeneratingProductPreview: false,
+              productPreviewError: 'Preview generation timed out. Tap "Retry" to try again.',
+            });
           }
         } catch (error) {
           console.warn('[Store] Product preview generation failed (non-fatal):', error);
-          set({ isGeneratingProductPreview: false });
+          set({
+            isGeneratingProductPreview: false,
+            productPreviewError: 'Preview generation failed. Tap "Retry" to try again.',
+          });
         }
       },
 
@@ -772,6 +782,7 @@ export const usePatternStore = create<PatternStore>()(
           dogName: '',
           leashBuddySpec: null,
           productPreviewOptions: [],
+          productPreviewError: null,
           selectedPreviewIndex: null,
           productPreviewUrl: null,
           leashBuddyCustomizations: { ...DEFAULT_LEASHBUDDY_CUSTOMIZATIONS },

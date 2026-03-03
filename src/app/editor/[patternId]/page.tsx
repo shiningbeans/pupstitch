@@ -19,10 +19,12 @@ export default function EditorPage() {
   const isGeneratingPreview = usePatternStore((s) => s.isGeneratingPreview);
   const leashBuddySpec = usePatternStore((s) => s.leashBuddySpec);
   const isGeneratingProductPreview = usePatternStore((s) => s.isGeneratingProductPreview);
+  const productPreviewError = usePatternStore((s) => s.productPreviewError);
   const productPreviewUrl = usePatternStore((s) => s.productPreviewUrl);
   const productPreviewOptions = usePatternStore((s) => s.productPreviewOptions);
   const selectedPreviewIndex = usePatternStore((s) => s.selectedPreviewIndex);
   const selectProductPreview = usePatternStore((s) => s.selectProductPreview);
+  const generateProductPreview = usePatternStore((s) => s.generateProductPreview);
   const scenicPhotos = usePatternStore((s) => s.scenicPhotos);
   const isGeneratingScenicPhotos = usePatternStore((s) => s.isGeneratingScenicPhotos);
   const generateScenicPhotos = usePatternStore((s) => s.generateScenicPhotos);
@@ -159,9 +161,23 @@ export default function EditorPage() {
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                       <p className="text-stone-500 text-sm">Creating your design...</p>
+                      <p className="text-stone-400 text-xs">This can take up to 60 seconds</p>
                       <div className="w-32 h-1 bg-stone-200 rounded-full overflow-hidden">
                         <div className="h-full bg-brand-coral animate-pulse rounded-full" style={{ width: '60%' }} />
                       </div>
+                    </div>
+                  ) : productPreviewError ? (
+                    <div className="flex flex-col items-center gap-4">
+                      <svg className="w-10 h-10 text-stone-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                      </svg>
+                      <p className="text-stone-600 text-sm font-medium text-center px-4">{productPreviewError}</p>
+                      <button
+                        onClick={() => generateProductPreview()}
+                        className="px-5 py-2 bg-brand-coral text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                      >
+                        Retry
+                      </button>
                     </div>
                   ) : productPreviewOptions.length >= 2 ? (
                     <PreviewPicker

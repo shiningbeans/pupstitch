@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Allow up to 120 seconds for image generation on Vercel
-export const maxDuration = 120;
+// Allow up to 60 seconds for image generation on Vercel (free tier limit)
+export const maxDuration = 60;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -379,13 +379,13 @@ async function generateOneImage(
   contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>,
   apiKey: string,
 ): Promise<{ imageBase64: string; mimeType: string } | null> {
-  // Use the fastest reliable model only — no fallback chain
+  // Try primary model first, fallback only if it fails FAST (not on timeout)
   const model = 'gemini-2.0-flash-exp-image-generation';
   console.log(`[ProductPreview] Generating with ${model}`);
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 90_000); // 90s hard timeout
+    const timeout = setTimeout(() => controller.abort(), 50_000); // 50s hard timeout (Vercel free = 60s)
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -407,10 +407,8 @@ async function generateOneImage(
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[ProductPreview] ${model} error (${response.status}):`, errorText.slice(0, 300));
-
-      // If primary model fails, try one fallback
-      console.log('[ProductPreview] Trying gemini-2.5-flash-image fallback');
-      return await tryGeminiImageGen(contentParts, 'gemini-2.5-flash-image', apiKey);
+      // No fallback — return null so client can retry
+      return null;
     }
 
     const data = await response.json();
@@ -426,17 +424,15 @@ async function generateOneImage(
       }
     }
 
-    console.warn(`[ProductPreview] ${model} responded but no image — trying fallback`);
-    return await tryGeminiImageGen(contentParts, 'gemini-2.5-flash-image', apiKey);
+    console.warn(`[ProductPreview] ${model} responded but no image in output`);
+    return null;
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      console.error('[ProductPreview] Generation timed out after 90s');
+      console.error('[ProductPreview] Generation timed out after 50s');
     } else {
       console.error(`[ProductPreview] ${model} exception:`, error);
     }
-    // One fallback attempt
-    console.log('[ProductPreview] Trying gemini-2.5-flash-image fallback after error');
-    return await tryGeminiImageGen(contentParts, 'gemini-2.5-flash-image', apiKey);
+    return null;
   }
 }
 
@@ -534,62 +530,3 @@ export async function POST(request: NextRequest) {
   }
 }
 
-/**
- * Try generating an image using a specific Gemini model (used as fallback)
- */
-async function tryGeminiImageGen(
-  contentParts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>,
-  model: string,
-  apiKey: string
-): Promise<{ imageBase64: string; mimeType: string } | null> {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 90_000);
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        signal: controller.signal,
-        body: JSON.stringify({
-          contents: [{ parts: contentParts }],
-          generationConfig: {
-            responseModalities: ['TEXT', 'IMAGE'],
-          },
-        }),
-      }
-    );
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[ProductPreview] ${model} error (${response.status}):`, errorText.slice(0, 300));
-      return null;
-    }
-
-    const data = await response.json();
-    const parts = data.candidates?.[0]?.content?.parts || [];
-
-    for (const part of parts) {
-      if (part.inlineData?.mimeType?.startsWith('image/')) {
-        console.log(`[ProductPreview] ${model} generated image successfully`);
-        return {
-          imageBase64: part.inlineData.data,
-          mimeType: part.inlineData.mimeType,
-        };
-      }
-    }
-
-    console.warn(`[ProductPreview] ${model} responded but no image in output`);
-    return null;
-  } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
-      console.error(`[ProductPreview] ${model} timed out`);
-    } else {
-      console.error(`[ProductPreview] ${model} exception:`, error);
-    }
-    return null;
-  }
-}
